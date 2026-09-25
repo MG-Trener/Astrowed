@@ -2045,6 +2045,28 @@
   font-size: 10px;
   fill: #a6baaf;
 }
+.discovery-live-art .scene-label {
+  font: 9px "Segoe UI", sans-serif;
+  letter-spacing: 1.2px;
+  fill: #a6baaf;
+}
+.discovery-live-art .pillar-glyph { font-size: 30px; }
+.pillar-foundation { fill: #20362b33; stroke: #aac79b22; }
+.pillar-connection { fill: none; stroke: #a6c39344; }
+.pillar-current { fill: none; stroke: #d8c58e; stroke-width: 1.5; stroke-dasharray: 10 90; animation: discovery-flow 8s linear infinite; }
+.pillar-halo { fill: #a9d4a5; opacity: .08; animation: pillar-breathe 8s ease-in-out var(--phase) infinite; }
+.pillar-crown { fill: #d3dca6; animation: pillar-breathe 8s ease-in-out var(--phase) infinite; }
+.pillar-light { fill: none; stroke: #c8dca3; stroke-width: 1.5; stroke-dasharray: 12 88; animation: discovery-flow 8s linear var(--phase) infinite; }
+.pillar-beam { animation: pillar-breathe 8s ease-in-out var(--phase) infinite; }
+@keyframes pillar-breathe { 0%, 100% { opacity: .12; } 50% { opacity: .65; } }
+.day-orbit-track { fill: none; stroke: #bed2b355; stroke-width: 1; }
+.day-orbit-traveller { transform-origin: 170px 120px; animation: day-orbit-turn 24s linear infinite; }
+.day-orbit-tail { fill: none; stroke: #e1cb94; stroke-width: 2; stroke-dasharray: 13 87; stroke-dashoffset: 13; opacity: .65; }
+.day-core-orbit { fill: none; stroke: #c9d4ac55; stroke-width: .75; }
+.discovery-live-art .day-sample { font-size: 13px; }
+.discovery-live-art .day-core-glyph { font-size: 31px; }
+.discovery-live-art .day-core-caption { font-size: 7px; letter-spacing: .6px; }
+@keyframes day-orbit-turn { from { transform: rotate(-90deg); } to { transform: rotate(270deg); } }
 .discovery-track {
   stroke: #9fbd9f;
   stroke-width: 1;

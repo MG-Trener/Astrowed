@@ -1,10 +1,11 @@
 "use client";
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useActiveChart } from "@/components/active-chart";
-import { elements, elementOf } from "@/domain/bazi/catalog";
+import { elements } from "@/domain/bazi/catalog";
 import { calculateNew } from "@/domain/bazi/engine";
 import { Arrow } from "@/components/icons";
+import { PillarsScene, DayOrbitScene } from "./discovery-scenes";
 
 const nodes = elements.map((e, i) => ({
   ...e,
@@ -49,47 +50,10 @@ export function DiscoveryVisuals() {
         ? `${chart.input.date} · ${chart.input.city}. Цвет показывает стихию каждого знака.`
         : "Рассчитайте карту: здесь оживут ваши столпы года, месяца, дня и часа.",
       art: (
-        <svg viewBox="0 0 300 200" aria-hidden="true">
-          <path
-            className="discovery-track"
-            d="M42 135 Q150 20 258 135 M42 60 Q150 185 258 60"
-          />
-          <path
-            className="discovery-stream"
-            pathLength="100"
-            d="M42 135 Q150 20 258 135 M42 60 Q150 185 258 60"
-          />
-          {["year", "month", "day", "hour"].map((key, i) => {
-            const p = chart?.pillars.find((p) => p.key === key);
-            return (
-              <g
-                className="discovery-pillar"
-                style={{ "--i": i } as CSSProperties}
-                key={key}
-              >
-                <rect x={18 + i * 72} y={38} width="48" height="114" rx="6" />
-                <text
-                  x={42 + i * 72}
-                  y="81"
-                  fill={p ? elementOf(p.element).color : "#9eb3a6"}
-                >
-                  {p?.stem ?? "·"}
-                </text>
-                <text
-                  x={42 + i * 72}
-                  y="120"
-                  fill={p ? elementOf(p.branchElement).color : "#9eb3a6"}
-                >
-                  {p?.branch ??
-                    (key === "hour" && chart?.input.unknownTime ? "?" : "·")}
-                </text>
-                <text className="discovery-small" x={42 + i * 72} y="174">
-                  {["Год", "Месяц", "День", "Час"][i]}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
+        <PillarsScene
+          pillars={chart?.pillars}
+          unknownTime={chart?.input.unknownTime}
+        />
       ),
     },
     {
@@ -141,56 +105,7 @@ export function DiscoveryVisuals() {
       text: chart
         ? `${date} · ${chart.input.timezone}. Двенадцать срезов с шагом 2 часа местного времени; расчёт — по среднему солнечному.`
         : "После расчёта — двенадцать часовых срезов выбранной даты с учётом вашего города.",
-      art: (
-        <svg viewBox="0 0 300 200" aria-hidden="true">
-          <circle cx="150" cy="100" r="70" className="discovery-track" />
-          <circle
-            cx="150"
-            cy="100"
-            r="70"
-            className="discovery-stream"
-            pathLength="100"
-          />
-          {Array.from({ length: 12 }, (_, i) => {
-            const a = ((i * 30 - 90) * Math.PI) / 180;
-            const x = 150 + 70 * Math.cos(a),
-              y = 100 + 70 * Math.sin(a);
-            const p = hours[i]?.pillar;
-            return (
-              <g key={i}>
-                <circle
-                  cx={x}
-                  cy={y}
-                  r="14"
-                  fill="#0c1717"
-                  stroke={p ? elementOf(p.element).color : "#788f84"}
-                />
-                <text
-                  x={x}
-                  y={y + 5}
-                  fontSize="14"
-                  fill={p ? elementOf(p.element).color : "#9eb3a6"}
-                >
-                  {p?.branch ?? (hours[i]?.unavailable ? "?" : "·")}
-                </text>
-                <text
-                  className="discovery-small"
-                  x={150 + 94 * Math.cos(a)}
-                  y={103 + 94 * Math.sin(a)}
-                >
-                  {String(i * 2).padStart(2, "0")}
-                </text>
-              </g>
-            );
-          })}
-          <text x="150" y="98" fontSize="28" fill="#c4d5ba">
-            {hours[6]?.day ?? "日"}
-          </text>
-          <text className="discovery-small" x="150" y="119">
-            12 МОМЕНТОВ
-          </text>
-        </svg>
-      ),
+      art: <DayOrbitScene hours={hours} />,
     },
   ];
   return (
