@@ -4,50 +4,8 @@ import type { BirthInput, Chart } from "@/domain/bazi/types";
 import { ChartView } from "./chart-view";
 import { HeroScene } from "@/scenes/hero-scene";
 import { Arrow } from "./icons";
-const cities = [
-  {
-    city: "Алматы",
-    timezone: "Asia/Almaty",
-    longitude: 76.886,
-    latitude: 43.238,
-  },
-  {
-    city: "Астана",
-    timezone: "Asia/Almaty",
-    longitude: 71.43,
-    latitude: 51.128,
-  },
-  {
-    city: "Кызылорда",
-    timezone: "Asia/Qyzylorda",
-    longitude: 65.509,
-    latitude: 44.848,
-  },
-  {
-    city: "Москва",
-    timezone: "Europe/Moscow",
-    longitude: 37.617,
-    latitude: 55.756,
-  },
-  {
-    city: "Санкт-Петербург",
-    timezone: "Europe/Moscow",
-    longitude: 30.315,
-    latitude: 59.939,
-  },
-  {
-    city: "Пекин",
-    timezone: "Asia/Shanghai",
-    longitude: 116.407,
-    latitude: 39.904,
-  },
-  {
-    city: "Нью-Йорк",
-    timezone: "America/New_York",
-    longitude: -74.006,
-    latitude: 40.713,
-  },
-];
+import { LocationPicker } from "./location-picker";
+import { demoInput } from "@/domain/bazi/engine";
 export function CalculatorForm({
   browserOnly = false,
 }: {
@@ -59,12 +17,16 @@ export function CalculatorForm({
     time: "10:30",
     unknownTime: false,
     gender: "female",
-    ...cities[0],
+    city: demoInput.city,
+    timezone: demoInput.timezone,
+    longitude: demoInput.longitude,
+    latitude: demoInput.latitude,
     dayBoundary: "midnight",
     timeMode: "civil",
     dstChoice: "reject",
   });
   const [chart, setChart] = useState<Chart | null>(null);
+  const [placeReady, setPlaceReady] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const update = <K extends keyof BirthInput>(key: K, value: BirthInput[K]) =>
@@ -74,6 +36,10 @@ export function CalculatorForm({
   }, [chart]);
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (!placeReady) {
+      setError("Выберите город из справочника или заполните место вручную.");
+      return;
+    }
     setBusy(true);
     setError("");
     try {
@@ -175,74 +141,16 @@ export function CalculatorForm({
               <option value="male">Мужской</option>
             </select>
           </label>
-          <label className="field">
-            Место рождения
-            <select
-              value={
-                cities.some((c) => c.city === input.city)
-                  ? input.city
-                  : "custom"
-              }
-              onChange={(e) => {
-                const place = cities.find((c) => c.city === e.target.value);
-                if (place) setInput((prev) => ({ ...prev, ...place }));
-                else update("city", "Другой город");
-              }}
-            >
-              {cities.map((c) => (
-                <option key={c.city}>{c.city}</option>
-              ))}
-              <option value="custom">Другой город — указать вручную</option>
-            </select>
-          </label>
-          <details
-            className="form-section full"
-            open={input.city === "Другой город" || undefined}
-          >
-            <summary>Место, часовой пояс и методика</summary>
+          <LocationPicker
+            value={input}
+            date={input.date}
+            time={input.unknownTime ? "12:00" : input.time}
+            onChange={(place) => setInput((prev) => ({ ...prev, ...place }))}
+            onReady={setPlaceReady}
+          />
+          <details className="form-section full">
+            <summary>Методика и правила времени</summary>
             <div className="form">
-              <label className="field full">
-                Город
-                <input
-                  value={input.city}
-                  required
-                  maxLength={120}
-                  onChange={(e) => update("city", e.target.value)}
-                />
-              </label>
-              <label className="field full">
-                Часовой пояс IANA
-                <input
-                  required
-                  value={input.timezone}
-                  onChange={(e) => update("timezone", e.target.value)}
-                  placeholder="Asia/Almaty"
-                />
-              </label>
-              <label className="field">
-                Долгота
-                <input
-                  type="number"
-                  min="-180"
-                  max="180"
-                  step="0.001"
-                  required
-                  value={input.longitude}
-                  onChange={(e) => update("longitude", Number(e.target.value))}
-                />
-              </label>
-              <label className="field">
-                Широта
-                <input
-                  type="number"
-                  min="-90"
-                  max="90"
-                  step="0.001"
-                  required
-                  value={input.latitude}
-                  onChange={(e) => update("latitude", Number(e.target.value))}
-                />
-              </label>
               <label className="field">
                 Смена дня
                 <select
@@ -289,8 +197,8 @@ export function CalculatorForm({
             </div>
           </details>
           <p className="method-note full">
-            {input.timezone} · Год начинается в Ли Чунь · Месяцы по солнечным
-            терминам.
+            {placeReady ? `${input.timezone} · ` : ""}Год начинается в Ли Чунь ·
+            Месяцы по солнечным терминам.
             <br />
             Историческое смещение UTC определяется по дате рождения.
           </p>
@@ -299,7 +207,11 @@ export function CalculatorForm({
               {error}
             </p>
           )}
-          <button type="submit" className="button primary full" disabled={busy}>
+          <button
+            type="submit"
+            className="button primary full"
+            disabled={busy || !placeReady}
+          >
             {busy ? "Расчёт структуры карты…" : "Построить мою карту"}
             <Arrow />
           </button>

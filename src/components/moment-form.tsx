@@ -1,4 +1,5 @@
 "use client";
+import { LocationPicker } from "./location-picker";
 import { useState } from "react";
 import { demoInput } from "@/domain/bazi/engine";
 import type { BirthInput } from "@/domain/bazi/types";
@@ -20,6 +21,7 @@ export function MomentForm({
     ...initial,
     dayBoundary: "zi" as const,
   });
+  const [placeReady, setPlaceReady] = useState(true);
   const [error, setError] = useState("");
   const update = <K extends keyof BirthInput>(key: K, value: BirthInput[K]) =>
     setInput((s) => ({ ...s, [key]: value }));
@@ -28,6 +30,12 @@ export function MomentForm({
       className="moment-form"
       onSubmit={(e) => {
         e.preventDefault();
+        if (!placeReady) {
+          setError(
+            "Выберите город из справочника или заполните место вручную.",
+          );
+          return;
+        }
         setError("");
         try {
           onCalculate(input);
@@ -66,27 +74,6 @@ export function MomentForm({
             onChange={(e) => update("time", e.target.value)}
           />
         </label>
-        <label className="field">
-          Часовой пояс IANA
-          <input
-            required
-            value={input.timezone}
-            list="moment-zones"
-            onChange={(e) => update("timezone", e.target.value)}
-          />
-          <datalist id="moment-zones">
-            {[
-              "Asia/Almaty",
-              "Asia/Qyzylorda",
-              "Europe/Moscow",
-              "Asia/Shanghai",
-              "Europe/Berlin",
-              "America/New_York",
-            ].map((z) => (
-              <option key={z} value={z} />
-            ))}
-          </datalist>
-        </label>
         {gender && (
           <label className="field">
             Пол для формулы Гуа
@@ -103,29 +90,16 @@ export function MomentForm({
         )}
         {children}
       </div>
+      <LocationPicker
+        value={input}
+        date={input.date}
+        time={input.time}
+        onChange={(place) => setInput((prev) => ({ ...prev, ...place }))}
+        onReady={setPlaceReady}
+      />
       <details className="method-details">
         <summary>Место и правила времени</summary>
         <div className="form-grid">
-          <label className="field">
-            Город
-            <input
-              required
-              value={input.city}
-              onChange={(e) => update("city", e.target.value)}
-            />
-          </label>
-          <label className="field">
-            Долгота (восток +)
-            <input
-              type="number"
-              step="0.001"
-              min={-180}
-              max={180}
-              required
-              value={input.longitude}
-              onChange={(e) => update("longitude", Number(e.target.value))}
-            />
-          </label>
           <label className="field">
             Расчётное время
             <select
@@ -168,11 +142,11 @@ export function MomentForm({
           </label>
         </div>
         <p>
-          Часовой пояс задаётся отдельно от города. Среднее солнечное время
-          учитывает долготу, но не уравнение времени.
+          Часовой пояс и координаты подставляются при выборе города. Среднее
+          солнечное время учитывает долготу, но не уравнение времени.
         </p>
       </details>
-      <button className="button primary" type="submit">
+      <button className="button primary" type="submit" disabled={!placeReady}>
         {label} <span aria-hidden>↗</span>
       </button>
       {error && (

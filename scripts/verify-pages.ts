@@ -26,6 +26,17 @@ const required = [
 ];
 for (const file of required)
   assert(existsSync(path.join(root, file)), `Missing route: ${file}`);
+const catalogue = JSON.parse(
+  readFileSync("src/data/city-catalog.json", "utf8"),
+);
+for (const country of catalogue.countries) {
+  const relative = `locations/${country}.json`;
+  assert.equal(
+    readFileSync(path.join(root, relative), "utf8"),
+    readFileSync(path.join("public", relative), "utf8"),
+    `Missing or stale city catalogue: ${country}`,
+  );
+}
 assert(!existsSync(path.join(root, "api")), "Server API must not be exported");
 let htmlCount = 0;
 function inspect(dir: string) {
