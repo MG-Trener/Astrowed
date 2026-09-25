@@ -7,6 +7,7 @@ const config: NextConfig = {
   trailingSlash: true,
   poweredByHeader: false,
   devIndicators: false,
+  images: { unoptimized: true },
   turbopack: { root: path.resolve(import.meta.dirname, "../..") },
 };
 export default config;

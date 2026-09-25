@@ -3,6 +3,7 @@ import { HeroArtwork } from "@/scenes/hero-artwork";
 import { ElementGallery } from "@/components/element-gallery";
 import { Arrow } from "@/components/icons";
 import { Intro } from "@/components/intro";
+import { PlatformDirections } from "@/components/expansion-pages";
 export default function Home() {
   return (
     <>
@@ -20,10 +21,10 @@ export default function Home() {
             <em>своя природа.</em>
           </h1>
           <p className="hero-description">
-            Четыре столпа. Пять элементов. Бесконечность связей.
+            Ба Цзы. Фэн Шуй. Ци Мэнь Дунь Цзя.
             <br />
-            Откройте свою карту Ба Цзы и исследуйте
-            <br className="desktop-break" /> тонкую архитектуру времени.
+            Исследуйте человека, пространство
+            <br className="desktop-break" /> и тонкую архитектуру времени.
           </p>
           <div className="hero-buttons">
             <Link href="/calculator" className="button primary">
@@ -42,19 +43,18 @@ export default function Home() {
           </div>
         </div>
         <HeroArtwork />
-        <div className="vertical-note">
-          FOUR PILLARS · FIVE ELEMENTS · ONE YOU
-        </div>
+        <div className="vertical-note">PERSON · SPACE · TIME</div>
       </section>
       <div className="coordinate-strip">
         <span>
-          <i /> СИСТЕМА БА ЦЗЫ
+          <i /> ТРИ НАПРАВЛЕНИЯ · ОДНА ПЛАТФОРМА
         </span>
         <span>
           天 НЕБО <b>·</b> 地 ЗЕМЛЯ <b>·</b> 人 ЧЕЛОВЕК
         </span>
         <a href="#discover">ПРОДОЛЖИТЬ ИССЛЕДОВАНИЕ ↓</a>
       </div>
+      <PlatformDirections />
       <ElementGallery />
       <section id="discover" className="discovery-section">
         <div className="section-heading">

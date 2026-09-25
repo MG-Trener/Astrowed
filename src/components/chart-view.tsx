@@ -7,6 +7,7 @@ import { DestinyMatrix } from "@/scenes/destiny-matrix";
 import { ElementsReactor } from "@/scenes/elements-reactor";
 import { Timeline } from "@/scenes/timeline";
 import { PdfButton } from "./pdf-button";
+import { ExtendedChart } from "./extended-chart";
 export function ChartView({
   chart,
   demo = false,
@@ -152,6 +153,7 @@ export function ChartView({
         </p>
       </section>
       <Timeline chart={chart} />
+      <ExtendedChart chart={chart} />
       <section className="chart-section">
         <div className="panel-heading">
           <h2>Прозрачная методика</h2>

@@ -15,10 +15,11 @@ export function Shell({ children }: { children: React.ReactNode }) {
     }
   }, []);
   const links = [
-    ["/", "Обсерватория"],
-    ["/calculator", "Калькулятор"],
-    ["/explore", "Исследовать"],
-    ["/knowledge", "Академия"],
+    ["/bazi", "Ба Цзы"],
+    ["/feng-shui", "Фэн Шуй"],
+    ["/qimen", "Ци Мэнь"],
+    ["/knowledge", "Библиотека"],
+    ["/about-julia", "Эксперт"],
   ];
   return (
     <div className={compact ? "app compact" : "app"}>
@@ -41,7 +42,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
               onClick={() => setMenu(false)}
               key={href}
               href={href}
-              className={path === href ? "active" : ""}
+              className={
+                path === href || path.startsWith(href + "/") ? "active" : ""
+              }
             >
               {label}
             </Link>
@@ -66,7 +69,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <Link href="/" className="footer-brand">
           <Mark small /> ASTROWED
         </Link>
-        <span>Древнее знание. Новая перспектива.</span>
+        <Link href="/about-julia">
+          Юлия Гаврилычева · запись на консультацию ↗
+        </Link>
         <button
           onClick={() => {
             try {
@@ -83,7 +88,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
         >
           {compact ? "◉ Профессиональный режим" : "◎ Режим исследования"}
         </button>
-        <span className="mono">BA ZI · 四柱</span>
+        <Link href="/reports" className="mono">
+          PDF-ОТЧЁТЫ ↗
+        </Link>
       </footer>
     </div>
   );

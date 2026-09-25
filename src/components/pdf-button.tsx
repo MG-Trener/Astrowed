@@ -1,13 +1,19 @@
 "use client";
 import { useState } from "react";
+import type { ReportLevel } from "@/services/report-template";
 export function PdfButton({ id }: { id: string }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [level, setLevel] = useState<ReportLevel>("full");
   async function download() {
     setBusy(true);
     setError("");
     try {
-      const r = await fetch(`/api/reports/${id}`, { method: "POST" });
+      const r = await fetch(`/api/reports/${id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ level }),
+      });
       if (!r.ok) {
         const data = await r.json();
         throw new Error(data.error);
@@ -26,6 +32,17 @@ export function PdfButton({ id }: { id: string }) {
   }
   return (
     <div className="no-print">
+      <label className="field">
+        Формат PDF
+        <select
+          value={level}
+          onChange={(e) => setLevel(e.target.value as ReportLevel)}
+        >
+          <option value="brief">Краткий</option>
+          <option value="full">Полный</option>
+          <option value="professional">Профессиональный</option>
+        </select>
+      </label>
       <button className="button primary" disabled={busy} onClick={download}>
         {busy ? "Формируем PDF…" : "Скачать отчёт PDF ↓"}
       </button>

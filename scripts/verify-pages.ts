@@ -11,6 +11,17 @@ const required = [
   "knowledge/index.html",
   "knowledge/graph/index.html",
   "clients/index.html",
+  "bazi/index.html",
+  "bazi/current-energies/index.html",
+  "bazi/life-years/index.html",
+  "bazi/stars/index.html",
+  "feng-shui/index.html",
+  "feng-shui/bagua/index.html",
+  "feng-shui/gua/index.html",
+  "qimen/index.html",
+  "qimen/palaces/index.html",
+  "about-julia/index.html",
+  "reports/index.html",
   "404.html",
 ];
 for (const file of required)
