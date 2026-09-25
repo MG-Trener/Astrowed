@@ -39,7 +39,9 @@ export function LocationPicker({
   time,
   onChange,
   onReady,
+  compact = false,
 }: {
+  compact?: boolean;
   value: Place;
   date: string;
   time: string;
@@ -114,7 +116,9 @@ export function LocationPicker({
   return (
     <div className="location-picker full">
       <div className="location-heading">
-        <span className="eyebrow">МЕСТО РОЖДЕНИЯ / СОБЫТИЯ</span>
+        <span className="eyebrow">
+          {compact ? "МЕСТО РОЖДЕНИЯ" : "МЕСТО РОЖДЕНИЯ / СОБЫТИЯ"}
+        </span>
         <button
           type="button"
           className="text-button"
@@ -289,7 +293,7 @@ export function LocationPicker({
       )}
       <p id={`${id}-hint`} className="location-hint" role="status">
         {selected
-          ? `${value.city} · ${value.timezone} · ${clock.isValid ? `UTC${clock.toFormat("ZZ")} на указанную дату` : "проверьте дату"} · ${value.latitude.toFixed(4)}°, ${value.longitude.toFixed(4)}°`
+          ? `${compact ? "" : `${value.city} · ${value.timezone} · `}${clock.isValid ? `UTC${clock.toFormat("ZZ")} на указанную дату` : "проверьте дату"}${compact ? "" : ` · ${value.latitude.toFixed(4)}°, ${value.longitude.toFixed(4)}°`}`
           : manual
             ? "Заполните название, часовой пояс и обе координаты. Параметры предыдущего города не используются."
             : loading
@@ -323,8 +327,8 @@ export function LocationPicker({
         >
           CC BY 4.0
         </a>
-        . Время учитывает историю часового пояса. Для солнечного времени можно
-        уточнить координаты вручную.
+        {!compact &&
+          ". Время учитывает историю часового пояса. Для солнечного времени можно уточнить координаты вручную."}
       </small>
     </div>
   );

@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import type { BirthInput, Chart } from "@/domain/bazi/types";
 import { ChartView } from "./chart-view";
-import { HeroScene } from "@/scenes/hero-scene";
 import { Arrow } from "./icons";
 import { LocationPicker } from "./location-picker";
 import { demoInput } from "@/domain/bazi/engine";
@@ -75,22 +74,17 @@ export function CalculatorForm({
       </>
     );
   return (
-    <div className="page-wrap">
+    <div className="page-wrap calculator-compact">
       <div className="page-title">
         <div>
-          <div className="eyebrow">01 / НАЧАЛО ВАШЕГО ИССЛЕДОВАНИЯ</div>
-          <h1>Момент, с которого всё началось.</h1>
-          <p>
-            Укажите данные рождения. Мы покажем их структуру в языке четырёх
-            столпов и пяти элементов.
-          </p>
+          <h1>Калькулятор Ба Цзы</h1>
+          <p>Дата, время и город рождения.</p>
         </div>
-        <span className="badge">БЕЗ РЕГИСТРАЦИИ</span>
       </div>
       <div className="form-layout">
         <form className="form" onSubmit={submit}>
-          <label className="field full">
-            Как вас зовут
+          <label className="field calculator-name">
+            Имя
             <input
               required
               maxLength={100}
@@ -99,6 +93,18 @@ export function CalculatorForm({
               value={input.name}
               onChange={(e) => update("name", e.target.value)}
             />
+          </label>
+          <label className="field calculator-gender">
+            Пол (для Да Юнь)
+            <select
+              value={input.gender}
+              onChange={(e) =>
+                update("gender", e.target.value as BirthInput["gender"])
+              }
+            >
+              <option value="female">Женский</option>
+              <option value="male">Мужской</option>
+            </select>
           </label>
           <label className="field">
             Дата рождения
@@ -112,7 +118,7 @@ export function CalculatorForm({
             />
           </label>
           <label className="field">
-            Местное время рождения
+            Время рождения
             <input
               type="time"
               required={!input.unknownTime}
@@ -129,19 +135,8 @@ export function CalculatorForm({
             />
             Время рождения неизвестно
           </label>
-          <label className="field">
-            Пол для направления Да Юнь
-            <select
-              value={input.gender}
-              onChange={(e) =>
-                update("gender", e.target.value as BirthInput["gender"])
-              }
-            >
-              <option value="female">Женский</option>
-              <option value="male">Мужской</option>
-            </select>
-          </label>
           <LocationPicker
+            compact
             value={input}
             date={input.date}
             time={input.unknownTime ? "12:00" : input.time}
@@ -149,56 +144,28 @@ export function CalculatorForm({
             onReady={setPlaceReady}
           />
           <p className="method-note full">
-            Среднее солнечное время. Введите местное время по документам:
-            исторический часовой пояс, летнее время и долгота учитываются
-            автоматически. Самостоятельно вычитать часы не нужно. Уравнение
-            времени не применяется.
+            Среднее солнечное время · поправки автоматически.
           </p>
-          <details className="form-section full">
-            <summary>Методика и правила времени</summary>
-            <div className="form">
-              <label className="field">
-                Смена дня
-                <select
-                  value={input.dayBoundary}
-                  onChange={(e) =>
-                    update(
-                      "dayBoundary",
-                      e.target.value as BirthInput["dayBoundary"],
-                    )
-                  }
-                >
-                  <option value="midnight">В полночь · 00:00</option>
-                  <option value="zi">Начало Цзы · 23:00</option>
-                </select>
-              </label>
-              <label className="field full">
-                Повторяющееся время при переходе DST
-                <select
-                  value={input.dstChoice}
-                  onChange={(e) =>
-                    update(
-                      "dstChoice",
-                      e.target.value as BirthInput["dstChoice"],
-                    )
-                  }
-                >
-                  <option value="reject">Запросить уточнение</option>
-                  <option value="earlier">Первое вхождение</option>
-                  <option value="later">Второе вхождение</option>
-                </select>
-              </label>
-            </div>
-          </details>
-          <p className="method-note full">
-            {placeReady ? `${input.timezone} · ` : ""}Год начинается в Ли Чунь ·
-            Месяцы по солнечным терминам.
-            <br />
-            Историческое смещение UTC определяется по дате рождения.
-          </p>
+          {error.includes("дважды") && (
+            <label className="field full">
+              Уточните повторившееся время
+              <select
+                value={input.dstChoice}
+                onChange={(e) =>
+                  update("dstChoice", e.target.value as BirthInput["dstChoice"])
+                }
+              >
+                <option value="reject">Выберите вхождение</option>
+                <option value="earlier">Первое — до перевода часов</option>
+                <option value="later">Второе — после перевода часов</option>
+              </select>
+            </label>
+          )}
           {error && (
             <p className="error full" role="alert">
-              {error}
+              {error.includes("дважды")
+                ? "Это время встречается дважды при переводе часов. Выберите вхождение выше и повторите расчёт."
+                : error}
             </p>
           )}
           <button
@@ -211,23 +178,10 @@ export function CalculatorForm({
           </button>
           <p className="legal-note full">
             {browserOnly
-              ? "Расчёт выполняется в вашем браузере. Данные рождения не отправляются на сервер. Карту можно распечатать или сохранить в PDF через меню печати."
+              ? "Данные остаются в браузере. Результат можно сохранить в PDF."
               : "Расчёт не сохраняется автоматически. Сохранение доступно в закрытом кабинете консультанта."}
           </p>
         </form>
-        <aside className="form-aside">
-          <HeroScene />
-          <div className="eyebrow">КАЖДАЯ ДЕТАЛЬ ИМЕЕТ ЗНАЧЕНИЕ</div>
-          <h3>
-            Точность начинается
-            <br />с исходных данных.
-          </h3>
-          <p>
-            Город и часовой пояс помогают определить момент рождения. Если время
-            неизвестно, карта будет построена без часового столпа — с ясным
-            обозначением границ расчёта.
-          </p>
-        </aside>
       </div>
     </div>
   );

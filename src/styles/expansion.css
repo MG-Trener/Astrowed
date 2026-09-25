@@ -1769,3 +1769,102 @@
     grid-column: 1 / -1;
   }
 }
+
+/* A focused calculator: all routine inputs above the fold. */
+.calculator-compact {
+  max-width: 720px;
+  margin-inline: auto;
+  padding: 20px 20px 28px;
+  min-height: 0;
+}
+.calculator-compact .page-title {
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+}
+.calculator-compact .page-title h1 {
+  font-size: clamp(25px, 5vw, 32px);
+  margin: 0 0 6px;
+  letter-spacing: -1px;
+}
+.calculator-compact .page-title p {
+  margin: 0;
+  font-size: 13px;
+}
+.calculator-compact .form-layout {
+  display: block;
+}
+.calculator-compact .form {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+}
+.calculator-compact .form > .field:not(.full) {
+  grid-column: auto;
+}
+.calculator-compact .field {
+  gap: 5px;
+  font-size: 12px;
+}
+.calculator-compact .field input,
+.calculator-compact .field select {
+  min-height: 44px;
+  padding: 8px;
+  font-size: 16px;
+}
+.calculator-compact .checkbox {
+  min-height: 36px;
+}
+.calculator-compact .location-picker {
+  padding: 0 0 8px;
+  border-top: 0;
+}
+.calculator-compact .location-heading {
+  margin: 0 0 4px;
+  gap: 8px;
+}
+.calculator-compact .location-heading .eyebrow {
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+.calculator-compact .location-heading button {
+  min-height: 36px;
+}
+.calculator-compact .location-search {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.calculator-compact .location-hint {
+  margin: 6px 0 2px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.calculator-compact .location-source {
+  font-size: 10px;
+  line-height: 1.4;
+}
+.calculator-compact .method-note,
+.calculator-compact .legal-note {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.calculator-compact .button.primary {
+  padding: 12px 16px;
+  min-height: 46px;
+  justify-content: center;
+}
+@media screen and (max-width: 600px) {
+  .calculator-compact {
+    padding: 14px 16px 20px;
+  }
+  .calculator-compact .page-title {
+    margin-bottom: 14px;
+  }
+}
+.calculator-compact .location-search > .field {
+  grid-column: auto;
+}
+.calculator-compact .method-note {
+  padding: 0;
+  border: 0;
+}
