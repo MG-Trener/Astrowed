@@ -1,4 +1,4 @@
-import { calculate } from "@/domain/bazi/engine";
+import { calculateNew } from "@/domain/bazi/engine";
 import { ZodError } from "zod";
 export async function POST(request: Request) {
   try {
@@ -8,7 +8,7 @@ export async function POST(request: Request) {
         { error: "Слишком большой запрос." },
         { status: 413 },
       );
-    return Response.json(calculate(JSON.parse(text)));
+    return Response.json(calculateNew(JSON.parse(text)));
   } catch (error) {
     return Response.json(
       {

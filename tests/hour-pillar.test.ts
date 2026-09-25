@@ -18,6 +18,7 @@ const hours = [
 ] as const;
 const astana = {
   ...demoInput,
+  timeMode: "civil" as const,
   city: "Астана",
   timezone: "Asia/Almaty",
   longitude: 71.43,

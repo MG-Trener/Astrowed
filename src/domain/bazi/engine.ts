@@ -40,9 +40,19 @@ export const demoInput: BirthInput = {
   longitude: 76.886,
   latitude: 43.238,
   dayBoundary: "midnight",
-  timeMode: "civil",
+  timeMode: "mean-solar",
   dstChoice: "reject",
 };
+// New calculations share one policy; calculate() still reproduces saved legacy charts.
+export const newBirthSchema = birthSchema.extend({
+  timeMode: z
+    .enum(["civil", "mean-solar"])
+    .optional()
+    .transform(() => "mean-solar" as const),
+});
+export function calculateNew(raw: unknown): Chart {
+  return calculate(newBirthSchema.parse(raw));
+}
 export function normalizeTime(input: BirthInput) {
   const clock = input.unknownTime ? "12:00" : input.time;
   let civil = DateTime.fromISO(`${input.date}T${clock}`, {

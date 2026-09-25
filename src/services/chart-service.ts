@@ -2,11 +2,11 @@ import "server-only";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/data/db";
 import { clients, birthData, charts, auditLogs } from "@/data/schema";
-import { calculate } from "@/domain/bazi/engine";
+import { calculateNew } from "@/domain/bazi/engine";
 import { requireAuth } from "./auth";
 export async function saveChart(raw: unknown, existingClientId?: string) {
   await requireAuth();
-  const result = calculate(raw);
+  const result = calculateNew(raw);
   return getDb().transaction(async (tx) => {
     let clientId = existingClientId;
     if (clientId) {

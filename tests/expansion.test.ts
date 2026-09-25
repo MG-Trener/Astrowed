@@ -11,6 +11,7 @@ import {
 import { reportHtml } from "../src/services/report-template";
 const base = {
   ...demoInput,
+  timeMode: "civil" as const,
   timezone: "Asia/Shanghai",
   city: "Пекин",
   dayBoundary: "zi" as const,

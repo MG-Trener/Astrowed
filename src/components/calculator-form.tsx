@@ -22,7 +22,7 @@ export function CalculatorForm({
     longitude: demoInput.longitude,
     latitude: demoInput.latitude,
     dayBoundary: "midnight",
-    timeMode: "civil",
+    timeMode: "mean-solar",
     dstChoice: "reject",
   });
   const [chart, setChart] = useState<Chart | null>(null);
@@ -44,8 +44,8 @@ export function CalculatorForm({
     setError("");
     try {
       if (browserOnly) {
-        const { calculate } = await import("@/domain/bazi/engine");
-        setChart(calculate(input));
+        const { calculateNew } = await import("@/domain/bazi/engine");
+        setChart(calculateNew(input));
       } else {
         const r = await fetch("/api/calculate", {
           method: "POST",
@@ -148,6 +148,12 @@ export function CalculatorForm({
             onChange={(place) => setInput((prev) => ({ ...prev, ...place }))}
             onReady={setPlaceReady}
           />
+          <p className="method-note full">
+            Среднее солнечное время. Введите местное время по документам:
+            исторический часовой пояс, летнее время и долгота учитываются
+            автоматически. Самостоятельно вычитать часы не нужно. Уравнение
+            времени не применяется.
+          </p>
           <details className="form-section full">
             <summary>Методика и правила времени</summary>
             <div className="form">
@@ -164,18 +170,6 @@ export function CalculatorForm({
                 >
                   <option value="midnight">В полночь · 00:00</option>
                   <option value="zi">Начало Цзы · 23:00</option>
-                </select>
-              </label>
-              <label className="field">
-                Время расчёта
-                <select
-                  value={input.timeMode}
-                  onChange={(e) =>
-                    update("timeMode", e.target.value as BirthInput["timeMode"])
-                  }
-                >
-                  <option value="civil">Гражданское</option>
-                  <option value="mean-solar">Среднее солнечное</option>
                 </select>
               </label>
               <label className="field full">

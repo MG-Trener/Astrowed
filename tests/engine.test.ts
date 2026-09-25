@@ -11,6 +11,7 @@ import type { BirthInput } from "../src/domain/bazi/types";
 import fixtures from "./reference-charts/fixtures.json";
 const base = {
   ...demoInput,
+  timeMode: "civil" as const,
   city: "Пекин",
   timezone: "Asia/Shanghai",
   longitude: 116.407,

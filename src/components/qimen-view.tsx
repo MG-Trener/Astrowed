@@ -274,6 +274,10 @@ export function QimenView() {
           <p className="method-note">
             {chart.method}
             <br />
+            Введённое время: {chart.input.date} {chart.input.time} · Среднее
+            солнечное: {chart.localTime} · Поправка:{" "}
+            {Math.round(chart.correctionMinutes * 100) / 100} мин.
+            <br />
             Сюнь: {chart.xun} · скрытый Цзя: {chart.concealed} · Чжи Фу:{" "}
             {chart.dutyStar} → дворец {chart.starTarget} · Чжи Ши:{" "}
             {doorNames[chart.dutyDoor]} → дворец {chart.doorTarget}. UTC:{" "}

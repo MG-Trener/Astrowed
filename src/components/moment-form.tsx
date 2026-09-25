@@ -1,7 +1,7 @@
 "use client";
 import { LocationPicker } from "./location-picker";
 import { useState } from "react";
-import { demoInput } from "@/domain/bazi/engine";
+import { demoInput, newBirthSchema } from "@/domain/bazi/engine";
 import type { BirthInput } from "@/domain/bazi/types";
 
 export function MomentForm({
@@ -19,6 +19,7 @@ export function MomentForm({
 }) {
   const [input, setInput] = useState({
     ...initial,
+    timeMode: "mean-solar" as const,
     dayBoundary: "zi" as const,
   });
   const [placeReady, setPlaceReady] = useState(true);
@@ -38,7 +39,7 @@ export function MomentForm({
         }
         setError("");
         try {
-          onCalculate(input);
+          onCalculate(newBirthSchema.parse(input));
         } catch (e) {
           setError(e instanceof Error ? e.message : "Проверьте данные.");
         }
@@ -97,21 +98,14 @@ export function MomentForm({
         onChange={(place) => setInput((prev) => ({ ...prev, ...place }))}
         onReady={setPlaceReady}
       />
+      <p className="method-note">
+        Среднее солнечное время. Вводите местное время без ручных поправок:
+        исторический часовой пояс, летнее время и долгота учитываются
+        автоматически. Уравнение времени не применяется.
+      </p>
       <details className="method-details">
         <summary>Место и правила времени</summary>
         <div className="form-grid">
-          <label className="field">
-            Расчётное время
-            <select
-              value={input.timeMode}
-              onChange={(e) =>
-                update("timeMode", e.target.value as BirthInput["timeMode"])
-              }
-            >
-              <option value="civil">Гражданское</option>
-              <option value="mean-solar">Среднее солнечное</option>
-            </select>
-          </label>
           <label className="field">
             Смена дня
             <select
