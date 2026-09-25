@@ -34,6 +34,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </span>
         </Link>
         <nav
+          id="site-navigation"
           className={menu ? "nav open" : "nav"}
           aria-label="Основная навигация"
         >
@@ -57,6 +58,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <button
             className="menu-button"
             aria-expanded={menu}
+            aria-controls="site-navigation"
             aria-label="Меню"
             onClick={() => setMenu(!menu)}
           >

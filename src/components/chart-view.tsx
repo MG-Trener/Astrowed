@@ -84,7 +84,15 @@ export function ChartView({
           {id && <Link href={`/chart/${id}`}>Открыть сохранённую карту →</Link>}
         </p>
       )}
-      <div className="chart-layout">
+      <nav
+        className="chart-shortcuts no-print"
+        aria-label="Перейти к разделу карты"
+      >
+        <a href="#chart-pillars">Столпы</a>
+        <a href="#timeline">Периоды</a>
+        <a href="#interpretation">Разбор и PDF ↓</a>
+      </nav>
+      <div className="chart-layout" id="chart-pillars">
         <section>
           <div className="panel-heading">
             <h2>Четыре столпа</h2>

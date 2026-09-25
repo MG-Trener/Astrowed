@@ -6,6 +6,7 @@ export function Intro() {
     try {
       if (
         !sessionStorage.getItem("astrowed-intro") &&
+        !window.matchMedia("(max-width: 800px)").matches &&
         !window.matchMedia("(prefers-reduced-motion: reduce)").matches
       ) {
         setShow(true);
