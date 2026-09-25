@@ -7,6 +7,7 @@ import Image from "next/image";
 import logo from "@/assets/generated/astrowed-logo.webp";
 import { StarMap } from "@/scenes/star-map";
 import { ActiveChartProvider } from "./active-chart";
+import { BackgroundMusic } from "./background-music";
 export function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const [menu, setMenu] = useState(false);
@@ -75,8 +76,12 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 {label}
               </Link>
             ))}
+            <Link className="nav-workspace" href="/clients" onClick={() => setMenu(false)}>
+              Кабинет ↗
+            </Link>
           </nav>
           <div className="header-actions">
+            <BackgroundMusic />
             <Link className="workspace-link" href="/clients">
               Кабинет <Arrow diagonal />
             </Link>
