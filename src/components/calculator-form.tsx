@@ -1,31 +1,29 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { BirthInput, Chart } from "@/domain/bazi/types";
 import { ChartView } from "./chart-view";
 import { Arrow } from "./icons";
 import { LocationPicker } from "./location-picker";
-import { demoInput } from "@/domain/bazi/engine";
+import { emptyBirthInput } from "@/domain/bazi/session";
+import { useActiveChart } from "./active-chart";
 export function CalculatorForm({
   browserOnly = false,
 }: {
   browserOnly?: boolean;
 }) {
-  const [input, setInput] = useState<BirthInput>({
-    name: "",
-    date: "1990-05-17",
-    time: "10:30",
-    unknownTime: false,
-    gender: "female",
-    city: demoInput.city,
-    timezone: demoInput.timezone,
-    longitude: demoInput.longitude,
-    latitude: demoInput.latitude,
-    dayBoundary: "midnight",
-    timeMode: "mean-solar",
-    dstChoice: "reject",
-  });
+  const [input, setInput] = useState<BirthInput>({ ...emptyBirthInput });
+  const { chart: activeChart, ready, remember } = useActiveChart();
+  const restored = useRef(false);
+  useEffect(() => {
+    if (!ready || restored.current) return;
+    restored.current = true;
+    if (activeChart) {
+      setInput(activeChart.input);
+      setPlaceReady(true);
+    }
+  }, [ready, activeChart]);
   const [chart, setChart] = useState<Chart | null>(null);
-  const [placeReady, setPlaceReady] = useState(true);
+  const [placeReady, setPlaceReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const update = <K extends keyof BirthInput>(key: K, value: BirthInput[K]) =>
@@ -42,19 +40,26 @@ export function CalculatorForm({
     setBusy(true);
     setError("");
     try {
+      const submitted = {
+        ...input,
+        time: input.unknownTime ? "12:00" : input.time,
+      };
+      let result: Chart;
       if (browserOnly) {
         const { calculateNew } = await import("@/domain/bazi/engine");
-        setChart(calculateNew(input));
+        result = calculateNew(submitted);
       } else {
         const r = await fetch("/api/calculate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(input),
+          body: JSON.stringify(submitted),
         });
         const body = await r.json();
         if (!r.ok) throw new Error(body.error);
-        setChart(body);
+        result = body;
       }
+      remember(result);
+      setChart(result);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Не удалось выполнить расчёт.");
@@ -123,7 +128,7 @@ export function CalculatorForm({
               type="time"
               required={!input.unknownTime}
               disabled={input.unknownTime}
-              value={input.time}
+              value={input.unknownTime ? "" : input.time}
               onChange={(e) => update("time", e.target.value)}
             />
           </label>
@@ -178,8 +183,8 @@ export function CalculatorForm({
           </button>
           <p className="legal-note full">
             {browserOnly
-              ? "Данные остаются в браузере. Результат можно сохранить в PDF."
-              : "Расчёт не сохраняется автоматически. Сохранение доступно в закрытом кабинете консультанта."}
+              ? "Последний расчёт хранится в этой вкладке. Результат можно сохранить в PDF."
+              : "Последний расчёт доступен в этой вкладке. В БД сохраняется через кабинет."}
           </p>
         </form>
       </div>

@@ -1,34 +1,47 @@
 "use client";
 import { LocationPicker } from "./location-picker";
-import { useState } from "react";
-import { demoInput, newBirthSchema } from "@/domain/bazi/engine";
+import { useEffect, useRef, useState } from "react";
+import { newBirthSchema } from "@/domain/bazi/engine";
+import { emptyBirthInput } from "@/domain/bazi/session";
+import { useActiveChart } from "./active-chart";
 import type { BirthInput } from "@/domain/bazi/types";
 
 export function MomentForm({
   onCalculate,
   children,
   label = "Построить карту",
-  initial = demoInput,
   gender = false,
 }: {
   onCalculate: (input: BirthInput) => void;
   children?: React.ReactNode;
   label?: string;
-  initial?: BirthInput;
   gender?: boolean;
 }) {
-  const [input, setInput] = useState({
-    ...initial,
-    timeMode: "mean-solar" as const,
-    dayBoundary: "zi" as const,
+  const [input, setInput] = useState<BirthInput>({
+    ...emptyBirthInput,
+    name: gender ? "Расчёт Гуа" : "Карта момента",
   });
-  const [placeReady, setPlaceReady] = useState(true);
+  const { chart, ready } = useActiveChart();
+  const restored = useRef(false);
+  const [placeReady, setPlaceReady] = useState(false);
   const [error, setError] = useState("");
+  useEffect(() => {
+    if (!ready || restored.current) return;
+    restored.current = true;
+    if (chart) {
+      setInput({
+        ...chart.input,
+        unknownTime: gender && chart.input.unknownTime,
+        time: !gender && chart.input.unknownTime ? "" : chart.input.time,
+      });
+      setPlaceReady(true);
+    }
+  }, [chart, ready, gender]);
   const update = <K extends keyof BirthInput>(key: K, value: BirthInput[K]) =>
     setInput((s) => ({ ...s, [key]: value }));
   return (
     <form
-      className="moment-form"
+      className="moment-form moment-compact"
       onSubmit={(e) => {
         e.preventDefault();
         if (!placeReady) {
@@ -39,7 +52,12 @@ export function MomentForm({
         }
         setError("");
         try {
-          onCalculate(newBirthSchema.parse(input));
+          onCalculate(
+            newBirthSchema.parse({
+              ...input,
+              time: input.unknownTime ? "12:00" : input.time,
+            }),
+          );
         } catch (e) {
           setError(e instanceof Error ? e.message : "Проверьте данные.");
         }
@@ -47,16 +65,7 @@ export function MomentForm({
     >
       <div className="form-grid">
         <label className="field">
-          Имя / название события
-          <input
-            required
-            maxLength={100}
-            value={input.name}
-            onChange={(e) => update("name", e.target.value)}
-          />
-        </label>
-        <label className="field">
-          Дата
+          {gender ? "Дата рождения" : "Дата события / рождения"}
           <input
             required
             type="date"
@@ -69,85 +78,75 @@ export function MomentForm({
         <label className="field">
           Местное время
           <input
-            required
+            required={!input.unknownTime}
+            disabled={input.unknownTime}
             type="time"
-            value={input.time}
+            value={input.unknownTime ? "" : input.time}
             onChange={(e) => update("time", e.target.value)}
           />
         </label>
         {gender && (
-          <label className="field">
-            Пол для формулы Гуа
-            <select
-              value={input.gender}
-              onChange={(e) =>
-                update("gender", e.target.value as BirthInput["gender"])
-              }
-            >
-              <option value="female">Женский</option>
-              <option value="male">Мужской</option>
-            </select>
-          </label>
+          <>
+            <label className="field">
+              Пол для Гуа
+              <select
+                value={input.gender}
+                onChange={(e) =>
+                  update("gender", e.target.value as BirthInput["gender"])
+                }
+              >
+                <option value="female">Женский</option>
+                <option value="male">Мужской</option>
+              </select>
+            </label>
+            <label className="checkbox">
+              <input
+                type="checkbox"
+                checked={input.unknownTime}
+                onChange={(e) => update("unknownTime", e.target.checked)}
+              />
+              Время неизвестно
+            </label>
+          </>
         )}
         {children}
       </div>
       <LocationPicker
+        compact
         value={input}
         date={input.date}
         time={input.time}
-        onChange={(place) => setInput((prev) => ({ ...prev, ...place }))}
+        onChange={(place) => setInput((s) => ({ ...s, ...place }))}
         onReady={setPlaceReady}
       />
       <p className="method-note">
-        Среднее солнечное время. Вводите местное время без ручных поправок:
-        исторический часовой пояс, летнее время и долгота учитываются
-        автоматически. Уравнение времени не применяется.
+        Среднее солнечное время · поправки автоматически.
       </p>
-      <details className="method-details">
-        <summary>Место и правила времени</summary>
-        <div className="form-grid">
-          <label className="field">
-            Смена дня
-            <select
-              value={input.dayBoundary}
-              onChange={(e) =>
-                update(
-                  "dayBoundary",
-                  e.target.value as BirthInput["dayBoundary"],
-                )
-              }
-            >
-              <option value="zi">В 23:00</option>
-              <option value="midnight">В 00:00</option>
-            </select>
-          </label>
-          <label className="field">
-            Повтор часа при переходе DST
-            <select
-              value={input.dstChoice}
-              onChange={(e) =>
-                update("dstChoice", e.target.value as BirthInput["dstChoice"])
-              }
-            >
-              <option value="reject">Попросить уточнение</option>
-              <option value="earlier">Первое вхождение</option>
-              <option value="later">Второе вхождение</option>
-            </select>
-          </label>
-        </div>
-        <p>
-          Часовой пояс и координаты подставляются при выборе города. Среднее
-          солнечное время учитывает долготу, но не уравнение времени.
+      {error.includes("дважды") && (
+        <label className="field">
+          Повторившийся час
+          <select
+            value={input.dstChoice}
+            onChange={(e) =>
+              update("dstChoice", e.target.value as BirthInput["dstChoice"])
+            }
+          >
+            <option value="reject">Уточните вхождение</option>
+            <option value="earlier">Первое — до перевода часов</option>
+            <option value="later">Второе — после перевода часов</option>
+          </select>
+        </label>
+      )}
+      {error && (
+        <p className="error" role="alert">
+          {error.includes("дважды")
+            ? "Время повторилось при переводе часов. Выберите вхождение выше."
+            : error}
         </p>
-      </details>
+      )}
       <button className="button primary" type="submit" disabled={!placeReady}>
         {label} <span aria-hidden>↗</span>
       </button>
-      {error && (
-        <p className="error" role="alert">
-          {error}
-        </p>
-      )}
     </form>
   );
 }

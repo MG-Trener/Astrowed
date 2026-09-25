@@ -51,6 +51,9 @@ export function StarMap() {
   return (
     <div className="site-star-map" aria-hidden="true">
       <div className="star-map-nebula" />
+      <div className="meteor meteor-jade" />
+      <div className="meteor meteor-gold" />
+      <div className="meteor meteor-violet" />
       <svg
         viewBox="0 0 1200 800"
         preserveAspectRatio="xMidYMid slice"

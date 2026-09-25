@@ -1,26 +1,6 @@
 import { elements } from "@/domain/bazi/catalog";
 
-// Public introductory material only. This build never reads the consultant's database.
-export const articles = [
-  ...elements.map((e, i) => ({
-    id: e.id,
-    slug: e.id,
-    title: `${e.name} · ${e.symbol}`,
-    symbol: e.symbol,
-    categoryId: "elements",
-    summary: e.quality,
-    body: `${e.description}\n\nНебесные стволы: ${e.stems}. Земные ветви: ${e.branches}.\n\nВ цикле порождения ${e.name} порождает ${elements[(i + 1) % 5].name.toLowerCase()}. В цикле контроля воздействует на ${elements[(i + 2) % 5].name.toLowerCase()}.\n\nЭти соответствия описывают традиционную модель У Син. Для интерпретации индивидуальной карты необходимо учитывать сезон, корни, связи и принятую школу анализа. Изолированный элемент не определяет личность и не предсказывает события.`,
-  })),
-  {
-    id: "four-pillars",
-    slug: "four-pillars",
-    title: "Четыре столпа: как читать карту",
-    symbol: "四柱",
-    categoryId: "foundations",
-    summary: "Год, месяц, день и час — четыре координаты момента рождения.",
-    body: "Каждый столп состоит из небесного ствола и земной ветви. Вместе четыре пары образуют восемь знаков — Ба Цзы.\n\nСтвол дня называют Господином дня (日主). Относительно него определяются десять богов — традиционные категории отношений между элементами и полярностями.\n\nВ этой реализации граница года — точный момент Ли Чунь, границы месяцев — солнечные термины цзе. Граница дня задаётся в настройках. Часовой пояс учитывается по дате рождения, а не по текущему смещению браузера.\n\nИзучая карту, различайте вычисляемые календарные факты и их интерпретацию. Школы Ба Цзы могут использовать разные правила.",
-  },
-];
+export { libraryArticles as articles } from "@/data/library";
 export const edges = elements.map((e, i) => ({
   sourceId: e.id,
   targetId: elements[(i + 1) % 5].id,

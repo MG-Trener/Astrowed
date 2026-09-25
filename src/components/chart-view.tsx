@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Chart } from "@/domain/bazi/types";
 import { elements, elementOf } from "@/domain/bazi/catalog";
@@ -8,6 +8,7 @@ import { ElementsReactor } from "@/scenes/elements-reactor";
 import { Timeline } from "@/scenes/timeline";
 import { PdfButton } from "./pdf-button";
 import { ExtendedChart } from "./extended-chart";
+import { useActiveChart } from "./active-chart";
 export function ChartView({
   chart,
   demo = false,
@@ -19,6 +20,10 @@ export function ChartView({
   savedId?: string;
   browserOnly?: boolean;
 }) {
+  const { remember } = useActiveChart();
+  useEffect(() => {
+    if (!demo) remember(chart);
+  }, [chart, demo, remember]);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
   const [id, setId] = useState(savedId);

@@ -33,7 +33,7 @@ export default function Page() {
             href={`/knowledge/${a.slug}`}
             className="knowledge-item"
           >
-            <KnowledgeCardArt symbol={a.symbol} />
+            <KnowledgeCardArt symbol={a.symbol} slug={a.slug} />
             <div className="symbol">{a.symbol}</div>
             <div className="eyebrow">
               {a.categoryId === "elements" ? "ПЯТЬ ЭЛЕМЕНТОВ" : "ОСНОВЫ БА ЦЗЫ"}

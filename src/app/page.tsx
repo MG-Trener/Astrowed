@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DiscoveryVisuals } from "@/scenes/discovery-visuals";
 import { HeroArtwork } from "@/scenes/hero-artwork";
 import { ElementGallery } from "@/components/element-gallery";
 import { Arrow } from "@/components/icons";
@@ -30,8 +31,8 @@ export default function Home() {
             <Link href="/calculator" className="button primary">
               Рассчитать карту <Arrow />
             </Link>
-            <Link href="/chart/demo" className="text-button">
-              Исследовать демо <span>↗</span>
+            <Link href="/chart/current" className="text-button">
+              Открыть мою карту <span>↗</span>
             </Link>
           </div>
           <div className="hero-footnote">
@@ -73,71 +74,7 @@ export default function Home() {
             <br />к целостной картине.
           </p>
         </div>
-        <div className="discovery-grid">
-          {[
-            {
-              n: "01",
-              href: "/chart/demo",
-              title: "Ваша матрица",
-              sub: "ЧЕТЫРЕ СТОЛПА",
-              text: "Восемь знаков, из которых начинается личная история.",
-              art: (
-                <div className="mini-pillars">
-                  {["甲寅", "丙午", "戊辰", "壬子"].map((s, i) => (
-                    <span key={s} style={{ height: `${88 - i * 9}px` }}>
-                      {s[0]}
-                      <i>{s[1]}</i>
-                    </span>
-                  ))}
-                </div>
-              ),
-            },
-            {
-              n: "02",
-              href: "/explore",
-              title: "Всё во взаимодействии",
-              sub: "ПЯТЬ ЭЛЕМЕНТОВ",
-              text: "Исследуйте циклы порождения и контроля в живой системе.",
-              art: (
-                <div className="mini-reactor">
-                  <span>木</span>
-                  <span>火</span>
-                  <span>土</span>
-                  <span>金</span>
-                  <span>水</span>
-                </div>
-              ),
-            },
-            {
-              n: "03",
-              href: "/chart/demo#timeline",
-              title: "Ритмы времени",
-              sub: "ЦИКЛЫ ДА ЮНЬ",
-              text: "Увидьте, как десятилетия и годы дополняют натальную карту.",
-              art: (
-                <div className="mini-timeline">
-                  {[
-                    28, 46, 38, 65, 54, 80, 60, 92, 70, 51, 39, 64, 48, 32, 45,
-                  ].map((h, i) => (
-                    <i key={i} style={{ height: h }} />
-                  ))}
-                </div>
-              ),
-            },
-          ].map((item) => (
-            <Link className="discovery-item" href={item.href} key={item.n}>
-              <div className="item-top">
-                <span className="mono">
-                  {item.n} / {item.sub}
-                </span>
-                <Arrow diagonal />
-              </div>
-              <div className="item-art">{item.art}</div>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-            </Link>
-          ))}
-        </div>
+        <DiscoveryVisuals />
       </section>
       <section className="closing-note">
         <span className="chinese">知</span>

@@ -1,7 +1,6 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { calculate, demoInput } from "@/domain/bazi/engine";
-import { ExtendedChart } from "@/components/extended-chart";
+import { PersonalSection } from "@/components/personal-pages";
+
 import { PageHeading } from "@/components/expansion-pages";
 const sections: Record<string, { tab: string; title: string }> = {
   "current-energies": { tab: "energies", title: "Текущие энергии" },
@@ -31,19 +30,11 @@ export default async function Page({
   return (
     <div className="page-wrap expansion-page">
       <PageHeading
-        eyebrow="БА ЦЗЫ / ПРИМЕР РАЗБОРА"
+        eyebrow="БА ЦЗЫ / ВАША КАРТА"
         title={item.title}
-        text="Здесь показана демонстрационная карта: 17.05.1990, 10:30, Алматы. Для персонального анализа рассчитайте свою карту — все эти слои появятся под результатом."
+        text="Разбор по вашему последнему расчёту в этой вкладке."
       />
-      <Link className="button primary" href="/calculator">
-        Рассчитать свою карту ↗
-      </Link>
-      <ExtendedChart
-        key={item.tab}
-        chart={calculate(demoInput)}
-        initial={item.tab}
-        standalone
-      />
+      <PersonalSection tab={item.tab} />
     </div>
   );
 }

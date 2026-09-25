@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import type { BirthInput } from "@/domain/bazi/types";
 import { palaceOf, luoShuOrder } from "@/domain/feng-shui/catalog";
 import { elementOf } from "@/domain/bazi/catalog";
 import { calculateGua } from "@/domain/feng-shui/gua";
@@ -116,17 +117,40 @@ export function GuaResult({
   );
 }
 export function GuaCalculator() {
+  const [source, setSource] = useState<BirthInput | null>(null);
   const [result, setResult] = useState<ReturnType<typeof calculateGua> | null>(
     null,
   );
   return (
     <>
-      <MomentForm
-        gender
-        label="Рассчитать Гуа"
-        onCalculate={(input) => setResult(calculateGua(input))}
-      />
-      {result && <GuaResult result={result} />}
+      {result && (
+        <button className="back-link" onClick={() => setResult(null)}>
+          ← Изменить данные рождения
+        </button>
+      )}
+      <div hidden={Boolean(result)}>
+        <MomentForm
+          gender
+          label="Рассчитать Гуа"
+          onCalculate={(input) => {
+            const next = calculateGua(input);
+            setSource(input);
+            setResult(next);
+          }}
+        />
+      </div>
+      {result && (
+        <>
+          {source && (
+            <p className="active-chart-caption">
+              {source.date} ·{" "}
+              {source.unknownTime ? "Время неизвестно" : source.time} ·{" "}
+              {source.city}
+            </p>
+          )}
+          <GuaResult result={result} />
+        </>
+      )}
     </>
   );
 }

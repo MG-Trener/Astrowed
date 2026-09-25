@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { baziArtwork, elementArtwork, libraryArtwork } from "@/assets/artwork";
-import { elements } from "@/domain/bazi/catalog";
+import { libraryArtwork } from "@/assets/artwork";
+import { articleArtwork } from "@/assets/library-artwork";
 
 export function KnowledgeHero() {
   return (
@@ -33,9 +33,14 @@ export function KnowledgeHero() {
   );
 }
 
-export function KnowledgeCardArt({ symbol }: { symbol: string | null }) {
-  const element = elements.find((entry) => entry.symbol === symbol);
-  const art = element ? elementArtwork[element.id] : baziArtwork;
+export function KnowledgeCardArt({
+  symbol,
+  slug = "",
+}: {
+  symbol: string | null;
+  slug?: string;
+}) {
+  const art = articleArtwork(slug, symbol);
   return (
     <div className="knowledge-card-art" aria-hidden="true">
       <Image src={art.image} alt="" sizes="(max-width: 600px) 85vw, 30vw" />

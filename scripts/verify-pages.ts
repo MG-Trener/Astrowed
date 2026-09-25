@@ -7,6 +7,9 @@ const required = [
   "index.html",
   "calculator/index.html",
   "chart/demo/index.html",
+  "chart/current/index.html",
+  "knowledge/solar-time/index.html",
+  "knowledge/ten-gods/index.html",
   "explore/index.html",
   "knowledge/index.html",
   "knowledge/graph/index.html",
@@ -72,6 +75,20 @@ function inspect(dir: string) {
   }
 }
 inspect(root);
+const articleCovers = new Map<string, string>();
+for (const entry of readdirSync(path.join(root, "knowledge"), { withFileTypes: true })) {
+  if (!entry.isDirectory()) continue;
+  const file = path.join(root, "knowledge", entry.name, "index.html");
+  if (!existsSync(file)) continue;
+  const html = readFileSync(file, "utf8");
+  const hero = html.match(/<figure class="article-hero[^"]*">([\s\S]*?)<\/figure>/)?.[1];
+  if (!hero) continue;
+  const src = hero.match(/<img\b[^>]*\bsrc="([^"]+)"/)?.[1];
+  assert(src, `Missing article cover: ${entry.name}`);
+  assert(!articleCovers.has(src), `Repeated article cover: ${entry.name} and ${articleCovers.get(src)}`);
+  articleCovers.set(src, entry.name);
+}
+assert.equal(articleCovers.size, 13, "Every library article must have a unique generated cover");
 console.log(
-  `Pages verification passed: ${htmlCount} HTML pages, routes and asset paths are valid.`,
+  `Pages verification passed: ${htmlCount} HTML pages, ${articleCovers.size} unique article covers, routes and asset paths are valid.`,
 );

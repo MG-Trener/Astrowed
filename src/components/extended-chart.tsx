@@ -64,7 +64,7 @@ export function StarsTable({
   );
 }
 export function EnergiesPanel({ chart }: { chart: Chart }) {
-  const [date, setDate] = useState("2026-09-25");
+  const [date, setDate] = useState("");
   const [time, setTime] = useState("12:00");
   const [layers, setLayers] = useState<ReturnType<typeof currentEnergies>>([]);
   const [error, setError] = useState("");

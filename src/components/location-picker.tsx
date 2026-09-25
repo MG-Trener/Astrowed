@@ -53,7 +53,17 @@ export function LocationPicker({
     (catalog.timezones as Record<string, string>)[value.timezone] ?? "KZ",
   );
   const [query, setQuery] = useState(value.city);
-  const [selected, setSelected] = useState(true);
+  const [selected, setSelected] = useState(
+    Boolean(value.city && value.timezone),
+  );
+  useEffect(() => {
+    setQuery(value.city);
+    setSelected(Boolean(value.city && value.timezone));
+    if (value.timezone)
+      setCountry(
+        (catalog.timezones as Record<string, string>)[value.timezone] ?? "KZ",
+      );
+  }, [value.city, value.timezone]);
   const [open, setOpen] = useState(false);
   const [manual, setManual] = useState(false);
   const [draft, setDraft] = useState({

@@ -2,8 +2,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Mark, Arrow } from "./icons";
+import { Arrow } from "./icons";
+import Image from "next/image";
+import logo from "@/assets/generated/astrowed-logo.webp";
 import { StarMap } from "@/scenes/star-map";
+import { ActiveChartProvider } from "./active-chart";
 export function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const [menu, setMenu] = useState(false);
@@ -32,96 +35,112 @@ export function Shell({ children }: { children: React.ReactNode }) {
     ["/about-julia", "Эксперт"],
   ];
   return (
-    <div
-      className={compact ? "app compact" : "app"}
-      data-sky-paused={skyPaused || pageHidden || compact}
-    >
-      <StarMap />
-      <a className="skip-link" href="#main">
-        К содержимому
-      </a>
-      <header className="header">
-        <Link className="brand" href="/" aria-label="Astrowed — главная">
-          <Mark />
-          <span>
-            ASTROWED<small>DIGITAL DESTINY LAB</small>
-          </span>
-        </Link>
-        <nav
-          id="site-navigation"
-          className={menu ? "nav open" : "nav"}
-          aria-label="Основная навигация"
-        >
-          {links.map(([href, label]) => (
-            <Link
-              onClick={() => setMenu(false)}
-              key={href}
-              href={href}
-              className={
-                path === href || path.startsWith(href + "/") ? "active" : ""
-              }
-            >
-              {label}
+    <ActiveChartProvider>
+      <div
+        className={compact ? "app compact" : "app"}
+        data-sky-paused={skyPaused || pageHidden || compact}
+      >
+        <StarMap />
+        <a className="skip-link" href="#main">
+          К содержимому
+        </a>
+        <header className="header">
+          <Link className="brand" href="/" aria-label="Astrowed — главная">
+            <Image
+              className="brand-emblem"
+              src={logo}
+              alt=""
+              width={48}
+              height={48}
+              priority
+            />
+            <span>
+              ASTROWED<small>DIGITAL DESTINY LAB</small>
+            </span>
+          </Link>
+          <nav
+            id="site-navigation"
+            className={menu ? "nav open" : "nav"}
+            aria-label="Основная навигация"
+          >
+            {links.map(([href, label]) => (
+              <Link
+                onClick={() => setMenu(false)}
+                key={href}
+                href={href}
+                className={
+                  path === href || path.startsWith(href + "/") ? "active" : ""
+                }
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+          <div className="header-actions">
+            <Link className="workspace-link" href="/clients">
+              Кабинет <Arrow diagonal />
             </Link>
-          ))}
-        </nav>
-        <div className="header-actions">
-          <Link className="workspace-link" href="/clients">
-            Кабинет <Arrow diagonal />
+            <button
+              className="menu-button"
+              aria-expanded={menu}
+              aria-controls="site-navigation"
+              aria-label="Меню"
+              onClick={() => setMenu(!menu)}
+            >
+              {menu ? "Закрыть" : "Меню ☰"}
+            </button>
+          </div>
+        </header>
+        <main id="main">{children}</main>
+        <footer className="footer">
+          <Link href="/" className="footer-brand">
+            <Image
+              className="brand-emblem"
+              src={logo}
+              alt=""
+              width={32}
+              height={32}
+            />{" "}
+            ASTROWED
+          </Link>
+          <Link href="/about-julia">
+            Юлия Гаврилычева · запись на консультацию ↗
           </Link>
           <button
-            className="menu-button"
-            aria-expanded={menu}
-            aria-controls="site-navigation"
-            aria-label="Меню"
-            onClick={() => setMenu(!menu)}
+            onClick={() => {
+              try {
+                localStorage.setItem(
+                  "astrowed-mode",
+                  compact ? "immersive" : "compact",
+                );
+              } catch {
+                // Apply the preference for this visit without persistent storage.
+              }
+              setCompact(!compact);
+            }}
+            aria-pressed={compact}
           >
-            {menu ? "Закрыть" : "Меню ☰"}
+            {compact ? "◉ Профессиональный режим" : "◎ Режим исследования"}
           </button>
-        </div>
-      </header>
-      <main id="main">{children}</main>
-      <footer className="footer">
-        <Link href="/" className="footer-brand">
-          <Mark small /> ASTROWED
-        </Link>
-        <Link href="/about-julia">
-          Юлия Гаврилычева · запись на консультацию ↗
-        </Link>
-        <button
-          onClick={() => {
-            try {
-              localStorage.setItem(
-                "astrowed-mode",
-                compact ? "immersive" : "compact",
-              );
-            } catch {
-              // Apply the preference for this visit without persistent storage.
-            }
-            setCompact(!compact);
-          }}
-          aria-pressed={compact}
-        >
-          {compact ? "◉ Профессиональный режим" : "◎ Режим исследования"}
-        </button>
-        <Link href="/reports" className="mono">
-          PDF-ОТЧЁТЫ ↗
-        </Link>
-        <button
-          className="sky-motion-toggle"
-          aria-pressed={skyPaused}
-          onClick={() => {
-            setSkyPaused(!skyPaused);
-            try {
-              localStorage.setItem("astrowed-sky-paused", String(!skyPaused));
-            } catch {
-              /* Preference remains active for this visit. */
-            }
-          }}
-        >
-          {skyPaused ? "▷ Оживить звёзды" : "Ⅱ Пауза фона"}
-        </button>
-      </footer>
-    </div>
+          <Link href="/reports" className="mono">
+            PDF-ОТЧЁТЫ ↗
+          </Link>
+          <button
+            className="sky-motion-toggle"
+            aria-pressed={skyPaused}
+            onClick={() => {
+              setSkyPaused(!skyPaused);
+              try {
+                localStorage.setItem("astrowed-sky-paused", String(!skyPaused));
+              } catch {
+                /* Preference remains active for this visit. */
+              }
+            }}
+          >
+            {skyPaused ? "▷ Оживить звёзды" : "Ⅱ Пауза фона"}
+          </button>
+        </footer>
+      </div>
+    </ActiveChartProvider>
   );
 }

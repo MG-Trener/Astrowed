@@ -1,8 +1,6 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import artwork from "@/assets/generated/qimen.webp";
 import {
   calculateQimen,
   doorNames,
@@ -163,54 +161,31 @@ export function QimenView() {
   const [ju, setJu] = useState(1);
   const [dun, setDun] = useState<"yang" | "yin">("yang");
   return (
-    <div className="page-wrap expansion-page">
-      <section className="module-hero">
+    <div
+      className={
+        chart
+          ? "page-wrap expansion-page"
+          : "page-wrap calculator-compact compact-tool-page"
+      }
+    >
+      <div className="page-title">
         <div>
-          <div className="eyebrow">奇門遁甲 / ВРЕМЯ И НАПРАВЛЕНИЕ</div>
-          <h1>
-            Ци Мэнь.
-            <br />
-            <em>Архитектура момента.</em>
-          </h1>
-          <p>
-            Личная карта по времени рождения или карта выбранного события.
-            Девять дворцов связывают направления, двери, звёзды и небесные
-            стволы.
-          </p>
-          <a className="button primary" href="#qimen-calculator">
-            Построить карту ↓
-          </a>
+          <h1>Ци Мэнь · девять дворцов</h1>
+          <p>Укажите дату, время и место рождения или события.</p>
         </div>
-        <Image
-          src={artwork}
-          alt="Нефритовая доска из девяти ячеек под латунной компасной дугой"
-          priority
-          sizes="(max-width: 800px) 100vw, 55vw"
-        />
-      </section>
-      <nav className="section-nav">
-        <a href="#qimen-calculator">Расчёт</a>
-        <Link href="/qimen/palaces">Справочник дворцов</Link>
-        <a href="#qimen-method">Методика</a>
-        <Link href="/reports">Отчёты</Link>
-      </nav>
-      <section id="qimen-calculator" className="exp-section">
-        <div className="section-heading">
-          <div>
-            <div className="eyebrow">01 / ЛИЧНАЯ КАРТА</div>
-            <h2>Выберите момент.</h2>
-          </div>
-          <p>
-            В форме приведён пример. Замените дату, время и часовой пояс на
-            свои.
-          </p>
-        </div>
+      </div>
+      {chart && (
+        <button className="back-link" onClick={() => setChart(null)}>
+          ← Изменить дату и место
+        </button>
+      )}
+      <section id="qimen-calculator" hidden={Boolean(chart)}>
         <MomentForm
           onCalculate={(input) =>
             setChart(calculateQimen(input, { system, ju, dun }))
           }
         >
-          <label className="field">
+          <label className="field full">
             Система
             <select
               value={system}
@@ -285,35 +260,15 @@ export function QimenView() {
           </p>
         </section>
       )}
-      <section id="qimen-method" className="exp-section prose-grid">
-        <div>
-          <div className="eyebrow">ПРОЗРАЧНОСТЬ РАСЧЁТА</div>
-          <h2>
-            Одна карта.
-            <br />
-            Явные правила.
-          </h2>
-        </div>
-        <div>
-          <p>
-            Автоматический вариант использует часовой вращающийся диск и метод
-            Чай Бу: солнечный термин определяет Инь/Ян Дунь, а фу-тоу дня —
-            верхний, средний или нижний юань. Термины сравниваются по реальному
-            моменту в UTC+8, день и час — по выбранному местному времени.
-          </p>
-          <p>
-            Ручной цзюй нужен специалисту для воспроизведения карты по
-            собственной методике. Он меняет исходный номер и Дунь; дальнейшая
-            раскладка остаётся вращающейся. Метод Чжи Жунь и летящий диск здесь
-            не заявлены.
-          </p>
-          <p>
-            Двери и звёзды несут традиционные символические значения. Для
-            натального разбора используется момент рождения; для вопроса —
-            выбранный момент события.
-          </p>
-        </div>
-      </section>
+      <details className="compact-tool-help">
+        <summary>Методика и справочник</summary>
+        <p>
+          Часовой вращающийся диск, Чай Бу. Среднее солнечное время; смена дня в
+          00:00. Ручной цзюй доступен в поле «Система». Вводите местное время
+          без ручных поправок.
+        </p>
+        <Link href="/qimen/palaces">Справочник девяти дворцов ↗</Link>
+      </details>
     </div>
   );
 }

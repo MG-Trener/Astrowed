@@ -6,6 +6,7 @@ import {
 import { and, eq, ilike, or } from "drizzle-orm";
 import { getDb } from "@/data/db";
 import { articles } from "@/data/schema";
+import { mergeLibrary } from "@/data/library";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Академия Ба Цзы" };
 export default async function Page({
@@ -15,7 +16,6 @@ export default async function Page({
 }) {
   const { q = "" } = await searchParams;
   let all: (typeof articles.$inferSelect)[] = [];
-  let unavailable = false;
   try {
     const pattern = `%${q.slice(0, 100).replace(/[\\%_]/g, "\\$&")}%`;
     all = await getDb()
@@ -34,8 +34,13 @@ export default async function Page({
         ),
       );
   } catch {
-    unavailable = true;
+    // The bundled introductory library remains available without the CMS.
   }
+  const visible = mergeLibrary(all).filter((a) =>
+    `${a.title} ${a.body} ${a.symbol}`
+      .toLocaleLowerCase("ru")
+      .includes(q.toLocaleLowerCase("ru")),
+  );
   return (
     <div className="page-wrap">
       <KnowledgeHero />
@@ -50,23 +55,15 @@ export default async function Page({
         />
         <button className="text-button">Найти →</button>
       </form>
-      {unavailable ? (
-        <div className="empty-state">
-          <h2>Библиотека временно недоступна.</h2>
-          <p>
-            Не удалось прочитать материалы из базы. Попробуйте обновить страницу
-            позже.
-          </p>
-        </div>
-      ) : all.length ? (
+      {visible.length ? (
         <div className="knowledge-grid">
-          {all.map((a) => (
+          {visible.map((a) => (
             <Link
               key={a.id}
               href={`/knowledge/${a.slug}`}
               className="knowledge-item"
             >
-              <KnowledgeCardArt symbol={a.symbol} />
+              <KnowledgeCardArt symbol={a.symbol} slug={a.slug} />
               <div className="symbol">{a.symbol}</div>
               <div className="eyebrow">
                 {a.categoryId === "elements"
