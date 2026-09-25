@@ -34,6 +34,69 @@ function hour(
 }
 
 describe("independent audit of hour branches", () => {
+  // IANA tzdb asia: RussiaAsia rules and Almaty/Qyzylorda zone histories.
+  it.each([1984, 1989])(
+    "uses historical winter/summer offsets in %i",
+    (year) => {
+      for (const [timezone, winterOffset] of [
+        ["Asia/Almaty", 360],
+        ["Asia/Qyzylorda", 300],
+      ] as const) {
+        const winter = normalizeTime({
+          ...astana,
+          timezone,
+          date: `${year}-01-15`,
+          time: "10:30",
+        });
+        const summer = normalizeTime({
+          ...astana,
+          timezone,
+          date: `${year}-07-15`,
+          time: "10:30",
+        });
+        expect(winter.civil.offset).toBe(winterOffset);
+        expect(summer.civil.offset).toBe(winterOffset + 60);
+      }
+      const winter = normalizeTime({
+        ...astana,
+        date: `${year}-01-15`,
+        time: "10:30",
+        timeMode: "mean-solar",
+      });
+      const summer = normalizeTime({
+        ...astana,
+        date: `${year}-07-15`,
+        time: "10:30",
+        timeMode: "mean-solar",
+      });
+      expect(winter.local.toFormat("HH:mm:ss")).toBe("09:15:43");
+      expect(summer.local.toFormat("HH:mm:ss")).toBe("08:15:43");
+      expect(summer.correctionMinutes - winter.correctionMinutes).toBe(-60);
+      expect(hour(`${year}-01-15`, "10:30", "mean-solar").branch).toBe("巳");
+      expect(hour(`${year}-07-15`, "10:30", "mean-solar").branch).toBe("辰");
+      expect(hour(`${year}-07-15`, "10:30", "civil").branch).toBe("巳");
+    },
+  );
+  it.each([
+    ["1984-04-01", "00:30"],
+    ["1989-03-26", "02:30"],
+  ])("rejects the historical spring gap %s %s", (date, time) => {
+    expect(() => normalizeTime({ ...astana, date, time })).toThrow(
+      "отсутствует",
+    );
+  });
+  it.each(["1984-09-30", "1989-09-24"])(
+    "requires disambiguation for the historical autumn overlap %s",
+    (date) => {
+      const input = { ...astana, date, time: "02:30" };
+      expect(() => normalizeTime(input)).toThrow("дважды");
+      const a = normalizeTime({ ...input, dstChoice: "earlier" });
+      const b = normalizeTime({ ...input, dstChoice: "later" });
+      expect(a.civil.offset).toBe(420);
+      expect(b.civil.offset).toBe(360);
+      expect(b.civil.toMillis() - a.civil.toMillis()).toBe(3600000);
+    },
+  );
   it.each(hours)(
     "%s–%s maps to %s / %s at both edges for either day boundary",
     (start, end, branch, animal) => {
