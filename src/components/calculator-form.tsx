@@ -48,7 +48,11 @@ const cities = [
     latitude: 40.713,
   },
 ];
-export function CalculatorForm() {
+export function CalculatorForm({
+  browserOnly = false,
+}: {
+  browserOnly?: boolean;
+}) {
   const [input, setInput] = useState<BirthInput>({
     name: "",
     date: "1990-05-17",
@@ -73,14 +77,19 @@ export function CalculatorForm() {
     setBusy(true);
     setError("");
     try {
-      const r = await fetch("/api/calculate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(input),
-      });
-      const body = await r.json();
-      if (!r.ok) throw new Error(body.error);
-      setChart(body);
+      if (browserOnly) {
+        const { calculate } = await import("@/domain/bazi/engine");
+        setChart(calculate(input));
+      } else {
+        const r = await fetch("/api/calculate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(input),
+        });
+        const body = await r.json();
+        if (!r.ok) throw new Error(body.error);
+        setChart(body);
+      }
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Не удалось выполнить расчёт.");
@@ -96,7 +105,7 @@ export function CalculatorForm() {
             ← ИЗМЕНИТЬ ДАННЫЕ РОЖДЕНИЯ
           </button>
         </div>
-        <ChartView chart={chart} />
+        <ChartView chart={chart} browserOnly={browserOnly} />
       </>
     );
   return (
@@ -295,8 +304,9 @@ export function CalculatorForm() {
             <Arrow />
           </button>
           <p className="legal-note full">
-            Расчёт не сохраняется автоматически. Сохранение доступно в закрытом
-            кабинете консультанта.
+            {browserOnly
+              ? "Расчёт выполняется в вашем браузере. Данные рождения не отправляются на сервер. Карту можно распечатать или сохранить в PDF через меню печати."
+              : "Расчёт не сохраняется автоматически. Сохранение доступно в закрытом кабинете консультанта."}
           </p>
         </form>
         <aside className="form-aside">

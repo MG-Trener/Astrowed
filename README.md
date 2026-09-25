@@ -41,7 +41,15 @@ npm audit
 
 PDF формируется на сервере через Chromium. Windows автоматически использует установленный Edge. Linux: `npx playwright install --with-deps chromium`, установите CJK fonts. Для собственного Chromium задайте `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`.
 
-`npm run build` создаёт standalone-сборку. Dockerfile предназначен для Railway/Debian. Vercel поддерживает web-приложение; для PDF нужен отдельный Chromium runtime/сервис, совместимый с лимитами функций. Публичное размещение ещё не выполнено.
+`npm run build` создаёт standalone-сборку. Dockerfile предназначен для Railway/Debian. Vercel поддерживает web-приложение; для PDF нужен отдельный Chromium runtime/сервис, совместимый с лимитами функций. Полная серверная версия пока не опубликована.
+
+### GitHub Pages
+
+Публичная версия: https://mg-trener.github.io/Astrowed/. Отдельное приложение `apps/pages` использует общие компоненты, стили и расчётное ядро. `npm run build:pages` создаёт статические файлы в `apps/pages/out`; `npm run verify:pages` проверяет маршруты и пути ресурсов с префиксом `/Astrowed`.
+
+На Pages работают калькулятор в браузере, демо, исследование элементов и вводные статьи с графом. Данные рождения не отправляются на сервер. Печать позволяет сохранить карту в PDF средствами браузера. База клиентов, авторизация, редактор статей и серверный PDF доступны в полной версии, требующей Node.js-хостинга. Сборка Pages не подключается к Neon и не требует секретов. Материалы академии на Pages — справочник из кода, изменения CMS туда автоматически не попадают.
+
+Workflow `.github/workflows/pages.yml` собирает и публикует Pages при push в `main` или `codex/destiny-lab-foundation`. В Settings → Pages источником должен быть GitHub Actions; окружение `github-pages` должно разрешать выбранную ветку. После слияния foundation-ветки можно оставить автоматическую публикацию только из `main`.
 
 ## Границы версии
 

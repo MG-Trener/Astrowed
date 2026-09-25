@@ -11,10 +11,12 @@ export function ChartView({
   chart,
   demo = false,
   savedId,
+  browserOnly = false,
 }: {
   chart: Chart;
   demo?: boolean;
   savedId?: string;
+  browserOnly?: boolean;
 }) {
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
@@ -58,17 +60,23 @@ export function ChartView({
           <Link href="/calculator" className="button">
             Новый расчёт
           </Link>
-          {!demo && !id && (
+          {!browserOnly && !demo && !id && (
             <button className="button primary" disabled={saving} onClick={save}>
               {saving ? "Сохранение…" : "Сохранить карту"}
             </button>
           )}
-          {id && <PdfButton id={id} />}
+          {!browserOnly && id && <PdfButton id={id} />}
           <button className="button" onClick={() => window.print()}>
-            Печать
+            {browserOnly ? "Печать / сохранить PDF" : "Печать"}
           </button>
         </div>
       </div>
+      {browserOnly && (
+        <p className="method-note">
+          Карта рассчитана в браузере и не сохранена в базе. Для сохранения
+          файла выберите PDF в меню печати.
+        </p>
+      )}
       {message && (
         <p role="status" className="success">
           {message}{" "}

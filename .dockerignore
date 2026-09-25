@@ -4,3 +4,5 @@ node_modules
 .env*
 artifacts
 *.log
+apps/pages/.next
+apps/pages/out
