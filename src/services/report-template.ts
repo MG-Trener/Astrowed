@@ -15,6 +15,11 @@ import {
   spiritNames,
 } from "../domain/qimen/engine";
 import { luoShuOrder } from "../domain/feng-shui/catalog";
+import {
+  buildReading,
+  conclusionLabels,
+  type Conclusion,
+} from "../domain/bazi/reading";
 export const reportLevels = {
   brief: "Краткий",
   full: "Полный",
@@ -26,6 +31,7 @@ export type ReportOptions = {
   date?: string;
   comment?: string;
   cover?: string;
+  conclusion?: Conclusion;
 };
 const escape = (value: unknown) =>
   String(value ?? "").replace(
@@ -42,6 +48,7 @@ export function reportHtml(chart: Chart, options: ReportOptions = {}) {
   const professional = level === "professional",
     full = level !== "brief",
     gua = calculateGua(chart.input);
+  const reading = buildReading(chart);
   const table = (headers: string[], rows: string[][]) =>
     `<table><thead><tr>${headers.map((h) => `<th>${e(h)}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${e(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
   const note = (s: string) => `<p class="note">${e(s)}</p>`;
@@ -61,8 +68,35 @@ export function reportHtml(chart: Chart, options: ReportOptions = {}) {
       note(
         "Распределение видимых и скрытых стволов без сезонных коэффициентов. Оно не определяет силу карты.",
       ) +
-      paras(interpretChart(chart).slice(0, full ? 6 : 2)),
+      (professional ? paras(interpretChart(chart).slice(0, 6)) : ""),
   );
+  content += section(
+    "Понятный разбор вашей карты",
+    note(reading.notice) +
+      note(reading.boundaryNote) +
+      (full ? reading.sections : reading.sections.slice(0, 2))
+        .map(
+          (s) =>
+            `<article><h3>${e(s.title)}</h3><p>${e(s.text)}</p><p><b>Вопрос к себе:</b> ${e(s.question)}</p>${professional && s.evidence.length ? `<p><small>Основание: ${e(s.evidence.join("; "))}</small></p>` : ""}</article>`,
+        )
+        .join("") +
+      `<p><b>Практический шаг:</b> ${e(reading.action)}</p>`,
+  );
+  if (full) {
+    const conclusion = options.conclusion ?? reading.conclusion;
+    content += section(
+      "Структурированное заключение · черновик",
+      note(
+        "Автоматический черновик с возможными правками пользователя. Не является подписанным заключением эксперта; требуется проверка консультантом.",
+      ) +
+        (Object.entries(conclusionLabels) as [keyof Conclusion, string][])
+          .map(
+            ([key, title]) =>
+              `<article><h3>${e(title)}</h3><p class="consultant-comment">${e(conclusion[key] || "Не заполнено")}</p></article>`,
+          )
+          .join(""),
+    );
+  }
   content += section(
     "02 / Такты Да Юнь",
     note(

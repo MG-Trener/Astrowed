@@ -7,7 +7,14 @@ import {
   type ReportLevel,
 } from "@/services/report-template";
 import { observatoryArtwork } from "@/assets/artwork";
-export function ReportPreview({ chart }: { chart: Chart }) {
+import type { Conclusion } from "@/domain/bazi/reading";
+export function ReportPreview({
+  chart,
+  conclusion,
+}: {
+  chart: Chart;
+  conclusion?: Conclusion;
+}) {
   const [level, setLevel] = useState<ReportLevel>("full"),
     [comment, setComment] = useState("");
   const [date, setDate] = useState("2026-09-25"),
@@ -21,13 +28,15 @@ export function ReportPreview({ chart }: { chart: Chart }) {
         comment,
         date,
         cover: observatoryArtwork.image.src,
+        conclusion,
       }),
-    [chart, level, comment, date],
+    [chart, level, comment, date, conclusion],
   );
   useEffect(() => {
     // The server-rendered iframe may finish before React attaches onLoad.
     const frame = iframe.current;
-    const sync = () => setReady(frame?.contentDocument?.readyState === "complete");
+    const sync = () =>
+      setReady(frame?.contentDocument?.readyState === "complete");
     sync();
     frame?.addEventListener("load", sync);
     return () => frame?.removeEventListener("load", sync);
@@ -53,9 +62,9 @@ export function ReportPreview({ chart }: { chart: Chart }) {
         </div>
         <p>
           {level === "brief"
-            ? "Карта, основные пояснения и такты."
+            ? "Карта, понятное объяснение главного и такты."
             : level === "full"
-              ? "Ба Цзы, звёзды, Гуа, Ци Мэнь и ближайшие десять лет."
+              ? "Понятный разбор, черновик заключения, Ба Цзы, звёзды, Гуа, Ци Мэнь и ближайшие десять лет."
               : "Все разделы, скрытые стволы, методика и таблица ста лет жизни."}
         </p>
         <label className="field">

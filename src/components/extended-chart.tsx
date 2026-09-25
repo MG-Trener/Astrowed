@@ -13,6 +13,8 @@ import {
 import { calculateGua } from "@/domain/feng-shui/gua";
 import { GuaResult } from "./bagua-view";
 import { ReportPreview } from "./report-preview";
+import { ClientReading, ConclusionEditor } from "./chart-reading";
+import { buildReading } from "@/domain/bazi/reading";
 
 export function StarsTable({
   chart,
@@ -314,8 +316,13 @@ export function ExtendedChart({
 }) {
   const [tab, setTab] = useState(initial);
   const [found, setFound] = useState(false);
+  const [conclusion, setConclusion] = useState(
+    () => buildReading(chart).conclusion,
+  );
+  useEffect(() => setConclusion(buildReading(chart).conclusion), [chart]);
   const tabs = [
-    ["interpretation", "Разбор"],
+    ["interpretation", "Понятный разбор"],
+    ["conclusion", "Заключение"],
     ["energies", "Текущие энергии"],
     ["luck", "Такты"],
     ["years", "Годы жизни"],
@@ -354,19 +361,31 @@ export function ExtendedChart({
       <div id="analysis-panel" role="tabpanel" aria-labelledby={`tab-${tab}`}>
         {tab === "interpretation" && (
           <>
-            <div className="editorial-grid">
-              {interpretChart(chart).map((s) => (
-                <article key={s.title} className="editorial-card">
-                  <h3>{s.title}</h3>
-                  <p>{s.text}</p>
-                </article>
-              ))}
-            </div>
+            <ClientReading chart={chart} />
+            <details className="method-details reading-technical">
+              <summary>Подробные технические основания</summary>
+              <div className="editorial-grid">
+                {interpretChart(chart).map((s) => (
+                  <article key={s.title} className="editorial-card">
+                    <h3>{s.title}</h3>
+                    <p>{s.text}</p>
+                  </article>
+                ))}
+              </div>
+            </details>
             <p className="method-note">
               Автоматический разбор Astrowed. Это справочные формулировки, а не
               личное заключение Юлии Гаврилычевой.
             </p>
           </>
+        )}
+        {tab === "conclusion" && (
+          <ConclusionEditor
+            chart={chart}
+            value={conclusion}
+            onChange={setConclusion}
+            onReport={() => setTab("report")}
+          />
         )}
         {tab === "energies" && <EnergiesPanel chart={chart} />}
         {tab === "luck" && <LuckPanel chart={chart} />}
@@ -390,7 +409,9 @@ export function ExtendedChart({
           </>
         )}
         {tab === "gua" && <GuaResult result={calculateGua(chart.input)} />}
-        {tab === "report" && <ReportPreview chart={chart} />}
+        {tab === "report" && (
+          <ReportPreview chart={chart} conclusion={conclusion} />
+        )}
       </div>
     </section>
   );
