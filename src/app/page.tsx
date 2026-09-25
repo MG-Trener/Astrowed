@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { HeroScene } from "@/scenes/hero-scene";
+import { HeroArtwork } from "@/scenes/hero-artwork";
+import { ElementGallery } from "@/components/element-gallery";
 import { Arrow } from "@/components/icons";
 import { Intro } from "@/components/intro";
 export default function Home() {
@@ -40,7 +41,7 @@ export default function Home() {
             </span>
           </div>
         </div>
-        <HeroScene />
+        <HeroArtwork />
         <div className="vertical-note">
           FOUR PILLARS · FIVE ELEMENTS · ONE YOU
         </div>
@@ -54,6 +55,7 @@ export default function Home() {
         </span>
         <a href="#discover">ПРОДОЛЖИТЬ ИССЛЕДОВАНИЕ ↓</a>
       </div>
+      <ElementGallery />
       <section id="discover" className="discovery-section">
         <div className="section-heading">
           <div>

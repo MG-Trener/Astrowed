@@ -1,10 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { elementArtwork } from "@/assets/artwork";
 import { ElementsReactor } from "@/scenes/elements-reactor";
 import { elements, type ElementId } from "@/domain/bazi/catalog";
 export function ExploreView() {
   const [selected, setSelected] = useState<ElementId>("wood");
+  useEffect(() => {
+    const syncHash = () => {
+      const id = window.location.hash.slice(1);
+      if (elements.some((e) => e.id === id)) {
+        setSelected(id as ElementId);
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
+    };
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    return () => window.removeEventListener("hashchange", syncHash);
+  }, []);
   const index = elements.findIndex((e) => e.id === selected),
     element = elements[index];
   return (
@@ -34,9 +48,18 @@ export function ExploreView() {
               </button>
             ))}
           </div>
-          <div className="explore-character" style={{ color: element.color }}>
-            {element.symbol}
-          </div>
+          <figure className="element-portrait">
+            <Image
+              key={selected}
+              src={elementArtwork[selected].image}
+              alt={elementArtwork[selected].alt}
+              unoptimized
+              className="element-portrait-image"
+            />
+            <figcaption style={{ color: element.color }}>
+              {element.symbol}
+            </figcaption>
+          </figure>
           <div className="eyebrow">
             {element.en} / {String(index + 1).padStart(2, "0")}
           </div>
