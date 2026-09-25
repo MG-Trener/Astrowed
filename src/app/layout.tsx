@@ -6,6 +6,7 @@ import "@/styles/cosmic.css";
 import "@/styles/expansion.css";
 import "@/styles/music.css";
 import "@/styles/sky-events.css";
+import "@/styles/knowledge-atlas.css";
 export const metadata: Metadata = {
   title: {
     default: "Astrowed — Ба Цзы, Фэн Шуй и Ци Мэнь",

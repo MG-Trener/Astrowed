@@ -61,7 +61,7 @@ const cometRoutes = [
 const spiral = Array.from({ length: 64 }, (_, i) => {
   const angle = i * 0.09;
   const radius = 8 + i * 2.5;
-  return `${i === 0 ? "M" : "L"}${200 + radius * Math.cos(angle)} ${200 + radius * Math.sin(angle)}`;
+  return `${i === 0 ? "M" : "L"}${(200 + radius * Math.cos(angle)).toFixed(3)} ${(200 + radius * Math.sin(angle)).toFixed(3)}`;
 }).join(" ");
 
 function Galaxy({ variant }: { variant: "jade" | "violet" }) {
@@ -79,8 +79,8 @@ function Galaxy({ variant }: { variant: "jade" | "violet" }) {
                 return (
                   <circle
                     key={i}
-                    cx={200 + r * Math.cos(a)}
-                    cy={200 + r * Math.sin(a)}
+                    cx={(200 + r * Math.cos(a)).toFixed(3)}
+                    cy={(200 + r * Math.sin(a)).toFixed(3)}
                     r={i % 3 === 0 ? 1.3 : 0.65}
                   />
                 );

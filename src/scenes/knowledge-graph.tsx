@@ -1,173 +1,294 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-type Node = {
-  id: string;
-  slug: string;
-  title: string;
-  symbol: string | null;
-  summary: string;
-};
-type Edge = { sourceId: string; targetId: string; relation: string };
+import Image from "next/image";
+import { articleArtwork } from "@/assets/library-artwork";
+import {
+  learningPaths,
+  neighborsOf,
+  resolveKnowledgeEdges,
+  type KnowledgeNode,
+  type StoredKnowledgeEdge,
+} from "@/data/knowledge-map";
+
 export function KnowledgeGraph({
   nodes,
-  edges,
+  edges = [],
 }: {
-  nodes: Node[];
-  edges: Edge[];
+  nodes: KnowledgeNode[];
+  edges?: StoredKnowledgeEdge[];
 }) {
-  const [selected, setSelected] = useState(nodes[0]?.id);
-  const [zoom, setZoom] = useState(1);
-  const [pan, setPan] = useState({ x: 0, y: 0 });
-  const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
-  const current = nodes.find((n) => n.id === selected);
-  const positioned = nodes.map((n, i) => ({
-    ...n,
-    x: 320 + 220 * Math.cos((((i * 360) / nodes.length - 90) * Math.PI) / 180),
-    y: 280 + 190 * Math.sin((((i * 360) / nodes.length - 90) * Math.PI) / 180),
-  }));
+  const first =
+    nodes.find((n) => n.slug === "four-pillars")?.slug ?? nodes[0]?.slug ?? "";
+  const [selected, setSelected] = useState(first);
+  const [query, setQuery] = useState("");
+  const [history, setHistory] = useState<string[]>([]);
+  const [pathId, setPathId] = useState("");
+  const currentHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    const sync = () => {
+      const slug = window.location.hash.slice(1);
+      if (nodes.some((n) => n.slug === slug)) {
+        setSelected(slug);
+        setHistory([]);
+      }
+    };
+    sync();
+    window.addEventListener("hashchange", sync);
+    return () => window.removeEventListener("hashchange", sync);
+  }, [nodes]);
+  function choose(slug: string, remember = true, reveal = false) {
+    if (!nodes.some((n) => n.slug === slug) || slug === selected) return;
+    if (remember) setHistory((prev) => [...prev, selected].slice(-30));
+    setSelected(slug);
+    window.history.replaceState(window.history.state, "", `#${slug}`);
+    if (reveal)
+      requestAnimationFrame(() => {
+        currentHeading.current?.focus({ preventScroll: true });
+        currentHeading.current?.scrollIntoView({
+          block: "center",
+          behavior: "instant",
+        });
+      });
+  }
+  const current = nodes.find((n) => n.slug === selected) ?? nodes[0];
+  const visible = nodes.filter((n) =>
+    `${n.title} ${n.symbol ?? ""} ${n.summary}`
+      .toLocaleLowerCase("ru")
+      .includes(query.trim().toLocaleLowerCase("ru")),
+  );
+  const related = current
+    ? neighborsOf(current.slug, nodes, resolveKnowledgeEdges(nodes, edges))
+    : [];
+  const path = learningPaths.find((p) => p.id === pathId);
+  const steps =
+    path?.slugs
+      .map((slug) => nodes.find((n) => n.slug === slug))
+      .filter((n): n is KnowledgeNode => !!n) ?? [];
+  const step = steps.findIndex((n) => n.slug === selected);
+  if (!current)
+    return (
+      <p className="empty-state">
+        Материалы появятся после публикации.{" "}
+        <Link href="/knowledge">В библиотеку →</Link>
+      </p>
+    );
+  const art = articleArtwork(current.slug, current.symbol);
   return (
-    <div className="explore-layout">
-      <div>
-        <div className="tabs">
+    <div className="knowledge-atlas">
+      <section className="atlas-paths" aria-label="Маршруты изучения">
+        {learningPaths.map((p) => (
           <button
-            aria-label="Уменьшить граф"
-            onClick={() => setZoom((z) => Math.max(0.6, z - 0.2))}
-          >
-            −
-          </button>
-          <button
-            aria-label="Сбросить масштаб и положение"
+            type="button"
+            key={p.id}
+            aria-pressed={pathId === p.id}
             onClick={() => {
-              setZoom(1);
-              setPan({ x: 0, y: 0 });
+              setPathId(p.id);
+              setQuery("");
+              choose(
+                p.slugs.find((s) => nodes.some((n) => n.slug === s)) ?? first,
+              );
             }}
           >
-            {Math.round(zoom * 100)}%
+            <span>{p.title} ↗</span>
+            <small>{p.description}</small>
           </button>
-          <button
-            aria-label="Увеличить граф"
-            onClick={() => setZoom((z) => Math.min(2, z + 0.2))}
-          >
-            +
-          </button>
-        </div>
-        <svg
-          viewBox="0 0 640 570"
-          style={{
-            width: "100%",
-            touchAction: "none",
-            cursor: drag ? "grabbing" : "grab",
-          }}
-          aria-label="Граф материалов академии"
-          onPointerDown={(e) => {
-            setDrag({ x: e.clientX, y: e.clientY });
-            e.currentTarget.setPointerCapture(e.pointerId);
-          }}
-          onPointerMove={(e) => {
-            if (drag) {
-              const rect = e.currentTarget.getBoundingClientRect();
-              setPan((p) => ({
-                x: p.x + ((e.clientX - drag.x) * 640) / rect.width,
-                y: p.y + ((e.clientY - drag.y) * 570) / rect.height,
-              }));
-              setDrag({ x: e.clientX, y: e.clientY });
-            }
-          }}
-          onPointerUp={() => setDrag(null)}
-          onPointerCancel={() => setDrag(null)}
-        >
-          <g
-            transform={`translate(${pan.x} ${pan.y}) translate(320 280) scale(${zoom}) translate(-320 -280)`}
-          >
-            {edges.map((edge, i) => {
-              const a = positioned.find((n) => n.id === edge.sourceId),
-                b = positioned.find((n) => n.id === edge.targetId);
-              return a && b ? (
-                <line
-                  key={i}
-                  x1={a.x}
-                  y1={a.y}
-                  x2={b.x}
-                  y2={b.y}
-                  stroke="#90b493"
-                  strokeOpacity={
-                    a.id === selected || b.id === selected ? ".7" : ".2"
-                  }
-                />
-              ) : null;
-            })}
-            {positioned.map((n) => (
-              <g
-                key={n.id}
-                role="button"
-                tabIndex={0}
-                aria-label={n.title}
-                aria-pressed={n.id === selected}
-                className="reactor-button"
-                onClick={() => setSelected(n.id)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setSelected(n.id);
-                  }
-                }}
-              >
-                <circle
-                  cx={n.x}
-                  cy={n.y}
-                  r="35"
-                  fill="#101b14"
-                  stroke="#aac5a3"
-                  strokeOpacity={n.id === selected ? ".9" : ".25"}
-                />
-                <text
-                  x={n.x}
-                  y={n.y + 9}
-                  textAnchor="middle"
-                  fill="#b7cbb1"
-                  fontSize="28"
-                  fontFamily="serif"
-                >
-                  {n.symbol}
-                </text>
-                <text
-                  x={n.x}
-                  y={n.y + 61}
-                  textAnchor="middle"
-                  className="reactor-label"
-                >
-                  {n.title}
-                </text>
-              </g>
-            ))}
-          </g>
-        </svg>
-      </div>
-      <section className="explore-detail">
-        <div className="eyebrow">KNOWLEDGE GRAPH / ЖИВЫЕ СВЯЗИ</div>
-        {current ? (
-          <>
-            <div className="explore-character" style={{ color: "var(--jade)" }}>
-              {current.symbol}
-            </div>
-            <h2>{current.title}</h2>
-            <p>{current.summary}</p>
-            <Link
-              className="button primary"
-              href={`/knowledge/${current.slug}`}
-            >
-              Открыть материал ↗
-            </Link>
-            <p className="method-note" style={{ marginTop: 30 }}>
-              Линии обозначают связи порождения между опубликованными
-              материалами. Выберите узел, измените масштаб или переместите граф.
-            </p>
-          </>
-        ) : (
-          <p>Граф появится после публикации материалов.</p>
-        )}
+        ))}
       </section>
+      <div className="atlas-layout">
+        <aside className="atlas-index" aria-label="Темы библиотеки">
+          <label htmlFor="atlas-search">
+            Найти понятие{" "}
+            <span>
+              {visible.length} / {nodes.length}
+            </span>
+          </label>
+          <input
+            id="atlas-search"
+            type="search"
+            placeholder="Например, время или стихия"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          {query && (
+            <button
+              type="button"
+              className="atlas-clear"
+              onClick={() => setQuery("")}
+            >
+              Сбросить поиск ×
+            </button>
+          )}
+          {visible.length === 0 ? (
+            <p role="status">
+              Ничего не найдено. Попробуйте «час», «столпы» или «вода».
+            </p>
+          ) : (
+            <>
+              <select
+                className="atlas-mobile-select"
+                aria-label="Выберите понятие"
+                value={visible.some((n) => n.slug === selected) ? selected : ""}
+                onChange={(e) => choose(e.target.value, true, true)}
+              >
+                <option value="" disabled>
+                  Выберите понятие
+                </option>
+                {visible.map((n) => (
+                  <option key={n.slug} value={n.slug}>
+                    {n.title}
+                  </option>
+                ))}
+              </select>
+              <div className="atlas-topic-list">
+                {visible.map((n) => (
+                  <button
+                    type="button"
+                    key={n.slug}
+                    aria-pressed={selected === n.slug}
+                    onClick={() => choose(n.slug)}
+                  >
+                    <span aria-hidden="true">{n.symbol ?? "◇"}</span>
+                    {n.title}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </aside>
+        <div className="atlas-content">
+          <div className="atlas-toolbar">
+            <button
+              type="button"
+              disabled={!history.length}
+              onClick={() => {
+                const previous = history.at(-1);
+                if (previous) {
+                  setHistory((h) => h.slice(0, -1));
+                  choose(previous, false);
+                }
+              }}
+            >
+              ← Предыдущая тема
+            </button>
+            <Link href="/knowledge">Все статьи ↗</Link>
+          </div>
+          {path && (
+            <section className="atlas-steps" aria-label={path.title}>
+              <div>
+                <strong>{path.title}</strong>
+                <button type="button" onClick={() => setPathId("")}>
+                  Закрыть маршрут ×
+                </button>
+              </div>
+              <ol>
+                {steps.map((n, i) => (
+                  <li key={n.slug}>
+                    <button
+                      type="button"
+                      aria-current={selected === n.slug ? "step" : undefined}
+                      onClick={() => choose(n.slug)}
+                    >
+                      <b>{i + 1}</b>
+                      {n.title}
+                    </button>
+                  </li>
+                ))}
+              </ol>
+              <div className="atlas-step-actions">
+                <span>
+                  {step >= 0
+                    ? `Шаг ${step + 1} из ${steps.length}`
+                    : "Вы исследуете соседнюю тему. Вернитесь к любому шагу выше."}
+                </span>
+                {step >= 0 && step < steps.length - 1 && (
+                  <button
+                    type="button"
+                    onClick={() => choose(steps[step + 1].slug)}
+                  >
+                    Следующая тема →
+                  </button>
+                )}
+                {step === steps.length - 1 && (
+                  <span>Последняя тема маршрута</span>
+                )}
+              </div>
+            </section>
+          )}
+          <section
+            className="atlas-current"
+            aria-labelledby="atlas-current-title"
+          >
+            <Image
+              src={art.image}
+              alt={art.alt}
+              sizes="(max-width: 600px) 90px, 160px"
+            />
+            <div>
+              <div className="eyebrow">ВЫБРАННОЕ ПОНЯТИЕ</div>
+              <h2 ref={currentHeading} tabIndex={-1} id="atlas-current-title">
+                {current.title}
+              </h2>
+              <p>{current.summary}</p>
+              <Link className="text-button" href={`/knowledge/${current.slug}`}>
+                Читать статью ↗
+              </Link>
+            </div>
+          </section>
+          <p className="atlas-announcement" role="status">
+            Выбрано: {current.title}. Связанных тем: {related.length}.
+          </p>
+          <section className="atlas-connections" aria-label="Связанные понятия">
+            <h3>С чем связано · {related.length}</h3>
+            <p className="atlas-key">
+              Стрелка показывает направление связи. «Помогает понять» — связь
+              между темами для изучения; порождение и контроль — отношения
+              стихий.
+            </p>
+            {related.length ? (
+              <div className="atlas-neighbors">
+                {related.map(({ node, links }) => (
+                  <article className="atlas-neighbor" key={node.slug}>
+                    <button
+                      type="button"
+                      className="atlas-node"
+                      onClick={() => choose(node.slug, true, true)}
+                    >
+                      <span aria-hidden="true">{node.symbol ?? "◇"}</span>
+                      <strong>{node.title}</strong>
+                      <span aria-hidden="true">↗</span>
+                    </button>
+                    {links.map((link) => (
+                      <div
+                        className="atlas-relation"
+                        data-kind={link.kind}
+                        key={`${link.source}-${link.target}-${link.kind}`}
+                      >
+                        <span>
+                          {link.label} ·{" "}
+                          {link.source === selected
+                            ? "от выбранной темы →"
+                            : "к выбранной теме ←"}
+                        </span>
+                        <p>{link.explanation}</p>
+                      </div>
+                    ))}
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p>
+                Для этой статьи связи пока не описаны. Выберите другую тему или
+                откройте материал.
+              </p>
+            )}
+          </section>
+          <p className="method-note">
+            Атлас помогает освоить библиотеку. Связи здесь не являются
+            персональной интерпретацией вашей карты.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

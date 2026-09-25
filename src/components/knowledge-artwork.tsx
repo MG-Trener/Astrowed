@@ -16,7 +16,7 @@ export function KnowledgeHero() {
           внимательного исследования Ба Цзы.
         </p>
         <Link className="button" href="/knowledge/graph">
-          Граф знаний ↗
+          Атлас знаний · с чего начать ↗
         </Link>
       </div>
       <div className="celestial-art knowledge-hero-art">

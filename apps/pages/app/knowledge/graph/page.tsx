@@ -1,16 +1,6 @@
-import { KnowledgeGraph } from "@/scenes/knowledge-graph";
-import { articles, edges } from "../../../content";
+import { KnowledgeAtlasPage } from "@/components/knowledge-atlas-page";
+import { libraryArticles } from "@/data/library";
+export const metadata = { title: "Атлас знаний Ба Цзы" };
 export default function Page() {
-  return (
-    <div className="page-wrap">
-      <div className="page-title">
-        <div>
-          <div className="eyebrow">ACADEMY / АТЛАС ЗНАНИЙ</div>
-          <h1>Одно понятие ведёт к другому.</h1>
-          <p>Исследуйте связи между материалами академии.</p>
-        </div>
-      </div>
-      <KnowledgeGraph nodes={articles} edges={edges} />
-    </div>
-  );
+  return <KnowledgeAtlasPage nodes={libraryArticles} />;
 }

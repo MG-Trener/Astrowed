@@ -1,4 +1,4 @@
-import { elements } from "@/domain/bazi/catalog";
+import { elements } from "../domain/bazi/catalog";
 export type KnowledgeEntry = {
   id: string;
   slug: string;
