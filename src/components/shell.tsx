@@ -3,16 +3,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Mark, Arrow } from "./icons";
+import { StarMap } from "@/scenes/star-map";
 export function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const [menu, setMenu] = useState(false);
   const [compact, setCompact] = useState(false);
+  const [skyPaused, setSkyPaused] = useState(false);
+  const [pageHidden, setPageHidden] = useState(false);
   useEffect(() => {
     try {
       setCompact(localStorage.getItem("astrowed-mode") === "compact");
+      setSkyPaused(localStorage.getItem("astrowed-sky-paused") === "true");
     } catch {
       // The interface remains usable when browser storage is unavailable.
     }
+  }, []);
+  useEffect(() => {
+    const sync = () => setPageHidden(document.hidden);
+    sync();
+    document.addEventListener("visibilitychange", sync);
+    return () => document.removeEventListener("visibilitychange", sync);
   }, []);
   const links = [
     ["/bazi", "Ба Цзы"],
@@ -22,7 +32,11 @@ export function Shell({ children }: { children: React.ReactNode }) {
     ["/about-julia", "Эксперт"],
   ];
   return (
-    <div className={compact ? "app compact" : "app"}>
+    <div
+      className={compact ? "app compact" : "app"}
+      data-sky-paused={skyPaused || pageHidden || compact}
+    >
+      <StarMap />
       <a className="skip-link" href="#main">
         К содержимому
       </a>
@@ -93,6 +107,20 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <Link href="/reports" className="mono">
           PDF-ОТЧЁТЫ ↗
         </Link>
+        <button
+          className="sky-motion-toggle"
+          aria-pressed={skyPaused}
+          onClick={() => {
+            setSkyPaused(!skyPaused);
+            try {
+              localStorage.setItem("astrowed-sky-paused", String(!skyPaused));
+            } catch {
+              /* Preference remains active for this visit. */
+            }
+          }}
+        >
+          {skyPaused ? "▷ Оживить звёзды" : "Ⅱ Пауза фона"}
+        </button>
       </footer>
     </div>
   );

@@ -1,6 +1,286 @@
 .cosmic-scene {
   --cosmic-color: #a7cbb8;
 }
+.app {
+  isolation: isolate;
+}
+.site-star-map {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 82% 20%, #19313455, transparent 55%), #080e10;
+}
+.site-star-map > svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.65;
+}
+.star-map-nebula {
+  position: absolute;
+  inset: -10%;
+  background:
+    radial-gradient(ellipse at 15% 75%, #44645026, transparent 40%),
+    radial-gradient(ellipse at 85% 28%, #47526f22, transparent 35%);
+  animation: sky-drift 40s ease-in-out infinite alternate;
+}
+.star-map-grid {
+  stroke: #aac6b6;
+  stroke-width: 0.6;
+  opacity: 0.09;
+}
+.star-map-constellation {
+  animation: constellation-glow 12s ease-in-out var(--star-delay) infinite
+    alternate;
+}
+.star-map-constellation polyline {
+  stroke: #abc4b0;
+  stroke-width: 0.65;
+  opacity: 0.27;
+}
+.star-map-constellation circle {
+  fill: #dfdfb9;
+}
+.star-map-star {
+  fill: #d9e9df;
+  animation: star-shimmer var(--star-duration) ease-in-out var(--star-delay)
+    infinite alternate;
+}
+.star-map-star path {
+  stroke: #d7e6d9;
+  stroke-width: 0.5;
+  opacity: 0.55;
+}
+.footer {
+  flex-wrap: wrap;
+}
+.footer .sky-motion-toggle {
+  min-height: 44px;
+}
+.knowledge-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+.knowledge-hero h1 {
+  font-size: clamp(32px, 3.8vw, 58px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -1.5px;
+  margin: 20px 0;
+}
+.knowledge-hero h1 em {
+  color: var(--jade);
+  font-family: Georgia, serif;
+  font-weight: 400;
+}
+.knowledge-hero p {
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 470px;
+  margin-bottom: 24px;
+}
+.celestial-art {
+  position: relative;
+  overflow: hidden;
+}
+.knowledge-hero-art {
+  mask-image: radial-gradient(ellipse, #000 45%, transparent 73%);
+}
+.knowledge-hero-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  animation: illustration-float 14s ease-in-out infinite;
+}
+.art-spark {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff3c9;
+  box-shadow: 0 0 18px 4px #d8bf7d88;
+  animation: star-shimmer 5s ease-in-out infinite alternate;
+}
+.art-spark-one {
+  left: 53%;
+  top: 23%;
+}
+.art-spark-two {
+  left: 72%;
+  top: 61%;
+  animation-delay: -3s;
+}
+.module-hero.bazi-hero > .bazi-pillar-art {
+  height: auto;
+  aspect-ratio: 3 / 2;
+  mask-image: radial-gradient(ellipse, #000 48%, transparent 74%);
+  animation: illustration-float 16s ease-in-out infinite;
+}
+.knowledge-item {
+  position: relative;
+  overflow: hidden;
+  background: #0b1314a6;
+  transition: background 0.3s;
+}
+.knowledge-card-art {
+  height: 160px;
+  margin: -12px -12px 18px;
+  overflow: hidden;
+  mask-image: linear-gradient(#000 65%, transparent);
+}
+.knowledge-card-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+.knowledge-item:hover,
+.knowledge-item:focus-visible {
+  background: #182623b0;
+}
+.knowledge-item:hover .knowledge-card-art img,
+.knowledge-item:focus-visible .knowledge-card-art img {
+  transform: scale(1.05);
+}
+.knowledge-item .symbol {
+  position: absolute;
+  top: 135px;
+  right: 30px;
+  font-size: 30px;
+  text-shadow: 0 2px 16px #000;
+}
+.cosmic-scene[data-cycle="destruction"] .cosmic-astrolabe {
+  animation-direction: reverse;
+}
+.cosmic-scene .cosmic-cycle-switch button {
+  padding-inline: 12px;
+  min-height: 44px;
+}
+.app[data-sky-paused="true"] .site-star-map *,
+.app[data-sky-paused="true"] .celestial-art *,
+.app[data-sky-paused="true"] .bazi-pillar-art {
+  animation-play-state: paused !important;
+}
+@keyframes star-shimmer {
+  from {
+    opacity: 0.25;
+  }
+  to {
+    opacity: 0.95;
+  }
+}
+@keyframes constellation-glow {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 0.8;
+  }
+}
+@keyframes sky-drift {
+  from {
+    transform: translate3d(-1%, 0, 0);
+  }
+  to {
+    transform: translate3d(2%, -2%, 0);
+  }
+}
+@keyframes illustration-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@media (max-width: 800px) {
+  .knowledge-hero {
+    gap: 8px;
+    grid-template-columns: 1fr;
+  }
+  .knowledge-hero-art {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+  }
+  .knowledge-hero-art img {
+    max-height: 240px;
+    object-fit: cover;
+  }
+  .knowledge-hero p {
+    font-size: 14px;
+  }
+  .site-star-map > svg {
+    opacity: 0.45;
+  }
+  .star-map-star:nth-child(2n) {
+    display: none;
+  }
+}
+@media (max-width: 540px) {
+  .cosmic-scene .cosmic-cycle-switch {
+    width: min(100% - 16px, 340px);
+  }
+  .cosmic-scene .cosmic-cycle-switch button {
+    flex: 1;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 5px;
+    font-size: 9px;
+  }
+  .cosmic-scene .cosmic-cycle-switch button span {
+    font-size: 15px;
+  }
+  .cosmic-scene .art-caption {
+    padding-inline: 8px;
+    text-align: center;
+  }
+  .knowledge-hero-art img {
+    max-height: 195px;
+  }
+  .knowledge-hero h1 {
+    letter-spacing: -1px;
+  }
+  .knowledge-item .knowledge-card-art {
+    height: 135px;
+  }
+  .knowledge-item .symbol {
+    top: 108px;
+    right: 22px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-star-map *,
+  .celestial-art *,
+  .module-hero.bazi-hero > .bazi-pillar-art {
+    animation: none !important;
+  }
+  .star-map-star {
+    opacity: 0.6;
+  }
+  .star-map-constellation {
+    opacity: 0.6;
+  }
+  .knowledge-card-art img {
+    transition: none;
+  }
+  .footer .sky-motion-toggle {
+    display: none;
+  }
+}
+@media print {
+  .site-star-map,
+  .knowledge-hero-art,
+  .knowledge-card-art {
+    display: none !important;
+  }
+}
 .cosmic-scene .hero-art-stage {
   inset: 30px 0 135px;
   container-type: size;

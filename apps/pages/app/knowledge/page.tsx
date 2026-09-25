@@ -1,6 +1,10 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import {
+  KnowledgeHero,
+  KnowledgeCardArt,
+} from "@/components/knowledge-artwork";
 import { articles } from "../../content";
 export default function Page() {
   const [query, setQuery] = useState("");
@@ -11,19 +15,7 @@ export default function Page() {
   );
   return (
     <div className="page-wrap">
-      <div className="page-title">
-        <div>
-          <div className="eyebrow">ACADEMY / БАЗА ЗНАНИЙ</div>
-          <h1>Язык, на котором говорит карта.</h1>
-          <p>
-            От первого символа до системы взаимосвязей. Материалы для
-            внимательного исследования Ба Цзы.
-          </p>
-        </div>
-        <Link className="button" href="/knowledge/graph">
-          Граф знаний ↗
-        </Link>
-      </div>
+      <KnowledgeHero />
       <form role="search" onSubmit={(e) => e.preventDefault()}>
         <input
           className="search-input"
@@ -41,6 +33,7 @@ export default function Page() {
             href={`/knowledge/${a.slug}`}
             className="knowledge-item"
           >
+            <KnowledgeCardArt symbol={a.symbol} />
             <div className="symbol">{a.symbol}</div>
             <div className="eyebrow">
               {a.categoryId === "elements" ? "ПЯТЬ ЭЛЕМЕНТОВ" : "ОСНОВЫ БА ЦЗЫ"}

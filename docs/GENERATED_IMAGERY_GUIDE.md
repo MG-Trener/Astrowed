@@ -23,3 +23,27 @@ Use case: stylized-concept. Asset type: wide editorial hero artwork for Astrowed
 
 ### Материал кнопок
 Use case: stylized-concept. Asset type: seamless-looking material texture for premium interactive website buttons. Primary request: a very restrained dark jade mineral surface photographed straight-on, subtle deep forest green stone grain with a few delicate brushed antique brass hairline inclusions near edges. Landscape 1536x1024, flat even soft illumination, low contrast calm center suitable for crisp light text overlay. No object perspective, no letters, no symbols, no UI, no frame, no raised objects, no bright glow. Elegant tactile contemporary observatory aesthetic. This is the material only, not a complete button.
+
+## Космическая библиотека и Ба Цзы — 26.09.2026
+
+Создано встроенным image_gen, без CLI fallback. Рабочие иллюстрации: WebP 1200 × 800, quality 83, оптимизация Sharp.
+
+- `src/assets/generated/bazi-pillars.webp` — 112182 байта, новый hero Ба Цзы, карточка направления на главной и карточка основ в библиотеке.
+- `src/assets/generated/library-cosmos.webp` — 160446 байт, новый hero библиотеки.
+- Карточки пяти элементов используют ранее сгенерированные wood/fire/earth/metal/water.webp.
+
+### Спецификация промптов новых иллюстраций
+
+**Ба Цзы** — Use case: stylized-concept. Asset type: editorial website hero for Astrowed Ba Zi. Four tall jade and obsidian pillars above a brass celestial astrolabe, deep green-black cosmos, delicate gold constellation lines. Restrained cinematic lighting, physically detailed stone and brushed metal, landscape composition, contemplative observatory aesthetic matching the existing website. No readable text, no labels, no people, no watermark. Decorative artwork, not a calculated chart.
+
+**Библиотека** — Use case: stylized-concept. Asset type: editorial website hero for the Astrowed knowledge library. An open ivory book with a celestial diagram, a floating brass armillary sphere, jade seal and scroll in a cosmic observatory. Deep jade-black palette with warm ivory and muted gold, cinematic soft illumination, landscape composition. No readable text, no people, no watermark. Decorative artwork, not a calculated chart.
+
+### Движение и доступность
+
+Общий `StarMap` в Shell: детерминированная SVG-карта, линии созвездий, мягкое мерцание, медленный сдвиг фоновой дымки. Не перехватывает нажатия, скрыт от скринридеров и при печати. На телефоне сокращено число звёзд. Пауза в футере сохраняется между посещениями; скрытая вкладка и профессиональный режим приостанавливают фон. prefers-reduced-motion отключает CSS-анимации.
+
+Ба Цзы: едва заметное плавание иллюстрации. Библиотека: плавание обложки, два световых блика, мягкое увеличение картинок карточек при наведении/фокусе.
+
+Режим главной «Разрушение» следует обратному кругу порождения (шаг 4 из 5, SVG arc sweep=0). Подпись уточняет истощение источника, чтобы отличать его от режима «Контроль» (шаг 2). Астролябия вращается назад. Расчёт карты не меняется.
+
+Проверено: TypeScript, 62 существующих теста, статическая сборка и 33 маршрута; просмотр desktop и 320 px, переключение режима, отсутствие горизонтального переполнения, загрузка новых иллюстраций, поиск библиотеки и пауза фона.

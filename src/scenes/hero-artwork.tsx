@@ -23,7 +23,9 @@ const objectNames: Record<ElementId, string> = {
 
 export function HeroArtwork() {
   const [active, setActive] = useState<ElementId | null>(null);
-  const [cycle, setCycle] = useState<"creation" | "control">("creation");
+  const [cycle, setCycle] = useState<"creation" | "control" | "destruction">(
+    "creation",
+  );
   const [paused, setPaused] = useState(false);
   const [reduced, setReduced] = useState(true);
   const [visible, setVisible] = useState(false);
@@ -35,7 +37,7 @@ export function HeroArtwork() {
   const art = active ? elementArtwork[active] : observatoryArtwork;
   const element = elements.find((e) => e.id === active);
   const activeIndex = elements.findIndex((e) => e.id === active);
-  const step = cycle === "creation" ? 1 : 2;
+  const step = cycle === "creation" ? 1 : cycle === "control" ? 2 : 4;
   const related = activeIndex < 0 ? null : elements[(activeIndex + step) % 5];
 
   useEffect(() => {
@@ -158,9 +160,9 @@ export function HeroArtwork() {
             {nodes.map((node, index) => {
               const target = nodes[(index + step) % 5];
               const path =
-                cycle === "creation"
-                  ? `M${node.x} ${node.y} A226 226 0 0 1 ${target.x} ${target.y}`
-                  : `M${node.x} ${node.y} Q300 300 ${target.x} ${target.y}`;
+                cycle === "control"
+                  ? `M${node.x} ${node.y} Q300 300 ${target.x} ${target.y}`
+                  : `M${node.x} ${node.y} A226 226 0 0 ${cycle === "creation" ? 1 : 0} ${target.x} ${target.y}`;
               const lit = !active || active === node.id;
               return (
                 <g
@@ -234,8 +236,10 @@ export function HeroArtwork() {
         </span>
         <span>
           {element && related
-            ? `${element.name} ${cycle === "creation" ? "порождает" : "контролирует"} ${objectNames[related.id]}.`
-            : "Ни одна стихия не существует отдельно."}
+            ? `${element.name} ${cycle === "creation" ? "порождает" : cycle === "control" ? "контролирует" : "истощает"} ${objectNames[related.id]}.`
+            : cycle === "destruction"
+              ? "Обратный круг: порождённая стихия истощает источник."
+              : "Ни одна стихия не существует отдельно."}
         </span>
       </div>
       <div
@@ -256,6 +260,13 @@ export function HeroArtwork() {
           onClick={() => setCycle("control")}
         >
           <span aria-hidden="true">✧</span> Контроль
+        </button>
+        <button
+          type="button"
+          aria-pressed={cycle === "destruction"}
+          onClick={() => setCycle("destruction")}
+        >
+          <span aria-hidden="true">↺</span> Разрушение
         </button>
       </div>
       <div className="cosmic-toolbar">

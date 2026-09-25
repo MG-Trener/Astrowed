@@ -4,11 +4,21 @@ import fire from "./generated/fire.webp";
 import earth from "./generated/earth.webp";
 import metal from "./generated/metal.webp";
 import water from "./generated/water.webp";
+import bazi from "./generated/bazi-pillars.webp";
+import library from "./generated/library-cosmos.webp";
 import type { ElementId } from "@/domain/bazi/catalog";
 
 export const observatoryArtwork = {
   image: observatory,
   alt: "Обсерватория времени: металлические орбиты вокруг светящегося нефритового ядра",
+};
+export const baziArtwork = {
+  image: bazi,
+  alt: "Четыре нефритовых столпа на небесной астролябии среди золотых созвездий",
+};
+export const libraryArtwork = {
+  image: library,
+  alt: "Открытая книга небесных карт и парящая армиллярная сфера в космической библиотеке",
 };
 export const elementArtwork: Record<
   ElementId,

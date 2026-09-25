@@ -4,7 +4,7 @@ import Image from "next/image";
 import fengArtwork from "@/assets/generated/feng-shui.webp";
 import qimenArtwork from "@/assets/generated/qimen.webp";
 import juliaLogo from "@/assets/generated/julia-cosmic-logo.webp";
-import { observatoryArtwork, elementArtwork } from "@/assets/artwork";
+import { baziArtwork, elementArtwork } from "@/assets/artwork";
 import { elements } from "@/domain/bazi/catalog";
 import { BaguaNavigator, GuaCalculator } from "./bagua-view";
 
@@ -33,7 +33,7 @@ export function PlatformDirections() {
             title: "Ба Цзы",
             han: "八字",
             sub: "Понять свою природу",
-            image: observatoryArtwork.image,
+            image: baziArtwork.image,
             text: "Личная карта, десять богов, символические звёзды и периоды жизни.",
           },
           {
@@ -393,7 +393,7 @@ export function PageHeading({
 export function BaziPage() {
   return (
     <div className="page-wrap expansion-page">
-      <section className="module-hero">
+      <section className="module-hero bazi-hero">
         <div>
           <div className="eyebrow">八字 / ЧЕЛОВЕК И ЦИКЛЫ</div>
           <h1>
@@ -410,8 +410,9 @@ export function BaziPage() {
           </Link>
         </div>
         <Image
-          src={observatoryArtwork.image}
-          alt={observatoryArtwork.alt}
+          className="bazi-pillar-art"
+          src={baziArtwork.image}
+          alt={baziArtwork.alt}
           priority
           sizes="(max-width: 800px) 100vw, 55vw"
         />

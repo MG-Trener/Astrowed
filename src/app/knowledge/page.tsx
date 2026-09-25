@@ -1,4 +1,8 @@
 import Link from "next/link";
+import {
+  KnowledgeHero,
+  KnowledgeCardArt,
+} from "@/components/knowledge-artwork";
 import { and, eq, ilike, or } from "drizzle-orm";
 import { getDb } from "@/data/db";
 import { articles } from "@/data/schema";
@@ -34,19 +38,7 @@ export default async function Page({
   }
   return (
     <div className="page-wrap">
-      <div className="page-title">
-        <div>
-          <div className="eyebrow">ACADEMY / БАЗА ЗНАНИЙ</div>
-          <h1>Язык, на котором говорит карта.</h1>
-          <p>
-            От первого символа до системы взаимосвязей. Материалы для
-            внимательного исследования Ба Цзы.
-          </p>
-        </div>
-        <Link className="button" href="/knowledge/graph">
-          Граф знаний ↗
-        </Link>
-      </div>
+      <KnowledgeHero />
       <form role="search">
         <input
           className="search-input"
@@ -74,6 +66,7 @@ export default async function Page({
               href={`/knowledge/${a.slug}`}
               className="knowledge-item"
             >
+              <KnowledgeCardArt symbol={a.symbol} />
               <div className="symbol">{a.symbol}</div>
               <div className="eyebrow">
                 {a.categoryId === "elements"
