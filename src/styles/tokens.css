@@ -1,0 +1,15 @@
+:root {
+  --void: #090d0e;
+  --surface: #101617;
+  --text: #eceee7;
+  --muted: #a1ada7;
+  --dim: #75867d;
+  --jade: #b6cbb2;
+  --line: rgba(215, 235, 221, 0.13);
+  --wood: #80c6a4;
+  --fire: #e88a70;
+  --earth: #d7bb83;
+  --metal: #c7d1e0;
+  --water: #81b9d7;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
