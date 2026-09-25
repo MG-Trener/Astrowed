@@ -21,4 +21,3 @@
 Источники: [описание метода](https://github.com/anthonylee1994/qimen/blob/master/ALGORITHM.md), [публичные контрольные раскладки](https://github.com/atopx/qimen/blob/master/qimen_golden_test.go), [справочник девяти дворцов](https://www.masterseanchan.com/qi-men-dun-jia-9-palaces/).
 
 Раскладки из стороннего тестового набора используются как контрольные примеры, а не как гарантия совпадения всех школ. Центровое размещение отличается между школами и явно описано в UI.
-

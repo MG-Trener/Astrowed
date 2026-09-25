@@ -16,4 +16,3 @@
 Личный разрушитель в этой версии явно определяется как ветвь столкновения с ветвью дня. Это конвенция, которую можно заменить после согласования школы.
 
 Источники правил: [Peach blossom](https://www.masterseanchan.com/bazi-auxiliary-star-peach-blossom/), [Flying horse](https://www.masterseanchan.com/bazi-auxiliary-star-flying-horse/), [Academic](https://www.masterseanchan.com/bazi-auxiliary-star-academic-star/), [Nobleman](https://www.masterseanchan.com/bazi-auxiliary-star-heavenly-nobleman/), [Canopy](https://www.masterseanchan.com/bazi-auxiliary-star-canopy-star/).
-

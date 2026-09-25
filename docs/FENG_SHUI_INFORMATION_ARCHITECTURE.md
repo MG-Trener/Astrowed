@@ -10,4 +10,3 @@
 Карта летящих звёзд здания требует периода, ориентации фасада и правил школы. В этом цикле раздел справочный, не изображает выдуманные персональные звёзды.
 
 Основные справочные источники: [Joey Yap: Life Gua](https://www.joeyyap.com/store/fengshui/feng_shui.pdf), [Feng Shui basics](https://www.joeyyap.com/notes/rfs/Real_Feng_Shui.pdf).
-

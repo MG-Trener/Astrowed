@@ -3,6 +3,7 @@ import { ContactLinks } from "./contact-links";
 import Image from "next/image";
 import fengArtwork from "@/assets/generated/feng-shui.webp";
 import qimenArtwork from "@/assets/generated/qimen.webp";
+import juliaLogo from "@/assets/generated/julia-cosmic-logo.webp";
 import { observatoryArtwork, elementArtwork } from "@/assets/artwork";
 import { elements } from "@/domain/bazi/catalog";
 import { BaguaNavigator, GuaCalculator } from "./bagua-view";
@@ -72,9 +73,17 @@ export function PlatformDirections() {
         ))}
       </div>
       <div className="expert-strip">
-        <div>
-          <span className="eyebrow">ЭКСПЕРТ ПРОЕКТА</span>
-          <h3>Юлия Гаврилычева</h3>
+        <div className="expert-identity">
+          <Image
+            src={juliaLogo}
+            alt="Логотип ЮГ — Юлия Гаврилычева"
+            width={100}
+            height={100}
+          />
+          <div>
+            <span className="eyebrow">ЭКСПЕРТ ПРОЕКТА</span>
+            <h3>Юлия Гаврилычева</h3>
+          </div>
         </div>
         <p>Ба Цзы · Фэн Шуй · Ци Мэнь Дунь Цзя</p>
         <Link href="/about-julia" className="text-button">
@@ -456,9 +465,13 @@ export function AboutJuliaPage() {
   return (
     <div className="page-wrap expansion-page">
       <section className="expert-hero">
-        <div className="expert-monogram" aria-hidden="true">
-          <span>ЮГ</span>
-          <small>ЧЕЛОВЕК · ПРОСТРАНСТВО · ВРЕМЯ</small>
+        <div className="expert-logo">
+          <Image
+            src={juliaLogo}
+            alt="Космический логотип Юлии Гаврилычевой: золотая монограмма ЮГ в нефритовой вселенной с тонкими орбитами"
+            priority
+            sizes="(max-width: 800px) 85vw, 40vw"
+          />
         </div>
         <div>
           <div className="eyebrow">ЭКСПЕРТ ПРОЕКТА ASTROWED</div>

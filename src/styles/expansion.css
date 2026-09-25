@@ -276,6 +276,38 @@
   outline: 1px solid #758c671c;
   outline-offset: -25px;
 }
+.expert-logo {
+  width: 100%;
+  isolation: isolate;
+}
+.expert-logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  mix-blend-mode: screen;
+}
+.expert-identity {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.expert-identity img {
+  flex-shrink: 0;
+  mix-blend-mode: screen;
+}
+@media (max-width: 800px) {
+  .expert-logo {
+    max-width: 380px;
+    margin: auto;
+  }
+  .expert-identity {
+    gap: 12px;
+  }
+  .expert-identity img {
+    width: 80px;
+    height: 80px;
+  }
+}
 .expert-monogram > span {
   font-family: Georgia, serif;
   font-size: clamp(70px, 11vw, 155px);

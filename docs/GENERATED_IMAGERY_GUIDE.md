@@ -10,6 +10,11 @@
 
 ## Точные промпты
 
+Дополнительно по прямому запросу пользователя: `src/assets/generated/julia-cosmic-logo.webp`, персональная космическая монограмма «ЮГ». Встроена на страницу эксперта и в блок главной. Создана встроенным image_gen, без генерации лица или фотографии.
+
+### Логотип Юлии
+Use case: logo-brand. Asset type: premium personal expert monogram emblem for the Russian Chinese-metaphysics platform Astrowed. Primary request: a cosmic metaphysical logo for Юлия Гаврилычева, with her EXACT Cyrillic initials «ЮГ». These are TWO CYRILLIC letters: Ю (U+042E) and Г (U+0413), NOT Latin letters, NOT Я, NOT ЮТ. Central monogram is very large, legible, exquisitely drawn editorial high-contrast serif typography, brushed pale champagne metal with subtle jade reflections. Surround the monogram with a restrained celestial architecture: two or three fine astronomical orbital arcs, a circular astrolabe ring, a few tiny star-like points in muted gold and soft jade. Suggest a universe and the connection between person, space and time. Square composition 1024x1024, emblem centered with generous breathing room, radial symmetry gently broken by one orbital angle. Background is almost-black blue-green #090d0e, smoothly fading to EXACT dark flat edges, no square border. Stylish precise luxury identity, intelligent mystical atmosphere, high craft, crisp edges, extremely restrained glow and depth. No extra text, no name, no Latin letters, no zodiac icons, no human face, no dragons, no crown, no ornate baroque decoration, no watermark. The Cyrillic ЮГ remains the undeniable focal point and must be clear at small scale.
+
 ### Фэн Шуй
 Use case: photorealistic-natural. Asset type: wide website editorial hero for Astrowed Feng Shui. Primary request: an atmospheric premium contemporary interior showing thoughtful space and balanced natural materials. Architecture: tranquil dark jade stone room, low walnut desk, pale linen chair, circular window opening to a misty green courtyard, small ceramic vase with a single branch, soft morning light grazing bronze details. Restrained cinematic architectural photography, believable materials, generous negative space, landscape composition 1536x1024. Palette charcoal, jade, warm ivory and muted brass matching a dark observatory website. No people, no text, no logos, no Chinese characters, no magical symbols. Not a diagram or UI screenshot. Elegant, lived-in but uncluttered.
 
@@ -18,4 +23,3 @@ Use case: stylized-concept. Asset type: wide editorial hero artwork for Astrowed
 
 ### Материал кнопок
 Use case: stylized-concept. Asset type: seamless-looking material texture for premium interactive website buttons. Primary request: a very restrained dark jade mineral surface photographed straight-on, subtle deep forest green stone grain with a few delicate brushed antique brass hairline inclusions near edges. Landscape 1536x1024, flat even soft illumination, low contrast calm center suitable for crisp light text overlay. No object perspective, no letters, no symbols, no UI, no frame, no raised objects, no bright glow. Elegant tactile contemporary observatory aesthetic. This is the material only, not a complete button.
-
