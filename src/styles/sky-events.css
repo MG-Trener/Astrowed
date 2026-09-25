@@ -1,0 +1,227 @@
+/* All effects sit in the shared, non-interactive decorative background. */
+.comet-route {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.meteor {
+  position: absolute;
+  left: -150px;
+  width: 150px;
+  height: 2px;
+  opacity: 0;
+  border-radius: 50%;
+  background: linear-gradient(90deg, transparent, var(--meteor-color));
+  animation: comet-flight var(--meteor-period) linear var(--meteor-delay)
+    infinite;
+}
+.meteor::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: -1px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff9df;
+  box-shadow: 0 0 9px 2px var(--meteor-color);
+}
+@keyframes comet-flight {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  1% {
+    opacity: 0.65;
+  }
+  5% {
+    opacity: 0.45;
+  }
+  7%,
+  100% {
+    opacity: 0;
+    transform: translateX(95vmax);
+  }
+}
+.sky-galaxy {
+  position: absolute;
+  width: clamp(300px, 45vw, 720px);
+  aspect-ratio: 1;
+  opacity: 0.3;
+  --galaxy-color: #729eae;
+  --galaxy-glow: #51767c;
+}
+.sky-galaxy-jade {
+  left: -12%;
+  top: -17%;
+  transform: rotate(-24deg);
+}
+.sky-galaxy-violet {
+  right: -13%;
+  bottom: -23%;
+  transform: rotate(31deg);
+  --galaxy-color: #a896c8;
+  --galaxy-glow: #766089;
+  opacity: 0.24;
+}
+.galaxy-disc {
+  position: absolute;
+  inset: 0;
+  transform: scaleY(0.52);
+}
+.galaxy-spiral {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: galaxy-turn 200s linear infinite;
+}
+.sky-galaxy-violet .galaxy-spiral {
+  animation-duration: 260s;
+  animation-direction: reverse;
+}
+.galaxy-arm-haze {
+  stroke: var(--galaxy-glow);
+  stroke-width: 22;
+  opacity: 0.2;
+  filter: blur(8px);
+}
+.galaxy-arm {
+  stroke: var(--galaxy-color);
+  stroke-width: 2.5;
+  opacity: 0.25;
+  filter: blur(1px);
+}
+.galaxy-spiral circle {
+  fill: #e3dac3;
+  opacity: 0.6;
+}
+.galaxy-core {
+  position: absolute;
+  inset: 19%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    #ece0babb 0%,
+    #c4cfb344 8%,
+    var(--galaxy-glow) 20%,
+    transparent 66%
+  );
+  opacity: 0.5;
+}
+@keyframes galaxy-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.star-burst {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  color: #c3dbc9;
+}
+.star-burst:nth-of-type(even) {
+  color: #d4c0ed;
+}
+.star-burst i {
+  display: block;
+  position: absolute;
+  opacity: 0;
+  animation-duration: var(--burst-period);
+  animation-delay: var(--burst-delay);
+  animation-iteration-count: infinite;
+}
+.star-burst-core {
+  width: 5px;
+  height: 5px;
+  left: -2px;
+  top: -2px;
+  border-radius: 50%;
+  background: #fff3d7;
+  box-shadow: 0 0 12px 4px currentColor;
+  animation-name: star-burst-light;
+}
+.star-burst-ring {
+  width: 22px;
+  height: 22px;
+  left: -11px;
+  top: -11px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  animation-name: star-burst-expand;
+}
+.star-burst-rays {
+  width: 38px;
+  height: 38px;
+  left: -19px;
+  top: -19px;
+  background:
+    linear-gradient(transparent 48%, currentColor 50%, transparent 52%),
+    linear-gradient(90deg, transparent 48%, currentColor 50%, transparent 52%);
+  animation-name: star-burst-light;
+}
+@keyframes star-burst-light {
+  0%,
+  7%,
+  100% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  2% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+}
+@keyframes star-burst-expand {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  2% {
+    opacity: 0.35;
+  }
+  8%,
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+@media (max-width: 600px) {
+  .meteor {
+    width: 85px;
+    left: -85px;
+  }
+  .comet-route[data-extra="true"],
+  .star-burst[data-extra="true"] {
+    display: none;
+  }
+  .sky-galaxy {
+    width: 330px;
+    opacity: 0.22;
+  }
+  .sky-galaxy-jade {
+    left: -48%;
+    top: -10%;
+  }
+  .sky-galaxy-violet {
+    right: -49%;
+    bottom: -6%;
+    opacity: 0.17;
+  }
+  .galaxy-arm-haze {
+    filter: none;
+    opacity: 0.09;
+  }
+}
+.app[data-sky-paused="true"] .meteor::after {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .comet-route,
+  .star-burst {
+    display: none;
+  }
+  .galaxy-spiral {
+    animation: none !important;
+  }
+}

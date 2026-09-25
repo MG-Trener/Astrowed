@@ -2105,66 +2105,6 @@
     opacity: 1;
   }
 }
-.meteor {
-  position: absolute;
-  width: 160px;
-  height: 2px;
-  opacity: 0;
-  border-radius: 50%;
-  background: linear-gradient(90deg, transparent, var(--meteor-color));
-  transform-origin: right center;
-  animation: meteor-flight var(--meteor-period) linear var(--meteor-delay)
-    infinite;
-}
-.meteor::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: -1px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #fff9df;
-  box-shadow: 0 0 10px 3px var(--meteor-color);
-}
-.meteor-jade {
-  left: 7%;
-  top: 8%;
-  --meteor-color: #84e5d9;
-  --meteor-period: 31s;
-  --meteor-delay: 3s;
-}
-.meteor-gold {
-  left: 44%;
-  top: 12%;
-  --meteor-color: #f5c67e;
-  --meteor-period: 43s;
-  --meteor-delay: 14s;
-}
-.meteor-violet {
-  left: 4%;
-  top: 42%;
-  --meteor-color: #c9a6ef;
-  --meteor-period: 53s;
-  --meteor-delay: 25s;
-}
-@keyframes meteor-flight {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0) rotate(28deg);
-  }
-  1% {
-    opacity: 0.75;
-  }
-  6% {
-    opacity: 0.6;
-  }
-  8%,
-  100% {
-    opacity: 0;
-    transform: translate3d(48vw, 27vh, 0) rotate(28deg);
-  }
-}
 @media screen and (max-width: 600px) {
   .brand .brand-emblem {
     width: 34px;
@@ -2194,12 +2134,6 @@
   }
   .discovery-controls {
     gap: 8px;
-  }
-  .meteor {
-    width: 85px;
-  }
-  .meteor-violet {
-    display: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {
