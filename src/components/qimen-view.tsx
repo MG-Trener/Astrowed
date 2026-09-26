@@ -1,15 +1,21 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { calculateQimen, doorNames, type QimenChart } from "@/domain/qimen/engine";
+import {
+  calculateQimen,
+  doorNames,
+  type QimenChart,
+} from "@/domain/qimen/engine";
 import { MomentForm } from "./moment-form";
 import { PalaceBoard } from "./palace-board";
+import { QimenPrintPreview } from "./qimen-print-preview";
 
 // Keep the existing import contract for reports and other chart views.
 export { PalaceBoard } from "./palace-board";
 
 export function QimenView() {
   const [chart, setChart] = useState<QimenChart | null>(null);
+  const [printOpen, setPrintOpen] = useState(false);
   const [system, setSystem] = useState<"chaibu" | "manual">("chaibu");
   const [ju, setJu] = useState(1);
   const [dun, setDun] = useState<"yang" | "yin">("yang");
@@ -91,7 +97,11 @@ export function QimenView() {
                 {chart.term} · {chart.yuan} юань · {chart.pillars.join(" / ")}
               </p>
             </div>
-            <button className="button no-print" onClick={() => window.print()}>
+            <button
+              type="button"
+              className="button no-print"
+              onClick={() => setPrintOpen(true)}
+            >
               Печать / PDF ↓
             </button>
           </div>
@@ -112,6 +122,9 @@ export function QimenView() {
             {chart.utc}.
           </p>
         </section>
+      )}
+      {chart && printOpen && (
+        <QimenPrintPreview chart={chart} onClose={() => setPrintOpen(false)} />
       )}
       <details className="compact-tool-help">
         <summary>Методика и справочник</summary>
