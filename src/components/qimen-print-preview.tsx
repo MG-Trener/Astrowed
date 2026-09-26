@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 import type { QimenChart } from "@/domain/qimen/engine";
 import { qimenPrintSvg, qimenPdfBlob } from "@/services/qimen-print";
 import styles from "./qimen-print-preview.module.css";
+import { inlineQimenArtwork } from "@/assets/report-artwork";
+import type { ReportArtwork } from "@/services/report-artwork-files";
 
 export function QimenPrintPreview({
   chart,
@@ -18,11 +20,33 @@ export function QimenPrintPreview({
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [artwork, setArtwork] = useState<ReportArtwork | null>(null);
+  useEffect(() => {
+    let active = true;
+    inlineQimenArtwork()
+      .then((images) => {
+        if (active) {
+          setReady(false);
+          setArtwork(images);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setArtwork({});
+          setError(
+            "Иллюстрации не загрузились. Данные карты доступны; откройте предпросмотр повторно, чтобы загрузить оформление.",
+          );
+        }
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
   const src = useMemo(
     () =>
       "data:image/svg+xml;charset=utf-8," +
-      encodeURIComponent(qimenPrintSvg(chart)),
-    [chart],
+      encodeURIComponent(qimenPrintSvg(chart, artwork ?? {})),
+    [chart, artwork],
   );
   useEffect(() => {
     const modal = dialog.current;
@@ -94,7 +118,7 @@ export function QimenPrintPreview({
           <button
             type="button"
             className="button primary"
-            disabled={!ready || saving}
+            disabled={!ready || !artwork || saving}
             onClick={print}
           >
             Печать
@@ -102,7 +126,7 @@ export function QimenPrintPreview({
           <button
             type="button"
             className="button"
-            disabled={!ready || saving}
+            disabled={!ready || !artwork || saving}
             onClick={download}
           >
             {saving ? "Готовим PDF…" : "Скачать PDF"}
@@ -112,6 +136,7 @@ export function QimenPrintPreview({
           PDF можно скачать напрямую, даже если браузер не открывает окно
           печати.
         </p>
+        {!artwork && <p role="status">Загружаем оформление отчёта…</p>}
         <p role="status" aria-live="polite">
           {message}
         </p>

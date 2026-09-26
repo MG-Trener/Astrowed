@@ -6,7 +6,7 @@ import {
   reportLevels,
   type ReportLevel,
 } from "@/services/report-template";
-import { observatoryArtwork } from "@/assets/artwork";
+import { reportArtwork } from "@/assets/report-artwork";
 import type { Conclusion } from "@/domain/bazi/reading";
 export function ReportPreview({
   chart,
@@ -27,7 +27,7 @@ export function ReportPreview({
         level,
         comment,
         date,
-        cover: observatoryArtwork.image.src,
+        artwork: reportArtwork,
         conclusion,
       }),
     [chart, level, comment, date, conclusion],

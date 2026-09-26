@@ -6,6 +6,7 @@ import {
   type QimenChart,
 } from "../domain/qimen/engine";
 import { palaceZodiac } from "../components/palace-zodiac";
+import type { ReportArtwork } from "./report-artwork-files";
 
 const xml = (value: string) =>
   value.replace(
@@ -52,14 +53,14 @@ function lines(value: string, width: number) {
 }
 
 /** A self-contained A4 sheet, independent of viewport, selected palace and hidden layers. */
-export function qimenPrintSvg(chart: QimenChart) {
+export function qimenPrintSvg(chart: QimenChart, artwork: ReportArtwork = {}) {
   const dun = chart.dun === "yang" ? "Ян" : "Инь";
   const cells = luoShuOrder
     .map((id, index) => {
       const p = chart.palaces.find((palace) => palace.id === id)!;
       const x = 70 + (index % 3) * 218,
         y = 250 + Math.floor(index / 3) * 204;
-      let content = `<g data-palace="${id}"><rect x="${x}" y="${y}" width="218" height="204" fill="${id === 5 ? "#eef3ee" : "#fff"}" stroke="#acbfb2"/>`;
+      let content = `<g data-palace="${id}"><rect x="${x + 2}" y="${y + 2}" width="214" height="200" rx="7" fill="${id === 5 ? "url(#jadePaper)" : "#fffef9"}" stroke="#b1bda7"/><path d="M${x + 14} ${y + 34}h190" stroke="#c4ae76" stroke-width=".8"/>`;
       content += text(`${id}  ${p.name}`, x + 13, y + 24, 15);
       content += text(p.direction, x + 205, y + 24, 10, muted, "end");
       if (id === 5) {
@@ -130,14 +131,19 @@ export function qimenPrintSvg(chart: QimenChart) {
     .join("");
   return `<svg xmlns="http://www.w3.org/2000/svg" width="794" height="1123" viewBox="0 0 794 1123">
     <title>Ци Мэнь · девять дворцов</title>
-    <rect width="794" height="1123" fill="#fff"/>
+    <defs><linearGradient id="jadePaper" x2="1" y2="1"><stop stop-color="#e7eee0"/><stop offset="1" stop-color="#f6f5e9"/></linearGradient><linearGradient id="jadeNight"><stop stop-color="#102b23"/><stop offset="1" stop-color="#071c19"/></linearGradient></defs>
+    <rect width="794" height="1123" fill="#f9f8f1"/>
+    <rect x="22" y="20" width="750" height="168" rx="10" fill="url(#jadeNight)" stroke="#ae9862"/>
+    <g fill="none" stroke="#bfa36b" opacity=".16"><circle cx="644" cy="99" r="74"/><ellipse cx="644" cy="99" rx="91" ry="33" transform="rotate(-30 644 99)"/></g>
+    ${artwork.qimen ? `<image href="${xml(artwork.qimen)}" x="540" y="34" width="210" height="140" preserveAspectRatio="xMidYMid meet"/>` : ""}
     <g font-family="Arial, 'Microsoft YaHei', 'PingFang SC', sans-serif">
-    ${text("ASTROWED / КАРТА МОМЕНТА", 44, 46, 11, gold)}
-    ${text("Ци Мэнь · девять дворцов", 44, 83, 28)}
-    ${text(chart.input.name, 44, 112, 14, ink, "start", 706)}
-    ${text(`${chart.input.date} · ${chart.input.time} · ${chart.input.city} · ${chart.input.timezone}`, 44, 138, 12, muted, "start", 706)}
-    ${text(`${dun} Дунь · ${chart.ju} цзюй   /   ${chart.term} · ${chart.yuan} юань`, 44, 173, 18)}
-    ${text(`Столпы: ${chart.pillars.join(" / ")}   ·   Сюнь: ${chart.xun}   ·   скрытый Цзя: ${chart.concealed}`, 44, 199, 13)}
+    ${text("ASTROWED / КАРТА МОМЕНТА", 44, 46, 10, "#d8bd82")}
+    ${text("Ци Мэнь · девять дворцов", 44, 83, 26, "#f3efdf")}
+    ${text(chart.input.name, 44, 109, 13, "#d0dac9", "start", 468)}
+    ${text(`${chart.input.date} · ${chart.input.time} · ${chart.input.city}`, 44, 132, 11, "#c7d2c1", "start", 468)}
+    ${text(chart.input.timezone, 44, 148, 10, "#abbeb0")}
+    ${text(`${dun} Дунь · ${chart.ju} цзюй   /   ${chart.term} · ${chart.yuan} юань`, 44, 173, 14, "#dfc993")}
+    ${text(`Столпы: ${chart.pillars.join(" / ")}   ·   Сюнь: ${chart.xun}   ·   скрытый Цзя: ${chart.concealed}`, 44, 213, 12)}
     ${text("ЮГ", 397, 236, 12, gold, "middle")}
     ${text("ЮВ", 70, 236, 11, muted)}${text("ЮЗ", 724, 236, 11, muted, "end")}
     <g transform="translate(47 556) rotate(-90)">${text("ВОСТОК", 0, 0, 11, gold, "middle")}</g>
@@ -150,10 +156,11 @@ export function qimenPrintSvg(chart: QimenChart) {
     ${lines(chart.method, 106)
       .map((line, i) => text(line, 44, 970 + i * 16, 10, muted))
       .join("")}
-    <path d="M44 1042h706" stroke="#acbfb2"/>
+    <path d="M44 1042h706" stroke="#bfa36b"/>
+    ${artwork.expert ? `<image href="${xml(artwork.expert)}" x="699" y="1053" width="43" height="43" preserveAspectRatio="xMidYMid meet"/>` : ""}
     ${text("Юлия Гаврилычева · эксперт-астролог", 44, 1065, 12)}
     ${text("Традиционная символическая модель. Интерпретация требует контекста всей карты.", 44, 1085, 9, muted)}
-    ${text("1 / 1", 750, 1085, 9, muted, "end")}
+    ${text("1 / 1", 750, 1110, 9, muted, "end")}
     </g></svg>`;
 }
 

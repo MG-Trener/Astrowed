@@ -166,8 +166,9 @@ describe("report content and escaping", () => {
     const c = calculate(base);
     const brief = reportHtml(c, { level: "brief", date: "2026-09-25" }),
       full = reportHtml(c, { level: "full", date: "2026-09-25" });
-    expect(brief).not.toContain("06 / Личная карта Ци Мэнь");
-    expect(full).toContain("06 / Личная карта Ци Мэнь");
+    expect(brief).not.toContain("Личная карта Ци Мэнь");
+    expect(full).toContain("Личная карта Ци Мэнь");
+    expect(full).toContain('class="contents"');
     expect(full).toContain("https://wa.me/77777644655");
     expect(full).toContain("Юлия Гаврилычева");
   });
