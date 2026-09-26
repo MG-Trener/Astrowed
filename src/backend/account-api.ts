@@ -248,6 +248,9 @@ export async function accountHandler(request: Request): Promise<Response> {
           503,
           "Отправка заявок временно недоступна. Свяжитесь с экспертом через раздел консультаций.",
         );
+      const topic = process.env.TELEGRAM_MESSAGE_THREAD_ID?.trim();
+      if (topic && (!/^\d+$/.test(topic) || !Number.isSafeInteger(Number(topic)) || Number(topic) < 1))
+        throw new ApiError(503, "Отправка заявок временно недоступна: проверьте настройки темы Telegram.");
       const existing = (
         await db
           .select()
@@ -299,6 +302,7 @@ export async function accountHandler(request: Request): Promise<Response> {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               chat_id: process.env.TELEGRAM_CHAT_ID,
+              ...(topic ? { message_thread_id: Number(topic) } : {}),
               text: telegramText(p, body.message, row.id),
             }),
             signal: AbortSignal.timeout(12000),

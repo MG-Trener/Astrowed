@@ -35,11 +35,20 @@ try {
   }
   const chat = await call("getChat", { chat_id: chatId });
   const member = await call("getChatMember", { chat_id: chatId, user_id: bot.id });
-  if (chat.type !== "channel") throw new Error("Для заявок ожидается закрытый канал эксперта.");
+  if (!["channel", "supergroup"].includes(chat.type)) throw new Error("Для заявок ожидается закрытый канал или супергруппа эксперта.");
   if (chat.username) throw new Error("Канал публичный. Для персональных анкет используйте закрытый канал.");
-  if (member.status !== "creator" && !(member.status === "administrator" && member.can_post_messages))
+  const canSend = chat.type === "channel"
+    ? member.status === "creator" || (member.status === "administrator" && member.can_post_messages)
+    : ["creator", "administrator"].includes(member.status) ||
+      (member.status === "member" && chat.permissions?.can_send_messages) ||
+      (member.status === "restricted" && member.is_member && member.can_send_messages);
+  if (!canSend)
     throw new Error("Разрешите боту публикацию сообщений в канале.");
-  console.log(`Канал «${chat.title}»: право публикации подтверждено. Сообщения не отправлялись.`);
+  const topic = process.env.TELEGRAM_MESSAGE_THREAD_ID?.trim();
+  if (topic && (!/^\d+$/.test(topic) || !Number.isSafeInteger(Number(topic)) || Number(topic) < 1 || !chat.is_forum))
+    throw new Error("Проверьте ID темы: он должен быть положительным числом, а чат — группой с темами.");
+  console.log(`Чат «${chat.title}»: право публикации подтверждено. Сообщения не отправлялись.`);
+  if (topic) console.log(`Тема ${topic}: существование и доставку нужно подтвердить тестовым сообщением.`);
 } catch (error) {
   // Never print fetch errors/stacks: their URLs can contain the bot token.
   console.error(error instanceof Error && !error.cause && !/fetch|https?:/i.test(error.message)
