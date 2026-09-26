@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "node scripts/sync-map-assets.ts",
-    "prebuild": "node scripts/sync-map-assets.ts",
+    "predev": "node scripts/sync-pwa-assets.mjs && node scripts/sync-map-assets.ts",
+    "prebuild": "node scripts/sync-pwa-assets.mjs && node scripts/sync-map-assets.ts",
     "setup:workspace": "tsx scripts/setup-workspace.ts",
     "dev": "next dev --hostname 127.0.0.1",
     "build": "next build",
@@ -18,7 +18,7 @@
     "db:migrate": "tsx scripts/migrate.ts",
     "db:seed": "tsx scripts/seed.ts",
     "db:inspect": "tsx scripts/inspect-db.ts",
-    "prebuild:pages": "node scripts/sync-city-assets.ts && node scripts/sync-map-assets.ts"
+    "prebuild:pages": "node scripts/sync-pwa-assets.mjs && node scripts/sync-city-assets.ts && node scripts/sync-map-assets.ts"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.3",
@@ -48,7 +48,8 @@
     "prettier": "^3.9.9",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.2"
+    "vitest": "^5.0.2",
+    "sharp": "^0.35.4"
   },
   "overrides": {
     "@esbuild-kit/core-utils": {
