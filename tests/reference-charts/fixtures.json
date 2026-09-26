@@ -1,0 +1,10 @@
+{
+ "source": "https://github.com/6tail/lunar-javascript/blob/master/__tests__/EightChar.test.js",
+ "note": "Upstream regression fixtures, not independent expert certification. Times are civil Asia/Shanghai.",
+ "charts": [
+  {"date":"2005-12-23","time":"08:37","dayBoundary":"midnight","expected":["乙酉","戊子","辛巳","壬辰"]},
+  {"date":"1988-02-15","time":"23:30","dayBoundary":"midnight","expected":["戊辰","甲寅","庚子","戊子"]},
+  {"date":"1988-02-15","time":"23:30","dayBoundary":"zi","expected":["戊辰","甲寅","辛丑","戊子"]},
+  {"date":"1988-02-02","time":"22:30","dayBoundary":"midnight","expected":["丁卯","癸丑","丁亥","辛亥"]}
+ ]
+}

@@ -1,0 +1,92 @@
+.dialog {
+  width: min(900px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  margin: auto;
+  padding: 0;
+  border: 1px solid #536d60;
+  border-radius: 12px;
+  background: #11201d;
+  color: #e4ece6;
+}
+.dialog::backdrop {
+  background: #03110bd9;
+}
+.controls {
+  padding: 22px 26px;
+}
+.heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.heading h2 {
+  font-size: clamp(20px, 3vw, 27px);
+  font-weight: 400;
+  margin: 0 0 8px;
+}
+.controls p {
+  font-size: 12px;
+  color: #b5c8bb;
+  line-height: 1.6;
+}
+.controls p:empty {
+  display: none;
+}
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 16px 0 12px;
+}
+.sheet {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: white;
+}
+@media (max-width: 500px) {
+  .controls {
+    padding: 18px;
+  }
+  .heading {
+    flex-wrap: wrap;
+  }
+}
+@media print {
+  @page qimen {
+    size: A4 portrait;
+    margin: 0;
+  }
+  :global(body):has(.dialog[open]) > :not(.dialog) {
+    display: none !important;
+  }
+  :global(body):has(.dialog[open]) {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .dialog[open] {
+    page: qimen;
+    display: block;
+    position: static;
+    width: 210mm;
+    height: 297mm;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: white;
+  }
+  .dialog::backdrop,
+  .controls {
+    display: none !important;
+  }
+  .sheet {
+    width: 210mm;
+    height: 297mm;
+    break-inside: avoid;
+  }
+}

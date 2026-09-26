@@ -1,0 +1,1634 @@
+{
+  "version": "2026-09-26",
+  "count": 235878,
+  "countries": [
+    "AD",
+    "AE",
+    "AF",
+    "AG",
+    "AI",
+    "AL",
+    "AM",
+    "AO",
+    "AR",
+    "AS",
+    "AT",
+    "AU",
+    "AW",
+    "AX",
+    "AZ",
+    "BA",
+    "BB",
+    "BD",
+    "BE",
+    "BF",
+    "BG",
+    "BH",
+    "BI",
+    "BJ",
+    "BL",
+    "BM",
+    "BN",
+    "BO",
+    "BQ",
+    "BR",
+    "BS",
+    "BT",
+    "BW",
+    "BY",
+    "BZ",
+    "CA",
+    "CC",
+    "CD",
+    "CF",
+    "CG",
+    "CH",
+    "CI",
+    "CK",
+    "CL",
+    "CM",
+    "CN",
+    "CO",
+    "CR",
+    "CU",
+    "CV",
+    "CW",
+    "CX",
+    "CY",
+    "CZ",
+    "DE",
+    "DJ",
+    "DK",
+    "DM",
+    "DO",
+    "DZ",
+    "EC",
+    "EE",
+    "EG",
+    "EH",
+    "ER",
+    "ES",
+    "ET",
+    "FI",
+    "FJ",
+    "FK",
+    "FM",
+    "FO",
+    "FR",
+    "GA",
+    "GB",
+    "GD",
+    "GE",
+    "GF",
+    "GG",
+    "GH",
+    "GI",
+    "GL",
+    "GM",
+    "GN",
+    "GP",
+    "GQ",
+    "GR",
+    "GS",
+    "GT",
+    "GU",
+    "GW",
+    "GY",
+    "HK",
+    "HN",
+    "HR",
+    "HT",
+    "HU",
+    "ID",
+    "IE",
+    "IL",
+    "IM",
+    "IN",
+    "IO",
+    "IQ",
+    "IR",
+    "IS",
+    "IT",
+    "JE",
+    "JM",
+    "JO",
+    "JP",
+    "KE",
+    "KG",
+    "KH",
+    "KI",
+    "KM",
+    "KN",
+    "KP",
+    "KR",
+    "KW",
+    "KY",
+    "KZ",
+    "LA",
+    "LB",
+    "LC",
+    "LI",
+    "LK",
+    "LR",
+    "LS",
+    "LT",
+    "LU",
+    "LV",
+    "LY",
+    "MA",
+    "MC",
+    "MD",
+    "ME",
+    "MF",
+    "MG",
+    "MH",
+    "MK",
+    "ML",
+    "MM",
+    "MN",
+    "MO",
+    "MP",
+    "MQ",
+    "MR",
+    "MS",
+    "MT",
+    "MU",
+    "MV",
+    "MW",
+    "MX",
+    "MY",
+    "MZ",
+    "NA",
+    "NC",
+    "NE",
+    "NF",
+    "NG",
+    "NI",
+    "NL",
+    "NO",
+    "NP",
+    "NR",
+    "NU",
+    "NZ",
+    "OM",
+    "PA",
+    "PE",
+    "PF",
+    "PG",
+    "PH",
+    "PK",
+    "PL",
+    "PM",
+    "PN",
+    "PR",
+    "PS",
+    "PT",
+    "PW",
+    "PY",
+    "QA",
+    "RE",
+    "RO",
+    "RS",
+    "RU",
+    "RW",
+    "SA",
+    "SB",
+    "SC",
+    "SD",
+    "SE",
+    "SG",
+    "SH",
+    "SI",
+    "SJ",
+    "SK",
+    "SL",
+    "SM",
+    "SN",
+    "SO",
+    "SR",
+    "SS",
+    "ST",
+    "SV",
+    "SX",
+    "SY",
+    "SZ",
+    "TC",
+    "TD",
+    "TF",
+    "TG",
+    "TH",
+    "TJ",
+    "TK",
+    "TL",
+    "TM",
+    "TN",
+    "TO",
+    "TR",
+    "TT",
+    "TV",
+    "TW",
+    "TZ",
+    "UA",
+    "UG",
+    "US",
+    "UY",
+    "UZ",
+    "VA",
+    "VC",
+    "VE",
+    "VG",
+    "VI",
+    "VN",
+    "VU",
+    "WF",
+    "WS",
+    "XK",
+    "YE",
+    "YT",
+    "ZA",
+    "ZM",
+    "ZW"
+  ],
+  "timezones": {
+    "Europe/Andorra": "AD",
+    "Asia/Dubai": "OM",
+    "Asia/Kabul": "AF",
+    "America/Antigua": "AG",
+    "America/Anguilla": "AI",
+    "Europe/Tirane": "AL",
+    "Asia/Yerevan": "AM",
+    "Africa/Luanda": "AO",
+    "America/Argentina/Buenos_Aires": "AR",
+    "America/Argentina/Cordoba": "AR",
+    "America/Argentina/Tucuman": "AR",
+    "America/Argentina/Salta": "AR",
+    "America/Argentina/Jujuy": "AR",
+    "America/Argentina/Mendoza": "AR",
+    "America/Argentina/La_Rioja": "AR",
+    "America/Argentina/San_Luis": "AR",
+    "America/Argentina/Catamarca": "AR",
+    "America/Argentina/San_Juan": "AR",
+    "America/Argentina/Rio_Gallegos": "AR",
+    "America/Argentina/Ushuaia": "AR",
+    "Pacific/Pago_Pago": "AS",
+    "Europe/Vienna": "AT",
+    "Australia/Sydney": "AU",
+    "Australia/Melbourne": "AU",
+    "Australia/Brisbane": "AU",
+    "Australia/Perth": "AU",
+    "Australia/Adelaide": "AU",
+    "Australia/Hobart": "AU",
+    "Australia/Darwin": "AU",
+    "Australia/Broken_Hill": "AU",
+    "America/Aruba": "AW",
+    "Europe/Mariehamn": "AX",
+    "Asia/Baku": "AZ",
+    "Europe/Sarajevo": "XK",
+    "America/Barbados": "BB",
+    "Asia/Dhaka": "BD",
+    "Europe/Brussels": "BE",
+    "Africa/Ouagadougou": "BF",
+    "Europe/Sofia": "BG",
+    "Asia/Bahrain": "BH",
+    "Africa/Bujumbura": "BI",
+    "Africa/Porto-Novo": "BJ",
+    "America/St_Barthelemy": "BL",
+    "Atlantic/Bermuda": "BM",
+    "Asia/Brunei": "BN",
+    "Asia/Pontianak": "ID",
+    "America/La_Paz": "BO",
+    "America/Kralendijk": "BQ",
+    "America/Sao_Paulo": "BR",
+    "America/Bahia": "BR",
+    "America/Fortaleza": "BR",
+    "America/Manaus": "BR",
+    "America/Recife": "BR",
+    "America/Belem": "BR",
+    "America/Maceio": "BR",
+    "America/Campo_Grande": "BR",
+    "America/Cuiaba": "BR",
+    "America/Porto_Velho": "BR",
+    "America/Boa_Vista": "BR",
+    "America/Rio_Branco": "BR",
+    "America/Santarem": "BR",
+    "America/Araguaina": "BR",
+    "America/Eirunepe": "BR",
+    "America/Noronha": "BR",
+    "America/Nassau": "BS",
+    "Asia/Thimphu": "BT",
+    "Africa/Gaborone": "BW",
+    "Europe/Minsk": "BY",
+    "America/Belize": "BZ",
+    "America/Toronto": "CA",
+    "America/Edmonton": "CA",
+    "America/Winnipeg": "CA",
+    "America/Vancouver": "CA",
+    "America/Halifax": "CA",
+    "America/Regina": "CA",
+    "America/St_Johns": "CA",
+    "America/Glace_Bay": "CA",
+    "America/Moncton": "CA",
+    "America/Whitehorse": "CA",
+    "America/Dawson_Creek": "CA",
+    "America/Swift_Current": "CA",
+    "America/Goose_Bay": "CA",
+    "America/Iqaluit": "CA",
+    "America/Creston": "CA",
+    "America/Blanc-Sablon": "CA",
+    "America/Inuvik": "CA",
+    "America/Rankin_Inlet": "CA",
+    "America/Atikokan": "CA",
+    "America/Fort_Nelson": "CA",
+    "America/Detroit": "US",
+    "America/Cambridge_Bay": "CA",
+    "America/Dawson": "CA",
+    "Indian/Cocos": "CC",
+    "Africa/Kinshasa": "CD",
+    "Africa/Lubumbashi": "CD",
+    "Africa/Bangui": "CF",
+    "Africa/Brazzaville": "CG",
+    "Europe/Zurich": "CH",
+    "Africa/Abidjan": "ML",
+    "Africa/Accra": "GH",
+    "Pacific/Rarotonga": "CK",
+    "America/Santiago": "CL",
+    "America/Punta_Arenas": "CL",
+    "America/Coyhaique": "CL",
+    "Pacific/Easter": "CL",
+    "Africa/Douala": "CM",
+    "Asia/Shanghai": "VN",
+    "Asia/Urumqi": "CN",
+    "Asia/Macau": "MO",
+    "Asia/Yakutsk": "RU",
+    "America/Bogota": "CO",
+    "America/Costa_Rica": "CR",
+    "America/Havana": "CU",
+    "America/New_York": "US",
+    "Atlantic/Cape_Verde": "CV",
+    "America/Curacao": "CW",
+    "Indian/Christmas": "CX",
+    "Asia/Nicosia": "GB",
+    "Asia/Famagusta": "GB",
+    "Europe/Athens": "GR",
+    "Europe/Prague": "SK",
+    "Europe/Berlin": "DE",
+    "Europe/Busingen": "DE",
+    "Africa/Djibouti": "DJ",
+    "Europe/Copenhagen": "DK",
+    "America/Dominica": "DM",
+    "America/Santo_Domingo": "DO",
+    "Africa/Algiers": "DZ",
+    "America/Guayaquil": "EC",
+    "Pacific/Galapagos": "EC",
+    "Europe/Tallinn": "EE",
+    "Africa/Cairo": "EG",
+    "Africa/El_Aaiun": "MA",
+    "Africa/Casablanca": "MA",
+    "Africa/Asmara": "ER",
+    "Europe/Madrid": "ES",
+    "Atlantic/Canary": "ES",
+    "Africa/Ceuta": "ES",
+    "Africa/Addis_Ababa": "SO",
+    "Europe/Helsinki": "FI",
+    "Pacific/Fiji": "FJ",
+    "Atlantic/Stanley": "FK",
+    "Pacific/Chuuk": "FM",
+    "Pacific/Kosrae": "FM",
+    "Pacific/Pohnpei": "FM",
+    "Atlantic/Faroe": "FO",
+    "Europe/Paris": "FR",
+    "Africa/Libreville": "GA",
+    "Europe/London": "GB",
+    "America/Grenada": "GD",
+    "Asia/Tbilisi": "GE",
+    "Europe/Moscow": "RU",
+    "America/Cayenne": "GF",
+    "Europe/Guernsey": "GG",
+    "Europe/Gibraltar": "GI",
+    "America/Nuuk": "GL",
+    "America/Thule": "GL",
+    "Africa/Banjul": "GM",
+    "Africa/Conakry": "GN",
+    "America/Guadeloupe": "GP",
+    "Africa/Malabo": "GQ",
+    "Atlantic/South_Georgia": "GS",
+    "America/Guatemala": "GT",
+    "Pacific/Guam": "GU",
+    "Africa/Bissau": "GW",
+    "America/Guyana": "GY",
+    "Asia/Hong_Kong": "HK",
+    "America/Tegucigalpa": "HN",
+    "Europe/Zagreb": "HR",
+    "America/Port-au-Prince": "HT",
+    "Europe/Budapest": "HU",
+    "Asia/Jakarta": "ID",
+    "Asia/Makassar": "ID",
+    "Asia/Jayapura": "ID",
+    "Asia/Ho_Chi_Minh": "VN",
+    "Europe/Dublin": "IE",
+    "Asia/Jerusalem": "PS",
+    "Asia/Hebron": "PS",
+    "Europe/Isle_of_Man": "IM",
+    "Asia/Kolkata": "MM",
+    "Asia/Karachi": "PK",
+    "Indian/Chagos": "IO",
+    "Asia/Baghdad": "TR",
+    "Asia/Tehran": "IR",
+    "Atlantic/Reykjavik": "IS",
+    "Europe/Rome": "IT",
+    "Europe/Jersey": "JE",
+    "America/Jamaica": "JM",
+    "Asia/Amman": "JO",
+    "Asia/Tokyo": "JP",
+    "Africa/Nairobi": "KE",
+    "Asia/Bishkek": "UZ",
+    "Asia/Phnom_Penh": "KH",
+    "Pacific/Tarawa": "KI",
+    "Pacific/Kiritimati": "KI",
+    "Indian/Comoro": "KM",
+    "America/St_Kitts": "KN",
+    "Asia/Pyongyang": "KP",
+    "Asia/Seoul": "KR",
+    "Asia/Kuwait": "KW",
+    "America/Cayman": "KY",
+    "Asia/Almaty": "KZ",
+    "Asia/Aqtobe": "KZ",
+    "Asia/Qyzylorda": "KZ",
+    "Asia/Oral": "KZ",
+    "Asia/Atyrau": "KZ",
+    "Asia/Qostanay": "KZ",
+    "Asia/Aqtau": "KZ",
+    "Asia/Vientiane": "VN",
+    "Asia/Beirut": "LB",
+    "America/St_Lucia": "LC",
+    "Europe/Vaduz": "LI",
+    "Asia/Colombo": "LK",
+    "Africa/Monrovia": "LR",
+    "Africa/Maseru": "LS",
+    "Europe/Vilnius": "LT",
+    "Europe/Luxembourg": "LU",
+    "Europe/Riga": "LV",
+    "Africa/Tripoli": "LY",
+    "Europe/Monaco": "MC",
+    "Europe/Chisinau": "MD",
+    "Europe/Podgorica": "ME",
+    "America/Marigot": "MF",
+    "Indian/Antananarivo": "MG",
+    "Pacific/Majuro": "MH",
+    "Pacific/Kwajalein": "MH",
+    "Europe/Skopje": "MK",
+    "Africa/Bamako": "ML",
+    "Africa/Nouakchott": "MR",
+    "Asia/Yangon": "MM",
+    "Asia/Ulaanbaatar": "MN",
+    "Asia/Hovd": "MN",
+    "Pacific/Saipan": "MP",
+    "America/Martinique": "MQ",
+    "America/Montserrat": "MS",
+    "Europe/Malta": "MT",
+    "Indian/Mauritius": "MU",
+    "Indian/Maldives": "MV",
+    "Africa/Blantyre": "MW",
+    "America/Mexico_City": "MX",
+    "America/Tijuana": "MX",
+    "America/Ciudad_Juarez": "MX",
+    "America/Merida": "MX",
+    "America/Monterrey": "MX",
+    "America/Chihuahua": "MX",
+    "America/Cancun": "MX",
+    "America/Hermosillo": "MX",
+    "America/Mazatlan": "MX",
+    "America/Matamoros": "MX",
+    "America/Ojinaga": "MX",
+    "America/Bahia_Banderas": "MX",
+    "Asia/Kuala_Lumpur": "MY",
+    "Asia/Kuching": "MY",
+    "Africa/Maputo": "MZ",
+    "Africa/Windhoek": "NA",
+    "Pacific/Noumea": "NC",
+    "Africa/Niamey": "NE",
+    "Pacific/Norfolk": "NF",
+    "Africa/Lagos": "NG",
+    "America/Managua": "NI",
+    "Europe/Amsterdam": "NL",
+    "Europe/Oslo": "NO",
+    "Asia/Kathmandu": "NP",
+    "Pacific/Nauru": "NR",
+    "Pacific/Niue": "NU",
+    "Pacific/Auckland": "NZ",
+    "Pacific/Chatham": "NZ",
+    "Asia/Muscat": "OM",
+    "America/Panama": "PA",
+    "America/Lima": "PE",
+    "Pacific/Tahiti": "PF",
+    "Pacific/Marquesas": "PF",
+    "Pacific/Gambier": "PF",
+    "Pacific/Port_Moresby": "PG",
+    "Pacific/Bougainville": "PG",
+    "Asia/Manila": "PH",
+    "Europe/Warsaw": "PL",
+    "America/Miquelon": "PM",
+    "Pacific/Pitcairn": "PN",
+    "America/Puerto_Rico": "PR",
+    "Asia/Gaza": "PS",
+    "Europe/Lisbon": "PT",
+    "Atlantic/Madeira": "PT",
+    "Atlantic/Azores": "PT",
+    "Pacific/Palau": "PW",
+    "America/Asuncion": "PY",
+    "Asia/Qatar": "QA",
+    "Indian/Reunion": "RE",
+    "Europe/Bucharest": "RO",
+    "Europe/Belgrade": "XK",
+    "Asia/Novosibirsk": "RU",
+    "Asia/Yekaterinburg": "RU",
+    "Asia/Omsk": "RU",
+    "Europe/Samara": "RU",
+    "Asia/Krasnoyarsk": "RU",
+    "Europe/Volgograd": "RU",
+    "Europe/Saratov": "RU",
+    "Asia/Barnaul": "RU",
+    "Europe/Ulyanovsk": "RU",
+    "Asia/Irkutsk": "RU",
+    "Asia/Vladivostok": "RU",
+    "Asia/Tomsk": "RU",
+    "Asia/Novokuznetsk": "RU",
+    "Europe/Astrakhan": "RU",
+    "Europe/Kirov": "RU",
+    "Europe/Kaliningrad": "RU",
+    "Asia/Chita": "RU",
+    "Asia/Sakhalin": "RU",
+    "Asia/Kamchatka": "RU",
+    "Asia/Magadan": "RU",
+    "Asia/Anadyr": "RU",
+    "Africa/Kigali": "RW",
+    "Asia/Riyadh": "SA",
+    "Pacific/Guadalcanal": "SB",
+    "Indian/Mahe": "SC",
+    "Africa/Khartoum": "SD",
+    "Europe/Stockholm": "SE",
+    "Asia/Singapore": "SG",
+    "Atlantic/St_Helena": "SH",
+    "Europe/Ljubljana": "SI",
+    "Arctic/Longyearbyen": "SJ",
+    "Europe/Bratislava": "SK",
+    "Africa/Freetown": "SL",
+    "Europe/San_Marino": "SM",
+    "Africa/Dakar": "SN",
+    "Africa/Mogadishu": "SO",
+    "America/Paramaribo": "SR",
+    "Africa/Juba": "SS",
+    "Africa/Sao_Tome": "ST",
+    "America/El_Salvador": "SV",
+    "America/Lower_Princes": "SX",
+    "Asia/Damascus": "SY",
+    "Africa/Mbabane": "SZ",
+    "America/Grand_Turk": "TC",
+    "Africa/Ndjamena": "TD",
+    "Indian/Kerguelen": "TF",
+    "Africa/Lome": "TG",
+    "Asia/Bangkok": "VN",
+    "Asia/Dushanbe": "TJ",
+    "Pacific/Fakaofo": "TK",
+    "Asia/Dili": "TL",
+    "Asia/Ashgabat": "TM",
+    "Africa/Tunis": "TN",
+    "Pacific/Tongatapu": "TO",
+    "Europe/Istanbul": "TR",
+    "America/Port_of_Spain": "TT",
+    "Pacific/Funafuti": "TV",
+    "Asia/Taipei": "TW",
+    "Africa/Dar_es_Salaam": "TZ",
+    "Europe/Kyiv": "UA",
+    "Europe/Simferopol": "UA",
+    "Africa/Kampala": "UG",
+    "America/Los_Angeles": "US",
+    "America/Chicago": "US",
+    "America/Phoenix": "US",
+    "America/Indiana/Indianapolis": "US",
+    "America/Denver": "US",
+    "America/Kentucky/Louisville": "US",
+    "Pacific/Honolulu": "US",
+    "America/Anchorage": "US",
+    "America/Boise": "US",
+    "America/Juneau": "US",
+    "America/North_Dakota/New_Salem": "US",
+    "America/Indiana/Vincennes": "US",
+    "America/Sitka": "US",
+    "America/Menominee": "US",
+    "America/Indiana/Tell_City": "US",
+    "America/Kentucky/Monticello": "US",
+    "America/Nome": "US",
+    "America/Indiana/Knox": "US",
+    "America/North_Dakota/Beulah": "US",
+    "America/Indiana/Winamac": "US",
+    "America/Indiana/Petersburg": "US",
+    "America/Indiana/Vevay": "US",
+    "America/Metlakatla": "US",
+    "America/Indiana/Marengo": "US",
+    "America/Yakutat": "US",
+    "America/North_Dakota/Center": "US",
+    "America/Montevideo": "UY",
+    "Asia/Tashkent": "UZ",
+    "Asia/Samarkand": "UZ",
+    "Europe/Vatican": "VA",
+    "America/St_Vincent": "VC",
+    "America/Caracas": "VE",
+    "America/Tortola": "VG",
+    "America/St_Thomas": "VI",
+    "Pacific/Efate": "VU",
+    "Pacific/Wallis": "WF",
+    "Pacific/Apia": "WS",
+    "Asia/Aden": "YE",
+    "Indian/Mayotte": "YT",
+    "Africa/Johannesburg": "ZA",
+    "Africa/Lusaka": "ZM",
+    "Africa/Harare": "ZW"
+  },
+  "countryLabels": [
+    {
+      "code": "AU",
+      "name": "Австралия"
+    },
+    {
+      "code": "AT",
+      "name": "Австрия"
+    },
+    {
+      "code": "AZ",
+      "name": "Азербайджан"
+    },
+    {
+      "code": "AX",
+      "name": "Аландские о-ва"
+    },
+    {
+      "code": "AL",
+      "name": "Албания"
+    },
+    {
+      "code": "DZ",
+      "name": "Алжир"
+    },
+    {
+      "code": "AS",
+      "name": "Американское Самоа"
+    },
+    {
+      "code": "AI",
+      "name": "Ангилья"
+    },
+    {
+      "code": "AO",
+      "name": "Ангола"
+    },
+    {
+      "code": "AD",
+      "name": "Андорра"
+    },
+    {
+      "code": "AG",
+      "name": "Антигуа и Барбуда"
+    },
+    {
+      "code": "AR",
+      "name": "Аргентина"
+    },
+    {
+      "code": "AM",
+      "name": "Армения"
+    },
+    {
+      "code": "AW",
+      "name": "Аруба"
+    },
+    {
+      "code": "AF",
+      "name": "Афганистан"
+    },
+    {
+      "code": "BS",
+      "name": "Багамы"
+    },
+    {
+      "code": "BD",
+      "name": "Бангладеш"
+    },
+    {
+      "code": "BB",
+      "name": "Барбадос"
+    },
+    {
+      "code": "BH",
+      "name": "Бахрейн"
+    },
+    {
+      "code": "BY",
+      "name": "Беларусь"
+    },
+    {
+      "code": "BZ",
+      "name": "Белиз"
+    },
+    {
+      "code": "BE",
+      "name": "Бельгия"
+    },
+    {
+      "code": "BJ",
+      "name": "Бенин"
+    },
+    {
+      "code": "BM",
+      "name": "Бермудские о-ва"
+    },
+    {
+      "code": "BG",
+      "name": "Болгария"
+    },
+    {
+      "code": "BO",
+      "name": "Боливия"
+    },
+    {
+      "code": "BQ",
+      "name": "Бонэйр, Синт-Эстатиус и Саба"
+    },
+    {
+      "code": "BA",
+      "name": "Босния и Герцеговина"
+    },
+    {
+      "code": "BW",
+      "name": "Ботсвана"
+    },
+    {
+      "code": "BR",
+      "name": "Бразилия"
+    },
+    {
+      "code": "IO",
+      "name": "Британская территория в Индийском океане"
+    },
+    {
+      "code": "BN",
+      "name": "Бруней"
+    },
+    {
+      "code": "BF",
+      "name": "Буркина-Фасо"
+    },
+    {
+      "code": "BI",
+      "name": "Бурунди"
+    },
+    {
+      "code": "BT",
+      "name": "Бутан"
+    },
+    {
+      "code": "VU",
+      "name": "Вануату"
+    },
+    {
+      "code": "VA",
+      "name": "Ватикан"
+    },
+    {
+      "code": "GB",
+      "name": "Великобритания"
+    },
+    {
+      "code": "HU",
+      "name": "Венгрия"
+    },
+    {
+      "code": "VE",
+      "name": "Венесуэла"
+    },
+    {
+      "code": "VG",
+      "name": "Виргинские о-ва (Великобритания)"
+    },
+    {
+      "code": "VI",
+      "name": "Виргинские о-ва (США)"
+    },
+    {
+      "code": "TL",
+      "name": "Восточный Тимор"
+    },
+    {
+      "code": "VN",
+      "name": "Вьетнам"
+    },
+    {
+      "code": "GA",
+      "name": "Габон"
+    },
+    {
+      "code": "HT",
+      "name": "Гаити"
+    },
+    {
+      "code": "GY",
+      "name": "Гайана"
+    },
+    {
+      "code": "GM",
+      "name": "Гамбия"
+    },
+    {
+      "code": "GH",
+      "name": "Гана"
+    },
+    {
+      "code": "GP",
+      "name": "Гваделупа"
+    },
+    {
+      "code": "GT",
+      "name": "Гватемала"
+    },
+    {
+      "code": "GN",
+      "name": "Гвинея"
+    },
+    {
+      "code": "GW",
+      "name": "Гвинея-Бисау"
+    },
+    {
+      "code": "DE",
+      "name": "Германия"
+    },
+    {
+      "code": "GG",
+      "name": "Гернси"
+    },
+    {
+      "code": "GI",
+      "name": "Гибралтар"
+    },
+    {
+      "code": "HN",
+      "name": "Гондурас"
+    },
+    {
+      "code": "HK",
+      "name": "Гонконг (САР)"
+    },
+    {
+      "code": "GD",
+      "name": "Гренада"
+    },
+    {
+      "code": "GL",
+      "name": "Гренландия"
+    },
+    {
+      "code": "GR",
+      "name": "Греция"
+    },
+    {
+      "code": "GE",
+      "name": "Грузия"
+    },
+    {
+      "code": "GU",
+      "name": "Гуам"
+    },
+    {
+      "code": "DK",
+      "name": "Дания"
+    },
+    {
+      "code": "JE",
+      "name": "Джерси"
+    },
+    {
+      "code": "DJ",
+      "name": "Джибути"
+    },
+    {
+      "code": "DM",
+      "name": "Доминика"
+    },
+    {
+      "code": "DO",
+      "name": "Доминиканская Республика"
+    },
+    {
+      "code": "EG",
+      "name": "Египет"
+    },
+    {
+      "code": "ZM",
+      "name": "Замбия"
+    },
+    {
+      "code": "EH",
+      "name": "Западная Сахара"
+    },
+    {
+      "code": "ZW",
+      "name": "Зимбабве"
+    },
+    {
+      "code": "IL",
+      "name": "Израиль"
+    },
+    {
+      "code": "IN",
+      "name": "Индия"
+    },
+    {
+      "code": "ID",
+      "name": "Индонезия"
+    },
+    {
+      "code": "JO",
+      "name": "Иордания"
+    },
+    {
+      "code": "IQ",
+      "name": "Ирак"
+    },
+    {
+      "code": "IR",
+      "name": "Иран"
+    },
+    {
+      "code": "IE",
+      "name": "Ирландия"
+    },
+    {
+      "code": "IS",
+      "name": "Исландия"
+    },
+    {
+      "code": "ES",
+      "name": "Испания"
+    },
+    {
+      "code": "IT",
+      "name": "Италия"
+    },
+    {
+      "code": "YE",
+      "name": "Йемен"
+    },
+    {
+      "code": "CV",
+      "name": "Кабо-Верде"
+    },
+    {
+      "code": "KZ",
+      "name": "Казахстан"
+    },
+    {
+      "code": "KH",
+      "name": "Камбоджа"
+    },
+    {
+      "code": "CM",
+      "name": "Камерун"
+    },
+    {
+      "code": "CA",
+      "name": "Канада"
+    },
+    {
+      "code": "QA",
+      "name": "Катар"
+    },
+    {
+      "code": "KE",
+      "name": "Кения"
+    },
+    {
+      "code": "CY",
+      "name": "Кипр"
+    },
+    {
+      "code": "KG",
+      "name": "Киргизия"
+    },
+    {
+      "code": "KI",
+      "name": "Кирибати"
+    },
+    {
+      "code": "CN",
+      "name": "Китай"
+    },
+    {
+      "code": "KP",
+      "name": "КНДР"
+    },
+    {
+      "code": "CC",
+      "name": "Кокосовые о-ва"
+    },
+    {
+      "code": "CO",
+      "name": "Колумбия"
+    },
+    {
+      "code": "KM",
+      "name": "Коморы"
+    },
+    {
+      "code": "CG",
+      "name": "Конго - Браззавиль"
+    },
+    {
+      "code": "CD",
+      "name": "Конго - Киншаса"
+    },
+    {
+      "code": "XK",
+      "name": "Косово"
+    },
+    {
+      "code": "CR",
+      "name": "Коста-Рика"
+    },
+    {
+      "code": "CI",
+      "name": "Кот-д’Ивуар"
+    },
+    {
+      "code": "CU",
+      "name": "Куба"
+    },
+    {
+      "code": "KW",
+      "name": "Кувейт"
+    },
+    {
+      "code": "CW",
+      "name": "Кюрасао"
+    },
+    {
+      "code": "LA",
+      "name": "Лаос"
+    },
+    {
+      "code": "LV",
+      "name": "Латвия"
+    },
+    {
+      "code": "LS",
+      "name": "Лесото"
+    },
+    {
+      "code": "LR",
+      "name": "Либерия"
+    },
+    {
+      "code": "LB",
+      "name": "Ливан"
+    },
+    {
+      "code": "LY",
+      "name": "Ливия"
+    },
+    {
+      "code": "LT",
+      "name": "Литва"
+    },
+    {
+      "code": "LI",
+      "name": "Лихтенштейн"
+    },
+    {
+      "code": "LU",
+      "name": "Люксембург"
+    },
+    {
+      "code": "MU",
+      "name": "Маврикий"
+    },
+    {
+      "code": "MR",
+      "name": "Мавритания"
+    },
+    {
+      "code": "MG",
+      "name": "Мадагаскар"
+    },
+    {
+      "code": "YT",
+      "name": "Майотта"
+    },
+    {
+      "code": "MO",
+      "name": "Макао (САР)"
+    },
+    {
+      "code": "MW",
+      "name": "Малави"
+    },
+    {
+      "code": "MY",
+      "name": "Малайзия"
+    },
+    {
+      "code": "ML",
+      "name": "Мали"
+    },
+    {
+      "code": "MV",
+      "name": "Мальдивы"
+    },
+    {
+      "code": "MT",
+      "name": "Мальта"
+    },
+    {
+      "code": "MA",
+      "name": "Марокко"
+    },
+    {
+      "code": "MQ",
+      "name": "Мартиника"
+    },
+    {
+      "code": "MH",
+      "name": "Маршалловы о-ва"
+    },
+    {
+      "code": "MX",
+      "name": "Мексика"
+    },
+    {
+      "code": "MZ",
+      "name": "Мозамбик"
+    },
+    {
+      "code": "MD",
+      "name": "Молдова"
+    },
+    {
+      "code": "MC",
+      "name": "Монако"
+    },
+    {
+      "code": "MN",
+      "name": "Монголия"
+    },
+    {
+      "code": "MS",
+      "name": "Монтсеррат"
+    },
+    {
+      "code": "MM",
+      "name": "Мьянма (Бирма)"
+    },
+    {
+      "code": "NA",
+      "name": "Намибия"
+    },
+    {
+      "code": "NR",
+      "name": "Науру"
+    },
+    {
+      "code": "NP",
+      "name": "Непал"
+    },
+    {
+      "code": "NE",
+      "name": "Нигер"
+    },
+    {
+      "code": "NG",
+      "name": "Нигерия"
+    },
+    {
+      "code": "NL",
+      "name": "Нидерланды"
+    },
+    {
+      "code": "NI",
+      "name": "Никарагуа"
+    },
+    {
+      "code": "NU",
+      "name": "Ниуэ"
+    },
+    {
+      "code": "NZ",
+      "name": "Новая Зеландия"
+    },
+    {
+      "code": "NC",
+      "name": "Новая Каледония"
+    },
+    {
+      "code": "NO",
+      "name": "Норвегия"
+    },
+    {
+      "code": "IM",
+      "name": "о-в Мэн"
+    },
+    {
+      "code": "NF",
+      "name": "о-в Норфолк"
+    },
+    {
+      "code": "CX",
+      "name": "о-в Рождества"
+    },
+    {
+      "code": "SH",
+      "name": "о-в Св. Елены"
+    },
+    {
+      "code": "KY",
+      "name": "о-ва Кайман"
+    },
+    {
+      "code": "CK",
+      "name": "о-ва Кука"
+    },
+    {
+      "code": "PN",
+      "name": "о-ва Питкэрн"
+    },
+    {
+      "code": "AE",
+      "name": "ОАЭ"
+    },
+    {
+      "code": "OM",
+      "name": "Оман"
+    },
+    {
+      "code": "PK",
+      "name": "Пакистан"
+    },
+    {
+      "code": "PW",
+      "name": "Палау"
+    },
+    {
+      "code": "PS",
+      "name": "Палестинские территории"
+    },
+    {
+      "code": "PA",
+      "name": "Панама"
+    },
+    {
+      "code": "PG",
+      "name": "Папуа — Новая Гвинея"
+    },
+    {
+      "code": "PY",
+      "name": "Парагвай"
+    },
+    {
+      "code": "PE",
+      "name": "Перу"
+    },
+    {
+      "code": "PL",
+      "name": "Польша"
+    },
+    {
+      "code": "PT",
+      "name": "Португалия"
+    },
+    {
+      "code": "PR",
+      "name": "Пуэрто-Рико"
+    },
+    {
+      "code": "KR",
+      "name": "Республика Корея"
+    },
+    {
+      "code": "RE",
+      "name": "Реюньон"
+    },
+    {
+      "code": "RU",
+      "name": "Россия"
+    },
+    {
+      "code": "RW",
+      "name": "Руанда"
+    },
+    {
+      "code": "RO",
+      "name": "Румыния"
+    },
+    {
+      "code": "SV",
+      "name": "Сальвадор"
+    },
+    {
+      "code": "WS",
+      "name": "Самоа"
+    },
+    {
+      "code": "SM",
+      "name": "Сан-Марино"
+    },
+    {
+      "code": "ST",
+      "name": "Сан-Томе и Принсипи"
+    },
+    {
+      "code": "SA",
+      "name": "Саудовская Аравия"
+    },
+    {
+      "code": "MK",
+      "name": "Северная Македония"
+    },
+    {
+      "code": "MP",
+      "name": "Северные Марианские о-ва"
+    },
+    {
+      "code": "SC",
+      "name": "Сейшельские о-ва"
+    },
+    {
+      "code": "BL",
+      "name": "Сен-Бартелеми"
+    },
+    {
+      "code": "MF",
+      "name": "Сен-Мартен"
+    },
+    {
+      "code": "PM",
+      "name": "Сен-Пьер и Микелон"
+    },
+    {
+      "code": "SN",
+      "name": "Сенегал"
+    },
+    {
+      "code": "VC",
+      "name": "Сент-Винсент и Гренадины"
+    },
+    {
+      "code": "KN",
+      "name": "Сент-Китс и Невис"
+    },
+    {
+      "code": "LC",
+      "name": "Сент-Люсия"
+    },
+    {
+      "code": "RS",
+      "name": "Сербия"
+    },
+    {
+      "code": "SG",
+      "name": "Сингапур"
+    },
+    {
+      "code": "SX",
+      "name": "Синт-Мартен"
+    },
+    {
+      "code": "SY",
+      "name": "Сирия"
+    },
+    {
+      "code": "SK",
+      "name": "Словакия"
+    },
+    {
+      "code": "SI",
+      "name": "Словения"
+    },
+    {
+      "code": "US",
+      "name": "Соединенные Штаты"
+    },
+    {
+      "code": "SB",
+      "name": "Соломоновы о-ва"
+    },
+    {
+      "code": "SO",
+      "name": "Сомали"
+    },
+    {
+      "code": "SD",
+      "name": "Судан"
+    },
+    {
+      "code": "SR",
+      "name": "Суринам"
+    },
+    {
+      "code": "SL",
+      "name": "Сьерра-Леоне"
+    },
+    {
+      "code": "TJ",
+      "name": "Таджикистан"
+    },
+    {
+      "code": "TH",
+      "name": "Таиланд"
+    },
+    {
+      "code": "TW",
+      "name": "Тайвань"
+    },
+    {
+      "code": "TZ",
+      "name": "Танзания"
+    },
+    {
+      "code": "TC",
+      "name": "Тёркс и Кайкос"
+    },
+    {
+      "code": "TG",
+      "name": "Того"
+    },
+    {
+      "code": "TK",
+      "name": "Токелау"
+    },
+    {
+      "code": "TO",
+      "name": "Тонга"
+    },
+    {
+      "code": "TT",
+      "name": "Тринидад и Тобаго"
+    },
+    {
+      "code": "TV",
+      "name": "Тувалу"
+    },
+    {
+      "code": "TN",
+      "name": "Тунис"
+    },
+    {
+      "code": "TM",
+      "name": "Туркменистан"
+    },
+    {
+      "code": "TR",
+      "name": "Турция"
+    },
+    {
+      "code": "UG",
+      "name": "Уганда"
+    },
+    {
+      "code": "UZ",
+      "name": "Узбекистан"
+    },
+    {
+      "code": "UA",
+      "name": "Украина"
+    },
+    {
+      "code": "WF",
+      "name": "Уоллис и Футуна"
+    },
+    {
+      "code": "UY",
+      "name": "Уругвай"
+    },
+    {
+      "code": "FO",
+      "name": "Фарерские о-ва"
+    },
+    {
+      "code": "FM",
+      "name": "Федеративные Штаты Микронезии"
+    },
+    {
+      "code": "FJ",
+      "name": "Фиджи"
+    },
+    {
+      "code": "PH",
+      "name": "Филиппины"
+    },
+    {
+      "code": "FI",
+      "name": "Финляндия"
+    },
+    {
+      "code": "FK",
+      "name": "Фолклендские о-ва"
+    },
+    {
+      "code": "FR",
+      "name": "Франция"
+    },
+    {
+      "code": "GF",
+      "name": "Французская Гвиана"
+    },
+    {
+      "code": "PF",
+      "name": "Французская Полинезия"
+    },
+    {
+      "code": "TF",
+      "name": "Французские Южные территории"
+    },
+    {
+      "code": "HR",
+      "name": "Хорватия"
+    },
+    {
+      "code": "CF",
+      "name": "Центрально-Африканская Республика"
+    },
+    {
+      "code": "TD",
+      "name": "Чад"
+    },
+    {
+      "code": "ME",
+      "name": "Черногория"
+    },
+    {
+      "code": "CZ",
+      "name": "Чехия"
+    },
+    {
+      "code": "CL",
+      "name": "Чили"
+    },
+    {
+      "code": "CH",
+      "name": "Швейцария"
+    },
+    {
+      "code": "SE",
+      "name": "Швеция"
+    },
+    {
+      "code": "SJ",
+      "name": "Шпицберген и Ян-Майен"
+    },
+    {
+      "code": "LK",
+      "name": "Шри-Ланка"
+    },
+    {
+      "code": "EC",
+      "name": "Эквадор"
+    },
+    {
+      "code": "GQ",
+      "name": "Экваториальная Гвинея"
+    },
+    {
+      "code": "ER",
+      "name": "Эритрея"
+    },
+    {
+      "code": "SZ",
+      "name": "Эсватини"
+    },
+    {
+      "code": "EE",
+      "name": "Эстония"
+    },
+    {
+      "code": "ET",
+      "name": "Эфиопия"
+    },
+    {
+      "code": "GS",
+      "name": "Южная Георгия и Южные Сандвичевы о-ва"
+    },
+    {
+      "code": "ZA",
+      "name": "Южно-Африканская Республика"
+    },
+    {
+      "code": "SS",
+      "name": "Южный Судан"
+    },
+    {
+      "code": "JM",
+      "name": "Ямайка"
+    },
+    {
+      "code": "JP",
+      "name": "Япония"
+    }
+  ]
+}

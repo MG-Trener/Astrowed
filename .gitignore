@@ -1,0 +1,17 @@
+node_modules/
+.next/
+.env*
+!.env.example
+*.tsbuildinfo
+artifacts/
+output/
+tmp/
+playwright-report/
+test-results/
+*.log
+out/
+
+apps/pages/public/locations/
+apps/pages/public/audio/
+public/maplibre/
+apps/pages/public/maplibre/

@@ -1,0 +1,238 @@
+.hero-scene--illustrated {
+  width: 112%;
+  margin-left: -6%;
+  isolation: isolate;
+}
+.hero-art-stage {
+  position: absolute;
+  inset: 0 0 100px;
+  display: grid;
+  place-items: center;
+}
+.hero-art-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mask-image: radial-gradient(
+    ellipse 65% 65% at 50% 50%,
+    #000 65%,
+    transparent 100%
+  );
+  animation: artwork-appear 0.6s ease-out both;
+}
+.art-heading {
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 8px 12px;
+  background: #080f0dcc;
+}
+.art-caption {
+  position: absolute;
+  bottom: 63px;
+  width: 100%;
+  display: grid;
+  gap: 6px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+}
+.art-caption .mono {
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--dim);
+}
+.art-selector {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+.art-selector button {
+  width: 39px;
+  height: 39px;
+  font: 21px serif;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background 0.2s;
+}
+.art-selector button:hover,
+.art-selector button[aria-pressed="true"] {
+  color: var(--element, var(--jade));
+  border-color: var(--element, var(--jade));
+  background: #b2c7ab0b;
+}
+.element-gallery-section {
+  max-width: 1600px;
+  padding: 76px 5.1% 0;
+  margin: auto;
+}
+.element-art-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 32px;
+}
+.element-art-card {
+  position: relative;
+  min-width: 0;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 22px;
+}
+.element-art-index {
+  font: 8px monospace;
+  letter-spacing: 1.5px;
+  color: var(--dim);
+}
+.element-card-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+  margin: 15px 0 8px;
+  mask-image: radial-gradient(
+    ellipse 65% 65% at 50% 50%,
+    #000 70%,
+    transparent 100%
+  );
+  transition: transform 0.4s;
+}
+.element-art-card:hover .element-card-image {
+  transform: translateY(-6px);
+}
+.element-art-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.element-art-label > span:first-child {
+  font: 25px serif;
+}
+.element-art-label h3 {
+  font-size: 15px;
+  font-weight: 400;
+  margin: 0;
+}
+.element-art-label > span:last-child {
+  margin-left: auto;
+  color: var(--dim);
+}
+.element-portrait {
+  position: relative;
+  height: 250px;
+  margin: 20px 0 24px;
+}
+.element-portrait-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mask-image: radial-gradient(
+    ellipse 65% 65% at 50% 50%,
+    #000 68%,
+    transparent 100%
+  );
+  animation: artwork-appear 0.5s ease-out both;
+}
+.element-portrait figcaption {
+  position: absolute;
+  bottom: 10px;
+  left: 5%;
+  font: 64px serif;
+  text-shadow: 0 2px 18px #080f0d;
+}
+@keyframes artwork-appear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 800px) {
+  .hero-scene--illustrated {
+    width: 100%;
+    margin: 8px 0 0;
+    height: 440px;
+  }
+  .element-gallery-section {
+    padding: 54px 6% 0;
+  }
+  .element-art-grid {
+    gap: 16px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .element-portrait {
+    height: 280px;
+  }
+}
+@media (max-width: 540px) {
+  .hero-scene--illustrated {
+    height: 350px;
+    width: 112%;
+    margin-left: -6%;
+  }
+  .hero-art-stage {
+    inset: -4px 0 88px;
+  }
+  .art-heading {
+    font-size: 6px;
+    top: 0;
+  }
+  .art-selector {
+    gap: 7px;
+  }
+  .art-selector button {
+    width: 34px;
+    height: 34px;
+    font-size: 19px;
+  }
+  .art-caption {
+    bottom: 55px;
+    font-size: 10px;
+  }
+  .art-caption .mono {
+    font-size: 7px;
+  }
+  .element-art-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 16px;
+  }
+  .element-art-grid > :last-child {
+    grid-column: 1 / -1;
+    width: calc(50% - 8px);
+    justify-self: center;
+  }
+  .element-art-label h3 {
+    font-size: 14px;
+  }
+  .element-portrait {
+    height: 250px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-art-image,
+  .element-portrait-image,
+  .element-card-image {
+    animation: none;
+    transition: none;
+  }
+}
+@media print {
+  .hero-scene--illustrated,
+  .element-gallery-section,
+  .element-portrait {
+    display: none;
+  }
+}

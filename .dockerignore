@@ -1,0 +1,8 @@
+node_modules
+.next
+.git
+.env*
+artifacts
+*.log
+apps/pages/.next
+apps/pages/out

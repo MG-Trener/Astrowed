@@ -1,0 +1,58 @@
+/* All effects sit in the shared, non-interactive decorative background. */
+.celestial-sky { position: absolute; inset: 0; pointer-events: none; }
+.sky-volume { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: screen; opacity: 0; }
+.celestial-sky[data-ready="true"] .sky-volume { opacity: .88; }
+.sky-galaxy-fallback { position: absolute; width: min(85vw, 850px); aspect-ratio: 1; background-size: contain; background-repeat: no-repeat; mix-blend-mode: screen; opacity: .22; mask-image: radial-gradient(ellipse, #000 20%, transparent 69%); }
+.sky-galaxy-fallback-one { left: -21%; top: -27%; transform: rotate(-24deg) scaleY(.65); }
+.sky-galaxy-fallback-two { right: -24%; bottom: -29%; transform: rotate(30deg) scaleY(.4); }
+.celestial-sky[data-ready="true"] .sky-galaxy-fallback { visibility: hidden; }
+@media (max-width: 600px) {
+  .comet-route[data-extra="true"] { display: none; }
+  .meteor { width: 85px !important; left: -85px !important; }
+  .celestial-sky[data-ready="true"] .sky-volume { opacity: .7; }
+}
+@media (prefers-reduced-motion: reduce) { .comet-route { display: none; } }
+.comet-route {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.meteor {
+  position: absolute;
+  left: -150px;
+  width: 150px;
+  height: 2px;
+  opacity: 0;
+  border-radius: 50%;
+  background: linear-gradient(90deg, transparent, var(--meteor-color));
+  animation: comet-flight var(--meteor-period) linear var(--meteor-delay)
+    infinite;
+}
+.meteor::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: -1px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff9df;
+  box-shadow: 0 0 9px 2px var(--meteor-color);
+}
+@keyframes comet-flight {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  1% {
+    opacity: 0.65;
+  }
+  5% {
+    opacity: 0.45;
+  }
+  7%,
+  100% {
+    opacity: 0;
+    transform: translateX(95vmax);
+  }
+}
