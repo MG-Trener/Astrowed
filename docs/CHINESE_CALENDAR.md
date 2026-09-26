@@ -4,9 +4,9 @@ Routes: `/calendar/` in the main app and static Pages export. Main navigation li
 
 ## Calculation policy
 
-`src/domain/calendar/engine.ts` uses the pinned lunar-typescript 1.8.6 package already used by Ba Zi. Supported Gregorian dates: 1901–2099. All dates and solar-term times use the Chinese civil calendar (UTC+8), with midnight day boundaries. There is no browser-timezone, local-solar-time or natal-profile adjustment. The UI states this explicitly.
+`src/domain/calendar/engine.ts` uses the pinned lunar-typescript 1.8.6 package already used by Ba Zi. Its legacy API retains UTC+8/midnight fixtures. The UI uses `hours.ts` for local month/day/hour calculations with an explicit city, IANA timezone, longitude, civil or mean-solar basis, and midnight or 23:00 day boundary. Default: Astana, civil time, midnight. Supported Gregorian dates: 1901–2099. There is no natal-profile adjustment.
 
-The lunar date (including negative/intercalary month numbers), day pillar and solar terms come from the library. Month/year pillars use exact solar-term boundaries; the astrological year changes at Li Chun. A transition day is split into before/after profiles at the computed term time. The month grid reports its first period and marks the transition; the day panel switches periods. Times are algorithmic estimates, not a claim of observational accuracy to the second.
+The lunar date label (including negative/intercalary month numbers) refers to the selected Gregorian date in the Chinese civil calendar. The calculated day/hour pillars follow the selected local clock basis and day boundary; adjacent calculated dates are explicitly shown in hour details. Month/year pillars use the absolute solar-term instant (converted from the library's UTC+8 convention), independent of longitude correction. The astrological year changes at Li Chun. Month cells summarize the profile at local noon; the day panel switches periods at month/day boundaries. Times are algorithmic estimates, not a claim of observational accuracy to the second.
 
 - Twelve officers: `(dayBranch - exactMonthBranch + 12) % 12`.
 - Twelve deities: the library's branch-offset formula, using the exact month branch for each period. Yellow/black path classification is shown separately from action lists.
@@ -25,7 +25,7 @@ The almanac is general. Personal date selection, hourly Qi Men, natal compatibil
 - All twelve officers have explicit activity mappings, including dismantling on Break and the bed/groundwork exceptions on Danger. We do not infer recommendations for unlisted activities.
 - Year/month clashes affect the defined major-start set, not cleaning or routine obligations. Sha delay restricts travel, moving, home entry and property transactions; other Sha/major-start combinations give caution. This scope and priority are the site's conservative policy, not a universally agreed cancellation formula.
 - Wealthless days use stem Lu branches `[寅,卯,巳,午,巳,午,申,酉,亥,子]` and the day's ten-day-cycle void. The derived pillars are 甲辰, 乙巳, 丙申, 丁亥, 戊戌, 己丑, 庚辰, 辛巳, 壬申, 癸亥. Only the defined commercial-start activities are restricted; taking up employment is not silently included.
-- Four separation days precede the civil dates of equinoxes/solstices; four exhaustion days precede Li Chun/Xia/Qiu/Dong, all UTC+8. These and black-path background give caution for major starts. They do not suppress routine chores.
+- Four separation days precede the dates of equinoxes/solstices; four exhaustion days precede Li Chun/Xia/Qiu/Dong in the selected local/solar basis (legacy API: UTC+8). These and black-path background give caution for major starts. They do not suppress routine chores.
 - Medical and legal timing is not part of the combined activity selector. A birth-year animal is not a personal assessment.
 
 Rule references (formulas/associations, with original Russian explanation):
@@ -35,7 +35,19 @@ Rule references (formulas/associations, with original Russian explanation):
 - https://www.suanzhun.net/book/1985.html (classical text: Lu in void)
 - https://ctext.org/wiki.pl?chapter=609842&if=gb&remap=gb (classical seasonal-day definitions)
 
-No numerical luck score, probability or outcome prediction is computed. Unimplemented personal/hourly/Dong Gong layers are not silently represented as evaluated.
+No numerical luck score, probability or outcome prediction is computed. Unimplemented personal/Qi Men/Dong Gong layers are not silently represented as evaluated.
+
+## Hour selection and local time
+
+`hours.ts` partitions the selected civil day into contiguous absolute-time intervals. Boundaries include traditional odd-hour edges, calculated midnight, solar terms and UTC-offset transitions. Civil DST folds retain both occurrences; gaps do not invent nonexistent clock time. Output labels always use the city's civil clock, with UTC offsets distinguishing repeated hours. Mean solar clock = UTC + longitude × 4 minutes. Equation of time/apparent solar time is not implemented and is not implied by the setting. Fractional-second longitude boundaries are rounded up to a whole second before partitioning.
+
+Day stem/branch uses the effective local calendar date. At a 23:00 boundary that date advances for the final Rat period; midnight mode retains the same day's Rat stem until midnight. Hour branch = floor((clock hour + 1)/2) modulo 12; hour stem = (day stem × 2 + hour branch) modulo 10. This explicit midnight convention may differ from library late-Rat convenience methods. Hour Yi/Ji uses the resulting day/hour pillars through `LunarUtil`; deity uses the day-branch offset. Hour/day opposition restricts major starts; the hour branch in the day's Xun void adds caution for the defined travel/commercial subset. No undocumented auspicious-star cancellation is inferred.
+
+Day and hour are evaluated separately. A restriction on either remains red. Caution on either, or support from only one level, is amber. Green requires support from both with no restrictions/cautions. Both empty remains neutral. All evidence remains readable in two columns, without external technical links.
+
+UI: shared city and activity controls, month/hour view switch, date picker and adjacent-day comparison, current interval indication updated every 30 seconds. On phones selecting an interval scrolls to its explanation. Existing lunar animation supplies the decorative artwork; no additional raster imagery was needed.
+
+Primary library reference: https://6tail.cn/calendar/lunar.time.html and the pinned library's public LunarUtil implementations. Regression tests in `tests/calendar-hours.test.ts` cover civil continuity, 23/25-hour DST days, midnight vs Zi, solar longitude correction, absolute solar-term conversion, library agreement away from late Rat, day-rule precedence, missing-evidence neutrality and date validation. Browser verification includes Astana and Moscow, city search, mean-solar mode, direct date submission, interval selection and 390px layout.
 
 ## Explanations and design
 

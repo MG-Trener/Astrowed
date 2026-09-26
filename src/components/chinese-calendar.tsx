@@ -2,18 +2,25 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { DateTime } from "luxon";
 import { zodiacArtwork } from "@/assets/zodiac-artwork";
 import { animals } from "@/domain/bazi/catalog";
 import { categorySymbols, officers } from "@/domain/calendar/catalog";
 import {
   activityDescription,
-  calculateCalendarMonth,
   MAX_YEAR,
   MIN_YEAR,
   type DayProfile,
 } from "@/domain/calendar/engine";
 import styles from "./chinese-calendar.module.css";
 import { CalendarLunarScene } from "./calendar-lunar-scene";
+import { CalendarLocation } from "./calendar-location";
+import { CalendarHours } from "./calendar-hours";
+import {
+  calculateLocalMonth,
+  defaultClock,
+  type ClockOptions,
+} from "@/domain/calendar/hours";
 import {
   assessedActivities,
   assessActivity,
@@ -126,6 +133,8 @@ function ActivityList({
   );
 }
 export function ChineseCalendar() {
+  const [clock, setClock] = useState<ClockOptions>(defaultClock);
+  const [view, setView] = useState<"month" | "hours">("month");
   const [period, setPeriod] = useState<{ year: number; month: number } | null>(
     null,
   );
@@ -142,7 +151,7 @@ export function ChineseCalendar() {
   }, [selected, period]);
   useEffect(() => {
     const now = new Intl.DateTimeFormat("en-CA", {
-      timeZone: "Asia/Shanghai",
+      timeZone: defaultClock.timezone,
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
@@ -154,11 +163,40 @@ export function ChineseCalendar() {
     setMonthInput(month);
     setSelected(day);
   }, []);
-  const days = useMemo(
-    () => (period ? calculateCalendarMonth(period.year, period.month) : []),
-    [period],
-  );
+  useEffect(() => {
+    const update = () =>
+      setToday(DateTime.now().setZone(clock.timezone).toISODate()!);
+    update();
+    const timer = setInterval(update, 60000);
+    return () => clearInterval(timer);
+  }, [clock.timezone]);
+  const calculated = useMemo(() => {
+    try {
+      return {
+        days: period
+          ? calculateLocalMonth(period.year, period.month, clock)
+          : [],
+        error: "",
+      };
+    } catch (e) {
+      return {
+        days: [],
+        error:
+          e instanceof Error ? e.message : "Не удалось рассчитать календарь.",
+      };
+    }
+  }, [period, clock]);
+  const days = calculated.days;
   const day = days[selected - 1] ?? days[0];
+  useEffect(() => {
+    if (day)
+      setSegment(
+        Math.max(
+          0,
+          day.profiles.findIndex((p) => p.from <= "12:00" && p.until > "12:00"),
+        ),
+      );
+  }, [day]);
   const profile = day?.profiles[Math.min(segment, day.profiles.length - 1)];
   function showMonth(year: number, month: number) {
     if (!Number.isInteger(year) || year < MIN_YEAR || year > MAX_YEAR) {
@@ -192,6 +230,15 @@ export function ChineseCalendar() {
         detail.current?.focus({ preventScroll: true });
       });
   }
+  function openHours(date?: string) {
+    if (date) {
+      const [year, month, d] = date.split("-").map(Number);
+      showMonth(year, month);
+      setSelected(d);
+    }
+    if (!filter) setFilter("出行");
+    setView("hours");
+  }
   return (
     <div className={`page-wrap ${styles.page}`}>
       <header className={styles.hero}>
@@ -200,18 +247,23 @@ export function ChineseCalendar() {
           <h1>
             Китайский <em>календарь</em>
           </h1>
-          <p>
-            Выберите месяц. Найдите день. Узнайте, что стоит за каждым знаком.
-          </p>
+          <p>Ваше дело. Подходящий день. Понятный выбор часа.</p>
           <div className={styles.heroTags}>
             <span>Общий календарь · для всех знаков</span>
             <span>12 типов дня</span>
             <span>24 солнечных сезона</span>
-            <span>Расшифровки на русском</span>
+            <span>Дни и часы с объяснениями</span>
           </div>
         </div>
         <CalendarLunarScene />
       </header>
+      <CalendarLocation
+        value={clock}
+        onChange={(value) => {
+          setClock(value);
+          setSegment(0);
+        }}
+      />
       <form
         className={styles.form}
         onSubmit={(e) => {
@@ -261,14 +313,15 @@ export function ChineseCalendar() {
           Текущий месяц
         </button>
         <small>
-          Китайский календарь · UTC+8
+          {clock.city} · местное время
           <br />
-          Сутки с 00:00 · {MIN_YEAR}–{MAX_YEAR}
+          Сутки с {clock.dayBoundary === "zi" ? "23:00" : "00:00"} · {MIN_YEAR}–
+          {MAX_YEAR}
         </small>
       </form>
-      {error && (
+      {(error || calculated.error) && (
         <p role="alert" className={styles.error}>
-          {error}
+          {error || calculated.error}
         </p>
       )}
       <p className={styles.scopeNote}>
@@ -276,7 +329,23 @@ export function ChineseCalendar() {
         привязки к вашему году рождения. Цвета относятся к делам; персональный
         выбор даты требует разбора карты Ба Цзы.
       </p>
-      {!period || !day || !profile ? (
+      <div className={styles.viewTabs} role="group" aria-label="Вид календаря">
+        <button
+          type="button"
+          aria-pressed={view === "month"}
+          onClick={() => setView("month")}
+        >
+          <span>01</span> Обзор месяца
+        </button>
+        <button
+          type="button"
+          aria-pressed={view === "hours"}
+          onClick={() => openHours()}
+        >
+          <span>02</span> Часы дня
+        </button>
+      </div>
+      {calculated.error ? null : !period || !day || !profile ? (
         <p role="status" className={styles.loading}>
           Рассчитываем календарь…
         </p>
@@ -303,12 +372,12 @@ export function ChineseCalendar() {
               </button>
             </div>
             <label className={styles.filter}>
-              Выделить дело
+              Моё дело
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
               >
-                <option value="">Все дела</option>
+                {view === "month" && <option value="">Все дела</option>}
                 {filterActivities.map((k) => (
                   <option key={k} value={k}>
                     {activityDescription(k).name}
@@ -317,317 +386,353 @@ export function ChineseCalendar() {
               </select>
             </label>
           </div>
-          <div className={styles.legend}>
-            <span data-tone="good">＋ Есть поддержка</span>
-            <span data-tone="bad">− Есть ограничения</span>
-            <span data-tone="caution">△ С оговорками</span>
-            <span>◷ Смена солнечного месяца</span>
-            <a href="#calendar-method">Как читать календарь ↗</a>
-          </div>
-          {filter && (
-            <p className={styles.filterHint} role="status">
-              Выделено: {activityDescription(filter).name.toLowerCase()}. Цвет
-              относится только к этому делу; «·» означает отсутствие отдельного
-              указания. В переходный день проверьте оба периода.
-            </p>
-          )}
-          <div className={styles.layout}>
-            <section
-              className={styles.month}
-              id="calendar-month"
-              aria-label={`Календарь: ${months[period.month - 1]} ${period.year}`}
-            >
-              <div className={styles.week} aria-hidden="true">
-                {week.map((w) => (
-                  <span key={w}>{w}</span>
-                ))}
+          {view === "month" && (
+            <>
+              <div className={styles.legend}>
+                <span data-tone="good">＋ Есть поддержка</span>
+                <span data-tone="bad">− Есть ограничения</span>
+                <span data-tone="caution">△ С оговорками</span>
+                <span>◷ Есть смена периода</span>
+                <a href="#calendar-method">Как читать календарь ↗</a>
               </div>
-              <div className={styles.grid}>
-                {Array.from({ length: days[0].weekday }, (_, i) => (
-                  <div
-                    className={styles.blank}
-                    key={`blank-${i}`}
-                    aria-hidden="true"
-                  />
-                ))}
-                {days.map((d) => {
-                  const p = d.profiles[0],
-                    assessments = assessDayActivities(p),
-                    good = assessments.filter((a) => a.tone === "good"),
-                    bad = assessments.filter((a) => a.tone === "bad"),
-                    caution = assessments.filter((a) => a.tone === "caution"),
-                    status = filter
-                      ? assessActivity(p, filter).tone
-                      : undefined;
-                  return (
-                    <button
-                      key={d.date}
-                      className={styles.day}
-                      data-today={d.date === today}
-                      data-match={status}
-                      aria-pressed={selected === d.day}
-                      aria-label={`${fullDate(d.date)}. ${animals[d.animal]}. ${officers[p.officer][1]}${d.profiles.length > 1 ? ". Смена месяца" : ""}${status ? `. ${activityDescription(filter).name}: ${assessmentLabels[status]}` : ""}`}
-                      onClick={() => selectDay(d.day)}
-                    >
-                      <div className={styles.dayTop}>
-                        <time dateTime={d.date}>{d.day}</time>
-                        <span>{d.pillar}</span>
-                      </div>
-                      <span className={styles.lunar}>
-                        Луна · {d.lunarDay}
-                        {d.lunarMonth < 0 ? " · доб. месяц" : ""}
-                      </span>
-                      <strong>{animals[d.animal]}</strong>
-                      <span className={styles.officer}>
-                        {p.officer + 1}. {officers[p.officer][1]}
-                        {d.profiles.length > 1 ? " ◷" : ""}
-                      </span>
-                      {d.term && (
-                        <span className={styles.term}>{d.term.name}</span>
-                      )}
-                      {filter ? (
-                        <span className={styles.match} data-tone={status}>
-                          {status && (
-                            <>
-                              <b>{assessmentSymbols[status]}</b>
-                              <span className={styles.matchLabel}>
-                                {assessmentLabels[status]}
-                              </span>
-                            </>
-                          )}
-                        </span>
-                      ) : (
-                        <div className={styles.counts}>
-                          <span data-tone="good">＋ {good.length}</span>
-                          <span data-tone="bad">− {bad.length}</span>
-                          <span data-tone="caution">△ {caution.length}</span>
-                        </div>
-                      )}
-                      {p.flags.some((f) => f.id.startsWith("clash")) && (
-                        <span
-                          className={styles.clash}
-                          title="Столкновение дня с месяцем или годом"
-                        >
-                          ◇ <span>Столкновение</span>
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-              <p className={styles.gridNote}>
-                Числа ＋ / − / △ — количество дел с поддержкой, ограничениями и
-                оговорками среди {assessedActivities.length} проверяемых дел.
-                Это не рейтинг удачи. Нажмите день, чтобы увидеть причины.
-              </p>
-              <div className={styles.seasons}>
-                {days
-                  .filter((d) => d.term)
-                  .map((d) => (
-                    <button key={d.date} onClick={() => selectDay(d.day)}>
-                      <span>{d.term!.han}</span>
-                      <div>
-                        <strong>{d.term!.name}</strong>
-                        <small>
-                          {d.day} {monthGenitive[period.month - 1]} ·{" "}
-                          {d.term!.time.slice(0, 5)} UTC+8
-                        </small>
-                      </div>
-                      <b>↗</b>
-                    </button>
-                  ))}
-              </div>
-            </section>
-            <aside
-              ref={detail}
-              tabIndex={-1}
-              className={styles.detail}
-              aria-label="Расшифровка выбранного дня"
-            >
-              <a className={styles.backToMonth} href="#calendar-month">
-                ← К календарю месяца
-              </a>
-              <div className={styles.detailHeader}>
-                <div>
-                  <span className={styles.eyebrow}>ВЫБРАННЫЙ ДЕНЬ</span>
-                  <h2 aria-live="polite">
-                    {day.day} <span>{monthGenitive[period.month - 1]}</span>
-                  </h2>
-                  <p>
-                    {fullDate(day.date).split(",")[0]} · {day.pillar}
-                  </p>
-                </div>
-                <Image
-                  src={zodiacArtwork[zodiacKeys[day.animal]]}
-                  alt={animals[day.animal]}
-                  width={90}
-                  height={90}
-                />
-              </div>
-              <div className={styles.lunarInfo}>
-                <span>
-                  Животное дня: {animals[day.animal]} · лунный день{" "}
-                  {day.lunarDay}
-                </span>
-                <small>
-                  {Math.abs(day.lunarMonth)}-й{" "}
-                  {day.lunarMonth < 0 ? "добавочный " : ""}лунный месяц ·{" "}
-                  {day.lunarYear} год
-                </small>
-              </div>
-              {day.term && (
-                <p className={styles.termNotice}>
-                  {day.term.han} · {day.term.name}
-                  <br />
-                  {day.term.time} UTC+8
-                  {day.term.changesMonth
-                    ? " · смена солнечного месяца"
-                    : " · середина солнечного месяца"}
+              {filter && (
+                <p className={styles.filterHint} role="status">
+                  Выделено: {activityDescription(filter).name.toLowerCase()}.
+                  Цвет относится только к этому делу; «·» означает отсутствие
+                  отдельного указания. В переходный день проверьте оба периода.
                 </p>
               )}
-              {day.profiles.length > 1 && (
-                <div
-                  className={styles.segments}
-                  role="group"
-                  aria-label="Период переходного дня"
+              <div className={styles.layout}>
+                <section
+                  className={styles.month}
+                  id="calendar-month"
+                  aria-label={`Календарь: ${months[period.month - 1]} ${period.year}`}
                 >
-                  {day.profiles.map((p, i) => (
-                    <button
-                      key={p.from}
-                      aria-pressed={segment === i}
-                      onClick={() => setSegment(i)}
-                    >
-                      {i === 0 ? "До" : "После"} {day.term!.time.slice(0, 5)}
-                    </button>
-                  ))}
-                </div>
-              )}
-              <div className={styles.pillars}>
-                <span>
-                  Год <b>{profile.yearPillar}</b>
-                </span>
-                <span>
-                  Месяц <b>{profile.monthPillar}</b>
-                </span>
-                <span>
-                  День <b>{day.pillar}</b>
-                </span>
-              </div>
-              <p className={styles.detailNote}>
-                Нажмите на цветную отметку или название дела, чтобы прочитать
-                расшифровку.
-              </p>
-              <details
-                className={styles.officerDetail}
-                open
-                key={`${day.date}-${segment}`}
-              >
-                <summary>
-                  <span>{officers[profile.officer][0]}</span>
-                  <div>
-                    <small>12 ТИПОВ ДНЯ</small>
-                    <strong>
-                      {profile.officer + 1}. {officers[profile.officer][1]}
-                    </strong>
+                  <div className={styles.week} aria-hidden="true">
+                    {week.map((w) => (
+                      <span key={w}>{w}</span>
+                    ))}
                   </div>
-                </summary>
-                <p>{officers[profile.officer][2]}</p>
-              </details>
-              <div className={styles.flags}>
-                {profile.flags.map((f) => (
-                  <details key={f.id} data-tone={f.tone}>
-                    <summary>
-                      <span>
-                        {f.tone === "good"
-                          ? "＋"
-                          : f.tone === "bad"
-                            ? "−"
-                            : "·"}
-                      </span>
-                      {f.name}
-                    </summary>
-                    <p>{f.meaning}</p>
-                  </details>
-                ))}
-              </div>
-              <div className={styles.listHeading}>
-                <h3>Сводная оценка дел</h3>
-              </div>
-              <p className={styles.detailNote}>
-                Учтены таблица альманаха, тип дня, столкновения, Ша, день без
-                богатства, сезонные границы и путь дня. Ограничение имеет
-                приоритет; все противоречия раскрываются внутри дела.
-              </p>
-              <div className={styles.activityList}>
-                {(filter
-                  ? [assessActivity(profile, filter)]
-                  : assessDayActivities(profile)
-                ).map((result) => (
+                  <div className={styles.grid}>
+                    {Array.from({ length: days[0].weekday }, (_, i) => (
+                      <div
+                        className={styles.blank}
+                        key={`blank-${i}`}
+                        aria-hidden="true"
+                      />
+                    ))}
+                    {days.map((d) => {
+                      const p =
+                          d.profiles.find(
+                            (p) => p.from <= "12:00" && p.until > "12:00",
+                          ) ?? d.profiles[0],
+                        assessments = assessDayActivities(p),
+                        good = assessments.filter((a) => a.tone === "good"),
+                        bad = assessments.filter((a) => a.tone === "bad"),
+                        caution = assessments.filter(
+                          (a) => a.tone === "caution",
+                        ),
+                        status = filter
+                          ? assessActivity(p, filter).tone
+                          : undefined;
+                      return (
+                        <button
+                          key={d.date}
+                          className={styles.day}
+                          data-today={d.date === today}
+                          data-match={status}
+                          aria-pressed={selected === d.day}
+                          aria-label={`${fullDate(d.date)}. ${animals[d.animal]}. ${officers[p.officer][1]}${d.profiles.length > 1 ? ". Смена периода" : ""}${status ? `. ${activityDescription(filter).name}: ${assessmentLabels[status]}` : ""}`}
+                          onClick={() => selectDay(d.day)}
+                        >
+                          <div className={styles.dayTop}>
+                            <time dateTime={d.date}>{d.day}</time>
+                            <span>{d.pillar}</span>
+                          </div>
+                          <span className={styles.lunar}>
+                            Луна · {d.lunarDay}
+                            {d.lunarMonth < 0 ? " · доб. месяц" : ""}
+                          </span>
+                          <strong>{animals[d.animal]}</strong>
+                          <span className={styles.officer}>
+                            {p.officer + 1}. {officers[p.officer][1]}
+                            {d.profiles.length > 1 ? " ◷" : ""}
+                          </span>
+                          {d.term && (
+                            <span className={styles.term}>{d.term.name}</span>
+                          )}
+                          {filter ? (
+                            <span className={styles.match} data-tone={status}>
+                              {status && (
+                                <>
+                                  <b>{assessmentSymbols[status]}</b>
+                                  <span className={styles.matchLabel}>
+                                    {assessmentLabels[status]}
+                                  </span>
+                                </>
+                              )}
+                            </span>
+                          ) : (
+                            <div className={styles.counts}>
+                              <span data-tone="good">＋ {good.length}</span>
+                              <span data-tone="bad">− {bad.length}</span>
+                              <span data-tone="caution">
+                                △ {caution.length}
+                              </span>
+                            </div>
+                          )}
+                          {p.flags.some((f) => f.id.startsWith("clash")) && (
+                            <span
+                              className={styles.clash}
+                              title="Столкновение дня с месяцем или годом"
+                            >
+                              ◇ <span>Столкновение</span>
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className={styles.gridNote}>
+                    Числа ＋ / − / △ — количество дел с поддержкой,
+                    ограничениями и оговорками среди {assessedActivities.length}{" "}
+                    проверяемых дел. Это не рейтинг удачи. Нажмите день, чтобы
+                    увидеть причины.
+                  </p>
+                  <div className={styles.seasons}>
+                    {days
+                      .filter((d) => d.term)
+                      .map((d) => (
+                        <button key={d.date} onClick={() => selectDay(d.day)}>
+                          <span>{d.term!.han}</span>
+                          <div>
+                            <strong>{d.term!.name}</strong>
+                            <small>
+                              {d.day} {monthGenitive[period.month - 1]} ·{" "}
+                              {d.term!.time.slice(0, 5)} · {clock.city}
+                            </small>
+                          </div>
+                          <b>↗</b>
+                        </button>
+                      ))}
+                  </div>
+                </section>
+                <aside
+                  ref={detail}
+                  tabIndex={-1}
+                  className={styles.detail}
+                  aria-label="Расшифровка выбранного дня"
+                >
+                  <a className={styles.backToMonth} href="#calendar-month">
+                    ← К календарю месяца
+                  </a>
+                  <div className={styles.detailHeader}>
+                    <div>
+                      <span className={styles.eyebrow}>ВЫБРАННЫЙ ДЕНЬ</span>
+                      <h2 aria-live="polite">
+                        {day.day} <span>{monthGenitive[period.month - 1]}</span>
+                      </h2>
+                      <p>
+                        {fullDate(day.date).split(",")[0]} · {day.pillar}
+                      </p>
+                    </div>
+                    <Image
+                      src={zodiacArtwork[zodiacKeys[day.animal]]}
+                      alt={animals[day.animal]}
+                      width={90}
+                      height={90}
+                    />
+                  </div>
+                  <div className={styles.lunarInfo}>
+                    <span>
+                      Животное дня: {animals[day.animal]} · лунный день{" "}
+                      {day.lunarDay}
+                    </span>
+                    <small>
+                      {Math.abs(day.lunarMonth)}-й{" "}
+                      {day.lunarMonth < 0 ? "добавочный " : ""}лунный месяц ·{" "}
+                      {day.lunarYear} год
+                    </small>
+                  </div>
+                  <button
+                    type="button"
+                    className={styles.hoursCta}
+                    onClick={() => openHours()}
+                  >
+                    Подобрать час для этого дня <span>↗</span>
+                  </button>
+                  {day.term && (
+                    <p className={styles.termNotice}>
+                      {day.term.han} · {day.term.name}
+                      <br />
+                      {day.term.time} · {clock.city}
+                      {day.term.changesMonth
+                        ? " · смена солнечного месяца"
+                        : " · середина солнечного месяца"}
+                    </p>
+                  )}
+                  {day.profiles.length > 1 && (
+                    <div
+                      className={styles.segments}
+                      role="group"
+                      aria-label="Период переходного дня"
+                    >
+                      {day.profiles.map((p, i) => (
+                        <button
+                          key={p.from}
+                          aria-pressed={segment === i}
+                          onClick={() => setSegment(i)}
+                        >
+                          {p.from.slice(0, 5)}–{p.until.slice(0, 5)}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <div className={styles.pillars}>
+                    <span>
+                      Год <b>{profile.yearPillar}</b>
+                    </span>
+                    <span>
+                      Месяц <b>{profile.monthPillar}</b>
+                    </span>
+                    <span>
+                      День <b>{profile.dayPillar ?? day.pillar}</b>
+                    </span>
+                  </div>
+                  <p className={styles.detailNote}>
+                    Нажмите на цветную отметку или название дела, чтобы
+                    прочитать расшифровку.
+                  </p>
                   <details
-                    key={`${day.date}-${segment}-${result.activity}`}
-                    className={styles.activity}
-                    data-tone={result.tone}
-                    open={filter ? true : undefined}
+                    className={styles.officerDetail}
+                    open
+                    key={`${day.date}-${segment}`}
                   >
                     <summary>
-                      <span className={styles.activityIcon} aria-hidden="true">
-                        {
-                          categorySymbols[
-                            activityDescription(result.activity).category
-                          ]
-                        }
-                      </span>
-                      <span>
-                        {activityDescription(result.activity).name}
-                        <small>{assessmentLabels[result.tone]}</small>
-                      </span>
-                      <b aria-hidden="true">{assessmentSymbols[result.tone]}</b>
+                      <span>{officers[profile.officer][0]}</span>
+                      <div>
+                        <small>12 ТИПОВ ДНЯ</small>
+                        <strong>
+                          {profile.officer + 1}. {officers[profile.officer][1]}
+                        </strong>
+                      </div>
                     </summary>
-                    <p>{activityDescription(result.activity).meaning}</p>
-                    {result.conflict && (
-                      <p className={styles.conflict}>
-                        Есть противоречие: поддерживающие указания сохранены
-                        ниже, но они не отменяют ограничения и оговорки.
-                      </p>
-                    )}
-                    {result.reasons.length === 0 && (
-                      <p>
-                        Проверенные правила не дают отдельного указания для
-                        этого дела. Это не подтверждение благоприятности.
-                      </p>
-                    )}
-                    <ul className={styles.reasons}>
-                      {result.reasons.map((reason) => (
-                        <li key={reason.id} data-tone={reason.tone}>
-                          <strong>
-                            {assessmentSymbols[reason.tone]} {reason.title}
-                          </strong>
-                          <p>{reason.detail}</p>
-                        </li>
-                      ))}
-                    </ul>
+                    <p>{officers[profile.officer][2]}</p>
                   </details>
-                ))}
+                  <div className={styles.flags}>
+                    {profile.flags.map((f) => (
+                      <details key={f.id} data-tone={f.tone}>
+                        <summary>
+                          <span>
+                            {f.tone === "good"
+                              ? "＋"
+                              : f.tone === "bad"
+                                ? "−"
+                                : "·"}
+                          </span>
+                          {f.name}
+                        </summary>
+                        <p>{f.meaning}</p>
+                      </details>
+                    ))}
+                  </div>
+                  <div className={styles.listHeading}>
+                    <h3>Сводная оценка дел</h3>
+                  </div>
+                  <p className={styles.detailNote}>
+                    Учтены таблица альманаха, тип дня, столкновения, Ша, день
+                    без богатства, сезонные границы и путь дня. Ограничение
+                    имеет приоритет; все противоречия раскрываются внутри дела.
+                  </p>
+                  <div className={styles.activityList}>
+                    {(filter
+                      ? [assessActivity(profile, filter)]
+                      : assessDayActivities(profile)
+                    ).map((result) => (
+                      <details
+                        key={`${day.date}-${segment}-${result.activity}`}
+                        className={styles.activity}
+                        data-tone={result.tone}
+                        open={filter ? true : undefined}
+                      >
+                        <summary>
+                          <span
+                            className={styles.activityIcon}
+                            aria-hidden="true"
+                          >
+                            {
+                              categorySymbols[
+                                activityDescription(result.activity).category
+                              ]
+                            }
+                          </span>
+                          <span>
+                            {activityDescription(result.activity).name}
+                            <small>{assessmentLabels[result.tone]}</small>
+                          </span>
+                          <b aria-hidden="true">
+                            {assessmentSymbols[result.tone]}
+                          </b>
+                        </summary>
+                        <p>{activityDescription(result.activity).meaning}</p>
+                        {result.conflict && (
+                          <p className={styles.conflict}>
+                            Есть противоречие: поддерживающие указания сохранены
+                            ниже, но они не отменяют ограничения и оговорки.
+                          </p>
+                        )}
+                        {result.reasons.length === 0 && (
+                          <p>
+                            Проверенные правила не дают отдельного указания для
+                            этого дела. Это не подтверждение благоприятности.
+                          </p>
+                        )}
+                        <ul className={styles.reasons}>
+                          {result.reasons.map((reason) => (
+                            <li key={reason.id} data-tone={reason.tone}>
+                              <strong>
+                                {assessmentSymbols[reason.tone]} {reason.title}
+                              </strong>
+                              <p>{reason.detail}</p>
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    ))}
+                  </div>
+                  <details className={styles.rawTable}>
+                    <summary>
+                      Исходная таблица 宜 / 忌 · без объединения
+                    </summary>
+                    <div className={styles.listHeading}>
+                      <h3 data-tone="good">宜 · По таблице</h3>
+                      <span>{supportive(profile).length} указаний</span>
+                    </div>
+                    <ActivityList items={supportive(profile)} tone="good" />
+                    <div className={styles.listHeading}>
+                      <h3 data-tone="bad">忌 · Ограничения</h3>
+                      <span>{restricted(profile).length} указаний</span>
+                    </div>
+                    <ActivityList items={restricted(profile)} tone="bad" />
+                  </details>
+                  <p className={styles.detailNote}>
+                    Сводка относится к перечисленным правилам Astrowed, а не ко
+                    всем школам выбора дат. Личная карта не учтена; время можно
+                    выбрать во вкладке «Часы дня».
+                  </p>
+                </aside>
               </div>
-              <details className={styles.rawTable}>
-                <summary>Исходная таблица 宜 / 忌 · без объединения</summary>
-                <div className={styles.listHeading}>
-                  <h3 data-tone="good">宜 · По таблице</h3>
-                  <span>{supportive(profile).length} указаний</span>
-                </div>
-                <ActivityList items={supportive(profile)} tone="good" />
-                <div className={styles.listHeading}>
-                  <h3 data-tone="bad">忌 · Ограничения</h3>
-                  <span>{restricted(profile).length} указаний</span>
-                </div>
-                <ActivityList items={restricted(profile)} tone="bad" />
-              </details>
-              <p className={styles.detailNote}>
-                Сводка относится к перечисленным правилам Astrowed, а не ко всем
-                школам выбора дат. Личная карта и выбор часа не учтены.
-              </p>
-            </aside>
-          </div>
+            </>
+          )}
+          {view === "hours" && (
+            <CalendarHours
+              key={day.date}
+              date={day.date}
+              activity={filter || "出行"}
+              options={clock}
+              onDate={openHours}
+            />
+          )}
         </>
       )}
       <section id="calendar-method" className={styles.method}>
@@ -665,14 +770,16 @@ export function ChineseCalendar() {
         <details className={styles.methodDetails}>
           <summary>Как формируется оценка дня</summary>
           <p>
-            Можно рассчитать любой месяц с 1901 по 2099 год. Сутки начинаются в
-            00:00. Даты и время приведены по китайскому времени UTC+8. Местное
-            солнечное время и город пользователя не учитываются.
+            Можно рассчитать любой месяц с 1901 по 2099 год. Сутки начинаются по
+            выбранной границе: 00:00 или 23:00. Все интервалы показаны по часам
+            выбранного города. Солнечный режим учитывает долготу города.
           </p>
           <p>
             В день смены солнечного месяца некоторые признаки меняются. Сетка
-            показывает начало дня. Откройте карточку даты и переключите период,
-            чтобы увидеть оценку до и после перехода.
+            показывает середину дня, около 12:00. Откройте карточку даты и
+            переключите период, чтобы увидеть оценку до и после перехода. Лунная
+            дата подписана для выбранной календарной даты; соседние расчётные
+            сутки в часах отмечены отдельно.
           </p>
           <p>
             Это общий традиционный календарь, без персональной карты Ба Цзы.
@@ -690,12 +797,12 @@ export function ChineseCalendar() {
             «День без богатства» учитывается при начале коммерческих дел. Он не
             предсказывает доход человека. Разделители — дни перед
             равноденствиями и солнцестояниями; истощение — перед началом четырёх
-            сезонов, по UTC+8. Они дают оговорку для крупных начинаний. Три Ша
-            учитываются по области дела: Ша задержек ограничивает поездки,
-            переезд и недвижимость, остальные случаи дают оговорку. Путь дня —
-            дополнительный фон, который не отменяет конкретные ограничения. В
-            карточке каждого дела показано, какие признаки повлияли на его
-            оценку.
+            сезонов, по выбранному времени. Они дают оговорку для крупных
+            начинаний. Три Ша учитываются по области дела: Ша задержек
+            ограничивает поездки, переезд и недвижимость, остальные случаи дают
+            оговорку. Путь дня — дополнительный фон, который не отменяет
+            конкретные ограничения. В карточке каждого дела показано, какие
+            признаки повлияли на его оценку.
           </p>
           <div>
             <Link href="/knowledge/solar-terms">О солнечных сезонах ↗</Link>

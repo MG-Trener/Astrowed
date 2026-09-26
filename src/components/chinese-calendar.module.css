@@ -6,6 +6,60 @@
   --cal-good: #91d9b2;
   --cal-bad: #f2a395;
 }
+.viewTabs {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid #53674b;
+  background: #172c23;
+  border-radius: 14px;
+  width: fit-content;
+  margin: 24px 0;
+}
+.viewTabs button {
+  border: 0;
+  background: transparent;
+  border-radius: 9px;
+  padding: 13px 22px;
+  color: #bac7b4;
+}
+.viewTabs button span {
+  font-size: 9px;
+  opacity: 0.65;
+  margin-right: 10px;
+}
+.viewTabs button[aria-pressed="true"] {
+  background: linear-gradient(120deg, #d7c18c, #b59e68);
+  color: #142a20;
+  box-shadow: 0 3px 13px #0003;
+}
+.hoursCta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ac9967;
+  border-radius: 10px;
+  background: linear-gradient(120deg, #cfbd87, #ac975f);
+  color: #14261b;
+  font-size: 12px !important;
+  margin: 20px 0;
+}
+@media (max-width: 600px) {
+  .viewTabs {
+    width: 100%;
+  }
+  .viewTabs button {
+    flex: 1;
+    padding: 12px 8px;
+    font-size: 12px;
+  }
+  .viewTabs button span {
+    margin-right: 6px;
+  }
+}
 :global(.app):has(.page) {
   overflow: clip;
 }

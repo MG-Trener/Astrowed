@@ -12,6 +12,7 @@ export type CalendarFlag = {
   shaKind?: number;
 };
 export type DayProfile = {
+  dayPillar?: string;
   from: string;
   until: string;
   monthPillar: string;
@@ -55,11 +56,17 @@ const shaMeaning = [
   "Традиционная тема задержек и препятствий; также называется Ша года или Ша месяца.",
 ];
 
-function profile(solar: Solar, from: string, until: string): DayProfile {
+export function calendarProfile(
+  solar: Solar,
+  from: string,
+  until: string,
+  seasonSolar: Solar = solar,
+): DayProfile {
   const lunar = solar.getLunar(),
     day = lunar.getDayZhiIndex();
-  const month = lunar.getMonthZhiIndexExact(),
-    year = lunar.getYearZhiIndexExact();
+  const season = seasonSolar.getLunar();
+  const month = season.getMonthZhiIndexExact(),
+    year = season.getYearZhiIndexExact();
   const officer = mod(day - month, 12);
   const deity =
     LunarUtil.TIAN_SHEN[
@@ -125,15 +132,22 @@ function profile(solar: Solar, from: string, until: string): DayProfile {
     meaning: `Шестая противоположная ветвь — ${branches[(day + 6) % 12]}. В персональном выборе дат проверяют всю карту Ба Цзы; один знак года рождения не делает день плохим для человека.`,
   });
   return {
+    dayPillar: lunar.getDayInGanZhi(),
     from,
     until,
-    monthPillar: lunar.getMonthInGanZhiExact(),
-    yearPillar: lunar.getYearInGanZhiExact(),
+    monthPillar: season.getMonthInGanZhiExact(),
+    yearPillar: season.getYearInGanZhiExact(),
     officer,
     deity,
     deityGood,
-    good: lunar.getDayYi(2).filter((k) => k !== "无"),
-    bad: lunar.getDayJi(2).filter((k) => k !== "无"),
+    good: LunarUtil.getDayYi(
+      season.getMonthInGanZhiExact(),
+      lunar.getDayInGanZhi(),
+    ).filter((k) => k !== "无"),
+    bad: LunarUtil.getDayJi(
+      season.getMonthInGanZhiExact(),
+      lunar.getDayInGanZhi(),
+    ).filter((k) => k !== "无"),
     flags,
   };
 }
@@ -165,8 +179,8 @@ export function calculateCalendarDay(
         changesMonth: termInfo.isJie(),
       }
     : null;
-  const first = profile(start, "00:00:00", "24:00:00");
-  const last = profile(
+  const first = calendarProfile(start, "00:00:00", "24:00:00");
+  const last = calendarProfile(
     Solar.fromYmdHms(year, month, day, 23, 59, 59),
     "00:00:00",
     "24:00:00",
