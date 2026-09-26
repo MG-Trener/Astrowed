@@ -1844,7 +1844,7 @@ select option {
     border-color: #bbb;
   }
   .pillar-symbol {
-    color: #294a32 !important;
+    color: inherit;
   }
   .pillar-label,
   .pillar-polarity,
