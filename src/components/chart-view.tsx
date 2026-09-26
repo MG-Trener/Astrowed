@@ -9,6 +9,7 @@ import { Timeline } from "@/scenes/timeline";
 import { PdfButton } from "./pdf-button";
 import { ExtendedChart } from "./extended-chart";
 import { useActiveChart } from "./active-chart";
+import baziPillarsArtwork from "@/assets/generated/bazi-pillars.webp";
 export function ChartView({
   chart,
   demo = false,
@@ -63,7 +64,11 @@ export function ChartView({
           <span>ASTROWED</span>
           <span>BA ZI · 四柱</span>
         </div>
-        <div className="print-cover-art" aria-hidden="true" />
+        <img
+          className="print-cover-art"
+          src={baziPillarsArtwork.src}
+          alt="Художественная композиция четырёх столпов Ба Цзы"
+        />
         <div className="print-cover-copy">
           <div className="eyebrow">ЛИЧНАЯ КАРТА · ПЕРСОНАЛЬНЫЙ РАЗБОР</div>
           <h1>{chart.input.name}</h1>
