@@ -1,1 +1,1 @@
-export { default } from "@/app/manifest";
+export { default, dynamic } from "@/app/manifest";
