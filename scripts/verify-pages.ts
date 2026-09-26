@@ -22,6 +22,7 @@ const required = [
   "feng-shui/index.html",
   "feng-shui/bagua/index.html",
   "feng-shui/gua/index.html",
+  "feng-shui/compass/index.html",
   "qimen/index.html",
   "qimen/palaces/index.html",
   "about-julia/index.html",
