@@ -5,6 +5,7 @@ import path from "node:path";
 
 const root = path.resolve("apps/pages/out");
 const required = [
+  "locations/addresses/astana.json",
   "maplibre/maplibre-gl-worker.mjs",
   "maplibre/maplibre-gl-shared.mjs",
   "index.html",

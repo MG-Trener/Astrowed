@@ -653,7 +653,7 @@ export function FengCompass() {
           >
             CC BY 4.0
           </a>
-          . Карта: OpenFreeMap / OpenStreetMap. Поиск адресов: Photon /
+          . Карта: OpenFreeMap / OpenStreetMap. Поиск адресов:
           OpenStreetMap. Русские названия показываются при их наличии в данных;
           иначе используется местное название.
         </p>

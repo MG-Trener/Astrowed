@@ -19,17 +19,30 @@ export function CompassCitySearch({
   const [addressStatus, setAddressStatus] = useState("");
   const [addressRetry, setAddressRetry] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState("");
+  const [addressOpen, setAddressOpen] = useState(false);
+  const [addressActive, setAddressActive] = useState(-1);
   const addressRequest = useRef<AbortController | null>(null);
+  const resolvedSelection = useRef("");
   const selectRef = useRef(onSelect);
   selectRef.current = onSelect;
   function clearAddressResult() {
+    resolvedSelection.current = "";
     addressRequest.current?.abort();
     setAddresses([]);
     setSelectedAddress("");
     setAddressStatus("");
+    setAddressActive(-1);
   }
   function showAddress(match: AddressMatch) {
+    resolvedSelection.current = JSON.stringify([
+      city?.[0],
+      match.street || match.label,
+      house,
+    ]);
     setSelectedAddress(match.id);
+    setStreet(match.street || match.label);
+    setAddressOpen(false);
+    setAddressActive(-1);
     selectRef.current(
       match.center,
       `${city?.[1]} · ${match.label}`,
@@ -71,57 +84,64 @@ export function CompassCitySearch({
   useEffect(() => {
     const controller = new AbortController();
     addressRequest.current = controller;
+    if (
+      resolvedSelection.current === JSON.stringify([city?.[0], street, house])
+    )
+      return () => controller.abort();
     if (!city || street.trim().length < 3) return () => controller.abort();
     setAddressStatus("Уточняем адрес…");
     let timeout: ReturnType<typeof setTimeout>;
-    const timer = setTimeout(async () => {
-      timeout = setTimeout(() => {
-        controller.abort();
-        setAddressStatus(
-          "Поиск занял слишком много времени. Повторите попытку.",
-        );
-      }, 12000);
-      try {
-        const found = await searchAddress(
-          {
-            city: city[1],
-            country,
-            center: { lat: city[3], lng: city[4] },
-            street,
-            house,
-          },
-          controller.signal,
-        );
-        if (controller.signal.aborted) return;
-        setAddresses(found);
-        if (found.length) {
-          const first = found[0];
-          setSelectedAddress(first.id);
-          selectRef.current(
-            first.center,
-            `${city[1]} · ${first.label}`,
-            first.zoom,
-          );
+    const timer = setTimeout(
+      async () => {
+        timeout = setTimeout(() => {
+          controller.abort();
           setAddressStatus(
-            found.length > 1
-              ? "Адрес показан на карте. При необходимости выберите другой вариант ниже."
-              : "Адрес показан на карте.",
+            "Поиск занял слишком много времени. Повторите попытку.",
           );
-        } else
-          setAddressStatus(
-            house.trim()
-              ? "Дом не найден. Проверьте номер или уберите его, чтобы найти улицу. Карта остаётся на прежнем месте."
-              : "Улица не найдена. Уточните название. Карта остаётся на прежнем месте.",
+        }, 25000);
+        try {
+          const found = await searchAddress(
+            {
+              city: city[1],
+              country,
+              center: { lat: city[3], lng: city[4] },
+              street,
+              house,
+            },
+            controller.signal,
           );
-      } catch {
-        if (!controller.signal.aborted)
-          setAddressStatus(
-            "Поиск адресов недоступен. Повторите попытку или укажите точку на карте.",
-          );
-      } finally {
-        clearTimeout(timeout);
-      }
-    }, 1200);
+          if (controller.signal.aborted) return;
+          setAddresses(found);
+          if (found.length) {
+            const first = found[0];
+            setSelectedAddress(first.id);
+            selectRef.current(
+              first.center,
+              `${city[1]} · ${first.label}`,
+              first.zoom,
+            );
+            setAddressStatus(
+              found.length > 1
+                ? "Адрес показан на карте. Другой вариант можно выбрать в поле адреса."
+                : "Адрес показан на карте.",
+            );
+          } else
+            setAddressStatus(
+              house.trim()
+                ? "Дом не найден. Проверьте номер или уберите его, чтобы найти улицу. Карта остаётся на прежнем месте."
+                : "Улица не найдена. Уточните название. Карта остаётся на прежнем месте.",
+            );
+        } catch {
+          if (!controller.signal.aborted)
+            setAddressStatus(
+              "Поиск адресов недоступен. Повторите попытку или укажите точку на карте.",
+            );
+        } finally {
+          clearTimeout(timeout);
+        }
+      },
+      city[1] === "Астана" && country === "KZ" ? 350 : 1200,
+    );
     return () => {
       controller.abort();
       clearTimeout(timer);
@@ -241,18 +261,54 @@ export function CompassCitySearch({
           </small>
         )}
       </div>
-      <div className={styles.addressFields}>
+      <div
+        className={styles.addressFields}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) setAddressOpen(false);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") setAddressOpen(false);
+          if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            e.preventDefault();
+            setAddressOpen(true);
+            setAddressActive((n) =>
+              Math.max(
+                0,
+                Math.min(
+                  addresses.length - 1,
+                  n + (e.key === "ArrowDown" ? 1 : -1),
+                ),
+              ),
+            );
+          }
+          if (e.key === "Enter" && addressOpen && addresses[addressActive]) {
+            e.preventDefault();
+            showAddress(addresses[addressActive]);
+          }
+        }}
+      >
         <label>
           Улица <small>необязательно</small>
           <input
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded={addressOpen && addresses.length > 0}
+            aria-controls={`${id}-addresses`}
+            aria-activedescendant={
+              addressOpen && addressActive >= 0
+                ? `${id}-address-${addressActive}`
+                : undefined
+            }
             value={street}
             disabled={!city}
             placeholder={city ? "Название улицы" : "Сначала выберите город"}
             autoComplete="off"
             maxLength={160}
+            onFocus={() => setAddressOpen(true)}
             onChange={(e) => {
               clearAddressResult();
               setStreet(e.target.value);
+              setAddressOpen(true);
               setHouse("");
               if (!e.target.value.trim() && city)
                 onSelect({ lat: city[3], lng: city[4] }, city[1]);
@@ -262,17 +318,55 @@ export function CompassCitySearch({
         <label>
           Дом <small>если есть</small>
           <input
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded={addressOpen && addresses.length > 0}
+            aria-controls={`${id}-addresses`}
+            aria-activedescendant={
+              addressOpen && addressActive >= 0
+                ? `${id}-address-${addressActive}`
+                : undefined
+            }
             value={house}
             disabled={!city || street.trim().length < 3}
             placeholder="№ / корпус"
             autoComplete="off"
             maxLength={30}
+            onFocus={() => setAddressOpen(true)}
             onChange={(e) => {
               clearAddressResult();
               setHouse(e.target.value);
+              setAddressOpen(true);
             }}
           />
         </label>
+        {addressOpen && addresses.length > 0 && (
+          <ul
+            id={`${id}-addresses`}
+            className={`${styles.results} ${styles.addressResults}`}
+            role="listbox"
+            aria-label="Найденные адреса"
+          >
+            {addresses.map((match, i) => (
+              <li key={match.id} role="presentation">
+                <button
+                  type="button"
+                  role="option"
+                  id={`${id}-address-${i}`}
+                  aria-selected={
+                    addressActive === i ||
+                    (addressActive < 0 && selectedAddress === match.id)
+                  }
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => showAddress(match)}
+                >
+                  <strong>{match.label}</strong>
+                  <small>{match.detail}</small>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       <div className={styles.addressFeedback}>
         <p role="status">
@@ -289,21 +383,6 @@ export function CompassCitySearch({
               Повторить поиск
             </button>
           )}
-        {addresses.length > 0 && (
-          <div className={styles.addressChoices} aria-label="Найденные адреса">
-            {addresses.map((match) => (
-              <button
-                type="button"
-                key={match.id}
-                aria-pressed={selectedAddress === match.id}
-                onClick={() => showAddress(match)}
-              >
-                <strong>{match.label}</strong>
-                <small>{match.detail}</small>
-              </button>
-            ))}
-          </div>
-        )}
       </div>
       {status && (
         <p role="status">
