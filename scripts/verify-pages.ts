@@ -4,6 +4,8 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 const root = path.resolve("apps/pages/out");
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const prefix = `${basePath}/`;
 const required = [
   "locations/addresses/astana.json",
   "maplibre/maplibre-gl-worker.mjs",
@@ -67,8 +69,8 @@ function inspect(dir: string) {
       /(?:href|src)="(\/[^"#?]*)(?:[?#][^"]*)?"/g,
     )) {
       const url = match[1];
-      assert(url.startsWith("/Astrowed/"), `Incorrect base path: ${url}`);
-      const relative = decodeURIComponent(url.slice("/Astrowed/".length));
+      assert(url.startsWith(prefix), `Incorrect base path: ${url}`);
+      const relative = decodeURIComponent(url.slice(prefix.length));
       const target = path.join(root, relative);
       assert(
         existsSync(
@@ -102,10 +104,7 @@ for (const entry of readdirSync(path.join(root, "knowledge"), {
     `Repeated article cover: ${entry.name} and ${articleCovers.get(src)}`,
   );
   articleCovers.set(src, entry.name);
-  const asset = path.join(
-    root,
-    decodeURIComponent(src.slice("/Astrowed/".length)),
-  );
+  const asset = path.join(root, decodeURIComponent(src.slice(prefix.length)));
   const hash = createHash("sha256").update(readFileSync(asset)).digest("hex");
   assert(
     !articleCoverHashes.has(hash),
