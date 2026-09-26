@@ -4,7 +4,15 @@
 
 ## Map and assets
 
-MapLibre GL renders an OpenFreeMap vector style without a Google API key. Name labels prefer `name:ru`, then the local name, then Latin. House numbers and road references retain their original expressions. Russian labels therefore depend on coverage in OpenStreetMap data. Attribution stays visible. Country/city search uses the site's GeoNames catalog; buildings can be selected on the map or by exact coordinates. Address geocoding and satellite imagery are not included.
+MapLibre GL renders an OpenFreeMap vector style without a Google API key. Name labels prefer `name:ru`, then the local name, then Latin. House numbers and road references retain their original expressions. The default Positron style omits house labels, so we add an OpenMapTiles `housenumber` symbol layer at zoom 16+ when missing. Numbers still depend on OSM coverage. Attribution stays visible. Country/city search uses the site's GeoNames catalog; buildings can be selected on the map or by exact coordinates. Satellite imagery is not included.
+
+### Address refinement
+
+Selecting a city immediately centres the compass at zoom 13. Optional street and house fields search after a 1.2-second pause using Photon's structured geocoder. Street matches use zoom 15 and exact house-number matches zoom 18. Multiple candidates remain selectable. Street edits clear the old house number; city/country changes clear both fields. Emptying the street returns to the selected city. Stale requests are cancelled on edits, manual centre changes, demo resets, geolocation and unmount. Missing houses never fall back silently to a street or a different number.
+
+The default endpoint is `https://photon.komoot.io/structured`, replaceable via `NEXT_PUBLIC_COMPASS_GEOCODER_URL`. Queries include city, country, street, optional house and the catalogue city centre (not browser geolocation). Results must be in the selected country and within 60 km of the city centre; this is a proximity guard, not a municipal boundary test. House matching ignores spaces/case but preserves slashes and building suffixes. The demo provider supports local names, English, German and French; local Kazakh names may appear in Astana results. The map itself continues to prefer Russian labels.
+
+Photon permits reasonable project usage of its public demo, with no availability guarantee. Requests are debounced, aborted after 12 seconds and cached in memory (50 searches); there are no bulk requests. Use a dedicated compatible provider for heavier production traffic. See https://github.com/komoot/photon and https://github.com/komoot/photon/blob/master/docs/api-v1.md . Address tests cover encoding, distant/cross-country results, malformed responses and strict house-number matching.
 
 The demo centres on Astana Botanical Garden (51.106, 71.416). Geolocation is requested only after pressing the location button; denial, timeout and unavailable-position states offer manual selection. Later responses are ignored after a manual location change or unmount. Geolocation requires browser permission and a secure context (HTTPS or localhost).
 

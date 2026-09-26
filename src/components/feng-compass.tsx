@@ -110,6 +110,7 @@ export function FengCompass() {
     if (kind === "route") setDestination(null);
   }
   function locate() {
+    setSearchKey((n) => n + 1);
     if (!navigator.geolocation) {
       setLocationStatus(
         "Геолокация недоступна в этом браузере. Выберите город или координаты.",
@@ -153,16 +154,17 @@ export function FengCompass() {
     sitting = mountainAt(measured + 180);
   const zoomTo = (zoom: number) =>
     setView((v) => ({ zoom, request: v.request + 1 }));
-  const selectCity = (point: Coordinates, name: string) => {
+  const selectCity = (point: Coordinates, name: string, zoom = 13) => {
     locationRequest.current++;
     setLocating(false);
     setLocationStatus("");
     setCenter(point);
     setPlace(name);
-    zoomTo(13);
+    zoomTo(zoom);
     setMode("explore");
   };
   const changeCenter = (point: Coordinates) => {
+    setSearchKey((n) => n + 1);
     locationRequest.current++;
     setLocating(false);
     setLocationStatus("");
@@ -613,7 +615,7 @@ export function FengCompass() {
           [
             "01",
             "Найдите свой дом",
-            "Выберите город, приблизьте здание кнопкой «Здание +» и перемещайте карту. Можно ввести точные координаты.",
+            "Выберите город, затем при желании укажите улицу и дом — карта приблизится к адресу. Можно уточнить точку вручную или ввести координаты.",
           ],
           [
             "02",
@@ -651,8 +653,9 @@ export function FengCompass() {
           >
             CC BY 4.0
           </a>
-          . Карта: OpenFreeMap / OpenStreetMap. Русские названия показываются
-          при их наличии в данных; иначе используется местное название.
+          . Карта: OpenFreeMap / OpenStreetMap. Поиск адресов: Photon /
+          OpenStreetMap. Русские названия показываются при их наличии в данных;
+          иначе используется местное название.
         </p>
         <p>
           Кольцо земной тарелки: 24 сектора по 15°, восемь триграмм Позднего

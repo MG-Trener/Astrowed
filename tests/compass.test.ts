@@ -104,4 +104,24 @@ describe("interactive map compass", () => {
     expect(localized.layers[1]).toEqual(style.layers[1]);
     expect(style.layers[0].layout["text-field"]).toBe("{name:latin}");
   });
+  it("adds missing house labels for OpenMapTiles without duplicating them", () => {
+    const style = {
+      version: 8 as const,
+      sources: {
+        openmaptiles: {
+          type: "vector" as const,
+          url: "https://example.com/tiles.json",
+        },
+      },
+      layers: [],
+    };
+    const updated = russianMapStyle(style);
+    expect(updated.layers).toHaveLength(1);
+    expect(updated.layers[0]).toMatchObject({
+      "source-layer": "housenumber",
+      minzoom: 16,
+    });
+    expect(russianMapStyle(updated).layers).toHaveLength(1);
+    expect(style.layers).toHaveLength(0);
+  });
 });

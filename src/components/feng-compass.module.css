@@ -66,9 +66,81 @@
 }
 .search {
   display: grid;
-  grid-template-columns: 210px minmax(200px, 350px);
+  grid-template-columns: minmax(130px, 0.7fr) minmax(160px, 1fr) minmax(
+      240px,
+      1.5fr
+    );
   gap: 16px;
   flex: 1;
+}
+.addressFields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 100px;
+  gap: 12px;
+  min-width: 0;
+}
+.addressFields label {
+  position: relative;
+}
+.addressFields label > small {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 9px;
+  color: #92a69a;
+}
+.search input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.addressFeedback {
+  grid-column: 1 / -1;
+  min-width: 0;
+  color: #b8c7bd;
+}
+.addressFeedback > button {
+  border: 0;
+  background: transparent;
+  color: #dec58c;
+  cursor: pointer;
+  padding: 8px 0;
+}
+.addressChoices {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-top: 10px;
+  padding: 3px;
+  max-width: 100%;
+}
+.addressChoices button {
+  display: grid;
+  gap: 4px;
+  flex: 0 0 auto;
+  max-width: 280px;
+  text-align: left;
+  border: 1px solid #43594c;
+  border-radius: 8px;
+  background: #12241f;
+  color: #dfebde;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+.addressChoices button[aria-pressed="true"] {
+  border-color: #d9bf80;
+  background: #273c2d;
+}
+.addressChoices small {
+  font-size: 10px;
+  color: #a8bcae;
+}
+@media (max-width: 1100px) {
+  .search {
+    grid-template-columns: minmax(130px, 0.7fr) minmax(160px, 1fr);
+  }
+  .addressFields {
+    grid-column: 1 / -1;
+  }
 }
 .search label,
 .coordinates label {
