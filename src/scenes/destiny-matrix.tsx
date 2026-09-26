@@ -2,6 +2,33 @@
 import { useState } from "react";
 import { elementOf, stemElement } from "@/domain/bazi/catalog";
 import type { Chart } from "@/domain/bazi/types";
+import ratArtwork from "@/assets/generated/zodiac/rat.webp";
+import oxArtwork from "@/assets/generated/zodiac/ox.webp";
+import tigerArtwork from "@/assets/generated/zodiac/tiger.webp";
+import rabbitArtwork from "@/assets/generated/zodiac/rabbit.webp";
+import dragonArtwork from "@/assets/generated/zodiac/dragon.webp";
+import snakeArtwork from "@/assets/generated/zodiac/snake.webp";
+import horseArtwork from "@/assets/generated/zodiac/horse.webp";
+import goatArtwork from "@/assets/generated/zodiac/goat.webp";
+import monkeyArtwork from "@/assets/generated/zodiac/monkey.webp";
+import roosterArtwork from "@/assets/generated/zodiac/rooster.webp";
+import dogArtwork from "@/assets/generated/zodiac/dog.webp";
+import pigArtwork from "@/assets/generated/zodiac/pig.webp";
+
+const zodiacArtwork: Record<string, string> = {
+  Крыса: ratArtwork.src,
+  Бык: oxArtwork.src,
+  Тигр: tigerArtwork.src,
+  Кролик: rabbitArtwork.src,
+  Дракон: dragonArtwork.src,
+  Змея: snakeArtwork.src,
+  Лошадь: horseArtwork.src,
+  Коза: goatArtwork.src,
+  Обезьяна: monkeyArtwork.src,
+  Петух: roosterArtwork.src,
+  Собака: dogArtwork.src,
+  Свинья: pigArtwork.src,
+};
 export function DestinyMatrix({ chart }: { chart: Chart }) {
   const [selected, setSelected] = useState("day");
   const current =
@@ -16,7 +43,12 @@ export function DestinyMatrix({ chart }: { chart: Chart }) {
               data-branch={p.branch}
               key={p.key}
             >
-              <span className="pillar-animal-art" aria-hidden="true" />
+              <img
+                className="pillar-animal-art"
+                src={zodiacArtwork[p.animal]}
+                alt=""
+                aria-hidden="true"
+              />
               <div className="pillar-label">
                 {p.label}
                 {p.key === "day" ? " · 日主" : ""}
