@@ -9,6 +9,8 @@ import { elementOf, stemElement } from "@/domain/bazi/catalog";
 import { palaceZodiac, zodiacPaths, type ZodiacAnimal, type ZodiacSide } from "./palace-zodiac";
 import styles from "./palace-board.module.css";
 import palaceJade from "@/assets/generated/qimen-palace-jade.webp";
+import { findLifePalace } from "@/domain/qimen/life-palace";
+import { PalaceGoldGlow } from "./palace-gold-glow";
 
 type Layer = "all" | "stems" | "doors" | "stars" | "spirits";
 const layers: [Layer, string][] = [["all", "Все слои"], ["stems", "Стволы"], ["doors", "Двери"], ["stars", "Звёзды"], ["spirits", "Духи"]];
@@ -40,7 +42,8 @@ function Entity({ kind, symbol, label, compact, role }: { kind: string; symbol: 
 }
 
 export function PalaceBoard({ chart }: { chart: QimenChart }) {
-  const [selected, setSelected] = useState(chart.starTarget);
+  const life = findLifePalace(chart);
+  const [selected, setSelected] = useState(life?.id ?? chart.starTarget);
   const [layer, setLayer] = useState<Layer>("all");
   const [animalsVisible, setAnimalsVisible] = useState(true);
   const detailId = useId();
@@ -85,10 +88,11 @@ export function PalaceBoard({ chart }: { chart: QimenChart }) {
         <div className={styles.grid} role="group" aria-label="Ло Шу: юг сверху, восток слева">
           {luoShuOrder.map((id) => {
             const cell = chart.palaces.find((item) => item.id === id)!;
-            return <button type="button" key={id} className={`${styles.cell} ${id === 5 ? styles.center : ""}`} data-palace-id={id}
+            return <button type="button" key={id} className={`${styles.cell} ${id === 5 ? styles.center : ""}`} data-palace-id={id} data-life-palace={life?.id === id || undefined}
               style={accent(elementOf(cell.element).color)} aria-pressed={p.id === id} aria-controls={detailId}
-              aria-label={`${id}. ${cell.name}. ${cell.direction}. ${id === 5 ? `Ствол центра ${cell.earth}` : `Небо ${cell.heaven}, земля ${cell.earth}. Дверь ${doorNames[cell.door]}. Звезда ${starNames[cell.star]}. Дух ${spiritNames[cell.spirit]}`}`}
+              aria-label={`${id}. ${cell.name}. ${cell.direction}. ${life?.id === id ? "Дворец жизни. " : ""}${id === 5 ? `Ствол центра ${cell.earth}` : `Небо ${cell.heaven}, земля ${cell.earth}. Дверь ${doorNames[cell.door]}. Звезда ${starNames[cell.star]}. Дух ${spiritNames[cell.spirit]}`}`}
               onClick={() => setSelected(id)}>
+              {life?.id === id && <><PalaceGoldGlow /><span className={styles.lifeBadge}>Дворец жизни</span></>}
               <span className={styles.cellHeading}><span><b>{id}</b> {cell.name}</span><span className={styles.direction}>{directions[id]}</span></span>
               {id === 5 ? <span className={styles.centerBody}>
                 <svg className={styles.taiji} viewBox="0 0 80 80" aria-hidden="true" focusable="false"><circle cx="40" cy="40" r="35" fill="none" stroke="currentColor" opacity=".25" /><circle cx="40" cy="40" r="27" fill="currentColor" opacity=".12" /><path d="M40 13a27 27 0 0 1 0 54a13.5 13.5 0 0 1 0-27a13.5 13.5 0 0 0 0-27" fill="currentColor" opacity=".8" /><circle cx="40" cy="26.5" r="4" fill="currentColor" /><circle cx="40" cy="53.5" r="4" fill="#102328" /></svg>
@@ -116,13 +120,15 @@ export function PalaceBoard({ chart }: { chart: QimenChart }) {
           })}
         </div>
       </div>
-      <div className={styles.legend}><span><i /> Выбранный дворец</span><span>Небо / Земля — стволы</span><span>寄 — размещение центра</span></div>
+      <div className={styles.legend}>{life && <span className={styles.lifeLegend}><i /> Дворец жизни · {life.id} {palaceOf(life.id).name}</span>}<span><i /> Выбранный дворец</span><span>Небо / Земля — стволы</span><span>寄 — размещение центра</span></div>
+      {life && <p className={styles.lifeNote}>Дворец жизни определяется по стволу дня {life.dayStem} на небесной тарелке{life.dayStem === "甲" ? `: ${life.dayPillar} представлен стволом ${life.stem}` : ""}{life.hosted ? "; ствол центра учитывается в принимающем дворце" : ""}. Для личной карты укажите дату и время рождения; в карте события это дворец ствола дня события.</p>}
       <p className={styles.mapNote}>Нажмите на дворец или животное, чтобы раскрыть его слои. 12 животных обозначают земные ветви направлений, а не отдельные дворцы или прогноз.</p>
     </div>
     <aside className={styles.detail} id={detailId} aria-live="polite" aria-atomic="true" style={accent(elementOf(p.element).color)}>
       <div className={styles.detailTop}><span className={styles.eyebrow}>ВЫБРАННЫЙ ДВОРЕЦ</span><span className={styles.trigram} aria-hidden="true">{p.trigram}</span></div>
       <h2><span className={styles.detailNumber}>{p.id.toString().padStart(2, "0")}</span> {p.name} <span className={styles.detailHan}>{p.han}</span></h2>
       <p className={styles.detailDirection}>{p.direction} · {elementOf(p.element).name}</p>
+      {life?.id === p.id && <p className={styles.lifeDetail}>✧ Дворец жизни · ствол дня {life.dayStem}{life.dayStem !== life.stem ? ` → ${life.stem}` : ""}{life.hosted ? " · размещённый ствол центра" : ""}</p>}
       {selectedAnimals.length > 0 && <div className={styles.detailAnimals}>{selectedAnimals.map((animal) => <span key={animal.id}><ZodiacIcon animal={animal.id} /><span>{animal.branch} · {animal.name}</span></span>)}</div>}
       <p className={styles.theme}>{p.theme}</p>
       {p.id === 5 ? <>

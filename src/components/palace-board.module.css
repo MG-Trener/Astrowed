@@ -80,6 +80,17 @@
 .cell::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; background: linear-gradient(#06110e10, #06110e38), var(--palace-art) center / 100% 100%; opacity: .68; transition: opacity .2s ease; }
 .cell[aria-pressed="true"] { border-color: var(--palace-accent); box-shadow: inset 0 0 28px color-mix(in srgb, var(--palace-accent) 6%, transparent), 0 0 20px color-mix(in srgb, var(--palace-accent) 18%, transparent); }
 .cell[aria-pressed="true"]::before { opacity: 1; }
+.cell[data-life-palace="true"], .cell[data-life-palace="true"]:hover { border-color: #e9bf66; }
+.lifeBadge {
+  position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+  z-index: 3; padding: 2px 7px; border: 1px solid #af8c48; border-radius: 4px;
+  background: #233028; color: #ffe2a2; font-size: 8px; line-height: 1.3; white-space: nowrap;
+  letter-spacing: .03em; pointer-events: none;
+}
+.lifeLegend { color: #efd59b; }
+.legend .lifeLegend i { background: #efc86e; box-shadow: 0 0 8px #efc86e88; }
+.lifeNote { margin: 4px 0 8px; color: #baa97f; font-size: 10px; line-height: 1.65; }
+.lifeDetail { margin: 13px 0; padding: 9px 11px; border: 1px solid #b896504d; border-radius: 7px; color: #efce88; background: #e8bf5710; font-size: 11px; line-height: 1.6; }
 .cellHeading { display: flex; justify-content: space-between; align-items: baseline; gap: 4px; font-size: 12px; white-space: nowrap; }
 .cellHeading b { color: var(--palace-accent); font-weight: 500; margin-right: 3px; }
 .direction { font-size: 8px; color: var(--board-muted); letter-spacing: .05em; }

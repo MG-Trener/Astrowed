@@ -28,7 +28,30 @@ imports. Both the server app and the GitHub Pages app use the same component.
 - Printing restores all calculation layers even when the screen is filtered.
   Reduced-motion preferences disable the small hover transitions.
 
-## Verification
+## Life Palace
+
+The golden perimeter marks the birth-day heavenly stem on the heaven plate,
+not the Life Door (生). For a personal chart, enter the birth date and time;
+an event chart instead marks the event-day stem. The UI explains this distinction.
+Mingli describes its green frame in https://www.mingli.ru/blog/post/1947 and
+the birth-day stem rule in https://www.mingli.ru/blog/post/847.
+
+Jia days use their own pillar's concealed instrument: 甲子→戊, 甲戌→己,
+甲申→庚, 甲午→辛, 甲辰→壬, 甲寅→癸 (not the hour's instrument).
+The 甲戌→己 example is documented by the practitioner at
+https://feng-shui.ua/article/detail.php?ARTICLEID=6787.
+If that stem belongs to the centre, highlight the actual travelling `hosted`
+palace supplied by our engine. This follows our existing centre-hosting convention;
+parity with every school's edge cases is not claimed.
+
+`findLifePalace` supplies one shared result for the cell, badge, legend and details.
+Selecting another cell does not move the Life Palace marker. SVG strokes animate
+only along the perimeter, leaving text unobstructed. The site pause control pauses
+the effect; reduced motion keeps a static gold contour and print hides the animation.
+`qimen-life-palace.test.ts` covers heaven versus earth/door, all six Jia days,
+centre hosting, missing data, and every manual yin/yang ju.
+
+## Checks
 
 `palace-zodiac.test.ts` checks the canonical branch/animal names, all twelve SVGs,
 compass bearings, palace mapping, and the south-up frame order. Run `npm test`,
