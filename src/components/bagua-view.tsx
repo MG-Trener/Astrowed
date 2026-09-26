@@ -5,6 +5,7 @@ import { palaceOf, luoShuOrder } from "@/domain/feng-shui/catalog";
 import { elementOf } from "@/domain/bazi/catalog";
 import { calculateGua } from "@/domain/feng-shui/gua";
 import { MomentForm } from "./moment-form";
+import styles from "./gua-result.module.css";
 export function BaguaNavigator() {
   const [selected, setSelected] = useState(1);
   const p = palaceOf(selected);
@@ -72,40 +73,70 @@ export function GuaResult({
   result: ReturnType<typeof calculateGua>;
 }) {
   return (
-    <div className="gua-result">
-      <div className="gua-number">
-        <span>{result.palace.trigram}</span>
-        <strong>{result.number}</strong>
-        <p>
-          {result.palace.name} · {result.group} группа
-        </p>
-        <small>Солнечный год: {result.year}</small>
-      </div>
-      <div className="table-scroll">
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Направление</th>
-              <th>Качество</th>
-              <th>Традиционная тема</th>
-            </tr>
-          </thead>
-          <tbody>
-            {result.directions.map((d) => (
-              <tr key={d.id}>
-                <td>{d.direction}</td>
-                <td>
-                  <span className={d.favorable ? "positive-text" : "muted"}>
-                    {d.quality}
-                  </span>
-                </td>
-                <td>{d.meaning}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p className="method-note">
+    <section
+      className={styles.result}
+      aria-label="Ваше число Гуа и направления"
+    >
+      <header className={styles.summary}>
+        <div className={styles.seal} aria-label={`Число Гуа ${result.number}`}>
+          <span aria-hidden="true">{result.palace.trigram}</span>
+          <strong>{result.number}</strong>
+        </div>
+        <div className={styles.identity}>
+          <span className={styles.eyebrow}>ВАШЕ ЛИЧНОЕ ГУА</span>
+          <h2>
+            {result.palace.name} <span>{result.palace.han}</span>
+          </h2>
+          <p>
+            {result.group} группа · {elementOf(result.palace.element).name}
+          </p>
+          <small>Солнечный год рождения · {result.year}</small>
+        </div>
+      </header>
+      {[true, false].map((favorable) => (
+        <section
+          key={String(favorable)}
+          className={styles.group}
+          data-favorable={favorable}
+        >
+          <div className={styles.groupHeading}>
+            <span className={styles.groupMark} aria-hidden="true">
+              {favorable ? "✧" : "◇"}
+            </span>
+            <h3>
+              {favorable
+                ? "Благоприятные направления"
+                : "Направления осторожности"}
+            </h3>
+            <span className={styles.count}>04</span>
+          </div>
+          <ul className={styles.directions}>
+            {result.directions
+              .filter((d) => d.favorable === favorable)
+              .map((d) => (
+                <li key={d.id} className={styles.card}>
+                  <div className={styles.cardHeading}>
+                    <span className={styles.trigram} aria-hidden="true">
+                      {d.trigram}
+                    </span>
+                    <div>
+                      <h4>{d.direction}</h4>
+                      <span className={styles.bearing}>{d.degrees}</span>
+                    </div>
+                  </div>
+                  <div className={styles.quality}>
+                    <strong>{d.quality}</strong>
+                    <span lang="zh" aria-hidden="true">
+                      {d.hanQuality}
+                    </span>
+                  </div>
+                  <p>{d.meaning}</p>
+                </li>
+              ))}
+          </ul>
+        </section>
+      ))}
+      <p className={styles.method}>
         {result.method}. Ли Чунь: {result.boundary}.{" "}
         {result.uncertain
           ? "Дата совпала с Ли Чунь при неизвестном времени: результат требует уточнения."
@@ -113,7 +144,7 @@ export function GuaResult({
         Названия описывают традиционные соответствия, а не гарантированный
         результат.
       </p>
-    </div>
+    </section>
   );
 }
 export function GuaCalculator() {
