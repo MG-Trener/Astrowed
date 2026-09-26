@@ -26,6 +26,7 @@ const required = [
   "feng-shui/gua/index.html",
   "feng-shui/compass/index.html",
   "compasses/index.html",
+  "calendar/index.html",
   "qimen/index.html",
   "qimen/palaces/index.html",
   "about-julia/index.html",

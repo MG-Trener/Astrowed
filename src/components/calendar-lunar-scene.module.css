@@ -1,0 +1,135 @@
+.scene {
+  width: 320px;
+  flex: 0 0 320px;
+  position: relative;
+  contain: layout paint;
+}
+.sky {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.farRing,
+.gyroscope,
+.lightArc {
+  transform-origin: 180px 128px;
+}
+.farRing {
+  animation: celestialTurn 100s linear infinite;
+}
+.gyroscope {
+  animation: celestialTilt 32s ease-in-out infinite alternate;
+}
+.orbiter {
+  transform-origin: 0 0;
+  animation: celestialTurn 22s linear infinite;
+}
+.innerOrbiter {
+  transform-origin: 0 0;
+  animation: celestialTurn 17s linear infinite reverse;
+}
+.moon {
+  animation: lunarFloat 11s ease-in-out infinite;
+}
+.shadow {
+  animation: shadowDrift 28s ease-in-out infinite alternate;
+}
+.lightArc {
+  animation: arcDrift 26s linear infinite;
+  opacity: 0.65;
+}
+.breath {
+  animation: haloBreath 9s ease-in-out infinite;
+}
+.star,
+.starCross {
+  animation: starGlow 7s ease-in-out infinite;
+}
+.starCross {
+  animation-delay: -3s;
+}
+.scene[data-running="false"] *,
+:global(.app[data-sky-paused="true"]) .scene * {
+  animation-play-state: paused !important;
+}
+@keyframes celestialTurn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes celestialTilt {
+  from {
+    transform: rotate(-22deg);
+  }
+  to {
+    transform: rotate(13deg);
+  }
+}
+@keyframes lunarFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes shadowDrift {
+  from {
+    transform: translateX(-39px);
+  }
+  to {
+    transform: translateX(83px);
+  }
+}
+@keyframes arcDrift {
+  to {
+    transform: rotate(-360deg);
+    stroke-dashoffset: -202;
+  }
+}
+@keyframes haloBreath {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes starGlow {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+@media (max-width: 1100px) {
+  .scene {
+    width: 235px;
+    flex-basis: 235px;
+  }
+}
+@media (max-width: 700px) {
+  .scene {
+    width: 135px;
+    flex-basis: 135px;
+  }
+}
+@media (max-width: 420px) {
+  .scene {
+    width: 96px;
+    flex-basis: 96px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene * {
+    animation: none !important;
+  }
+  .shadow {
+    transform: translateX(-30px);
+  }
+}

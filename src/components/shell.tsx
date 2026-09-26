@@ -32,6 +32,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
     ["/bazi", "Ба Цзы"],
     ["/feng-shui", "Фэн Шуй"],
     ["/compasses", "Компасы"],
+    ["/calendar", "Календарь"],
     ["/qimen", "Ци Мэнь"],
     ["/knowledge", "Библиотека"],
     ["/about-julia", "Эксперт"],
