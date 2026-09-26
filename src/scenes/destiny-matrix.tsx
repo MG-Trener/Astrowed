@@ -13,8 +13,10 @@ export function DestinyMatrix({ chart }: { chart: Chart }) {
           {chart.pillars.map((p) => (
             <div
               className={`pillar ${p.key === selected ? "selected" : ""}`}
+              data-branch={p.branch}
               key={p.key}
             >
+              <span className="pillar-animal-art" aria-hidden="true" />
               <div className="pillar-label">
                 {p.label}
                 {p.key === "day" ? " · 日主" : ""}
@@ -51,6 +53,20 @@ export function DestinyMatrix({ chart }: { chart: Chart }) {
                 ))}
               </div>
               <div className="pillar-god">{p.tenGod}</div>
+              <div className="pillar-print-details">
+                <span>
+                  <b>Скрытые:</b>{" "}
+                  {p.hidden
+                    .map((stem, i) => `${stem} · ${p.hiddenGods[i]}`)
+                    .join(" / ")}
+                </span>
+                <span>
+                  <b>На Инь:</b> {p.nayin}
+                </span>
+                <span>
+                  <b>Фаза:</b> {p.stage}
+                </span>
+              </div>
             </div>
           ))}
           {chart.input.unknownTime && (
