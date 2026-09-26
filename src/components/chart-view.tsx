@@ -20,7 +20,7 @@ export function ChartView({
   savedId?: string;
   browserOnly?: boolean;
 }) {
-  const { remember } = useActiveChart();
+  const { remember, clear } = useActiveChart();
   useEffect(() => {
     if (!demo) remember(chart);
   }, [chart, demo, remember]);
@@ -63,7 +63,7 @@ export function ChartView({
           </p>
         </div>
         <div className="actions">
-          <Link href="/calculator" className="button">
+          <Link href="/calculator" className="button" onNavigate={clear}>
             Новый расчёт
           </Link>
           {!browserOnly && !demo && !id && (

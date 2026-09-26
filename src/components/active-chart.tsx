@@ -14,7 +14,15 @@ const Context = createContext<{
   chart: Chart | null;
   ready: boolean;
   remember: (chart: Chart) => void;
-}>({ chart: null, ready: false, remember: () => {} });
+  clear: () => void;
+  resetVersion: number;
+}>({
+  chart: null,
+  ready: false,
+  remember: () => {},
+  clear: () => {},
+  resetVersion: 0,
+});
 export function ActiveChartProvider({
   children,
 }: {
@@ -22,6 +30,7 @@ export function ActiveChartProvider({
 }) {
   const [chart, setChart] = useState<Chart | null>(null);
   const [ready, setReady] = useState(false);
+  const [resetVersion, setResetVersion] = useState(0);
   useEffect(() => {
     try {
       setChart(restoreChart(sessionStorage.getItem(chartSessionKey)));
@@ -38,8 +47,17 @@ export function ActiveChartProvider({
       /* Keep the result for this visit. */
     }
   }, []);
+  const clear = useCallback(() => {
+    setChart(null);
+    setResetVersion((version) => version + 1);
+    try {
+      sessionStorage.removeItem(chartSessionKey);
+    } catch {
+      /* In-memory reset remains available. */
+    }
+  }, []);
   return (
-    <Context.Provider value={{ chart, ready, remember }}>
+    <Context.Provider value={{ chart, ready, remember, clear, resetVersion }}>
       {children}
     </Context.Provider>
   );

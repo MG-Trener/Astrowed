@@ -12,8 +12,14 @@ export function CalculatorForm({
   browserOnly?: boolean;
 }) {
   const [input, setInput] = useState<BirthInput>({ ...emptyBirthInput });
-  const { chart: activeChart, ready, remember } = useActiveChart();
+  const {
+    chart: activeChart,
+    ready,
+    remember,
+    resetVersion,
+  } = useActiveChart();
   const restored = useRef(false);
+  const lastResetVersion = useRef(resetVersion);
   useEffect(() => {
     if (!ready || restored.current) return;
     restored.current = true;
@@ -26,6 +32,16 @@ export function CalculatorForm({
   const [placeReady, setPlaceReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  useEffect(() => {
+    if (lastResetVersion.current === resetVersion) return;
+    lastResetVersion.current = resetVersion;
+    restored.current = true;
+    setChart(null);
+    setInput({ ...emptyBirthInput });
+    setPlaceReady(false);
+    setError("");
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [resetVersion]);
   const update = <K extends keyof BirthInput>(key: K, value: BirthInput[K]) =>
     setInput((prev) => ({ ...prev, [key]: value }));
   useEffect(() => {
