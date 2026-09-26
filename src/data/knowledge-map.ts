@@ -20,6 +20,36 @@ export type KnowledgeEdge = {
 };
 const connections: [string, string, string][] = [
   [
+    "hidden-stems",
+    "four-pillars",
+    "Земные ветви каждого столпа содержат скрытые стволы.",
+  ],
+  [
+    "element-balance",
+    "hidden-stems",
+    "В распределении элементов учитывается состав скрытых стволов.",
+  ],
+  [
+    "personal-gua",
+    "feng-shui-compass",
+    "Для чтения направлений Гуа нужна корректная ориентация.",
+  ],
+  [
+    "personal-gua",
+    "solar-terms",
+    "Граница расчётного года определяется по Ли Чунь.",
+  ],
+  [
+    "qimen-nine-palaces",
+    "qimen-eight-doors",
+    "Двери — один из слоёв внешних дворцов карты.",
+  ],
+  [
+    "qimen-nine-palaces",
+    "solar-time",
+    "Исходное время и настройки метода нужно проверять до чтения карты.",
+  ],
+  [
     "four-pillars",
     "day-master",
     "Ствол дня задаёт точку отсчёта для чтения всей карты.",

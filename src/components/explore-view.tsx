@@ -109,7 +109,7 @@ export function ExploreView() {
             </button>
           </div>
           <Link href={`/knowledge/${element.id}`} className="text-button">
-            Материал в академии ↗
+            Статья в библиотеке ↗
           </Link>
         </section>
       </div>

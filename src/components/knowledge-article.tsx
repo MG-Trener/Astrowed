@@ -2,8 +2,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { articleArtwork } from "@/assets/library-artwork";
 import { libraryArticles, type KnowledgeEntry } from "@/data/library";
+import {
+  libraryCategoryLabel,
+  librarySection,
+  referenceLabel,
+} from "@/data/library-categories";
 export function KnowledgeArticle({ article }: { article: KnowledgeEntry }) {
   const art = articleArtwork(article.slug, article.symbol);
+  const section = librarySection(article.categoryId);
+  const destination =
+    section === "qimen"
+      ? { href: "/qimen", label: "Рассчитать карту Ци Мэнь" }
+      : section === "feng-shui"
+        ? article.slug === "feng-shui-compass"
+          ? { href: "/feng-shui/bagua", label: "Изучить направления Багуа" }
+          : { href: "/feng-shui/gua", label: "Рассчитать личное Гуа" }
+        : { href: "/calculator", label: "Перейти к своей карте" };
   const sections = article.body.split(/\n\s*\n/);
   const references = article.references
     .split("\n")
@@ -16,11 +30,9 @@ export function KnowledgeArticle({ article }: { article: KnowledgeEntry }) {
         </Link>
         <header className="article-heading">
           <div className="eyebrow">
-            {article.categoryId === "elements"
-              ? "ПЯТЬ ЭЛЕМЕНТОВ"
-              : "ОСНОВЫ БА ЦЗЫ"}{" "}
-            · {Math.max(1, Math.ceil(article.body.split(/\s+/).length / 150))}{" "}
-            МИН ЧТЕНИЯ
+            {libraryCategoryLabel(article.categoryId)} ·{" "}
+            {Math.max(1, Math.ceil(article.body.split(/\s+/).length / 150))} МИН
+            ЧТЕНИЯ
           </div>
           <h1>{article.title}</h1>
           <p className="muted">{article.summary}</p>
@@ -52,26 +64,25 @@ export function KnowledgeArticle({ article }: { article: KnowledgeEntry }) {
         {references.length > 0 && (
           <details className="compact-tool-help">
             <summary>Источники и методика</summary>
-            {references.map((url, i) => (
+            {references.map((url) => (
               <p key={url}>
                 <a href={url} target="_blank" rel="noreferrer">
-                  {url.includes("hko.gov")
-                    ? "Hong Kong Observatory · календарные основы"
-                    : "lunar · документация календарного расчёта"}{" "}
-                  ↗
+                  {referenceLabel(url)} ↗
                 </a>
               </p>
             ))}
           </details>
         )}
-        <Link href="/calculator" className="button primary">
-          Перейти к своей карте ↗
+        <Link href={destination.href} className="button primary">
+          {destination.label} ↗
         </Link>
         <nav className="related-reading" aria-label="Читать дальше">
           <h2>Продолжить знакомство</h2>
           {libraryArticles
             .filter(
-              (a) => a.slug !== article.slug && a.categoryId !== "elements",
+              (a) =>
+                a.slug !== article.slug &&
+                librarySection(a.categoryId) === section,
             )
             .slice(0, 3)
             .map((a) => (

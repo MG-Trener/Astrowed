@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { libraryArtwork } from "@/assets/artwork";
 import { articleArtwork } from "@/assets/library-artwork";
 
@@ -7,17 +6,14 @@ export function KnowledgeHero() {
   return (
     <section className="knowledge-hero">
       <div className="knowledge-hero-copy">
-        <div className="eyebrow">ACADEMY / БАЗА ЗНАНИЙ</div>
+        <div className="eyebrow">ASTROWED / БАЗА ЗНАНИЙ</div>
         <h1>
-          Язык, на котором <em>говорит карта.</em>
+          Библиотека <em>знаний.</em>
         </h1>
         <p>
-          От первого символа до системы взаимосвязей. Материалы для
-          внимательного исследования Ба Цзы.
+          Ба Цзы, фэншуй и Ци Мэнь — от первых обозначений до чтения карты.
+          Изучайте символы, время и пространство в своём темпе.
         </p>
-        <Link className="button" href="/knowledge/graph">
-          Атлас знаний · с чего начать ↗
-        </Link>
       </div>
       <div className="celestial-art knowledge-hero-art">
         <Image

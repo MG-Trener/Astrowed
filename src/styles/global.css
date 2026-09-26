@@ -1054,7 +1054,8 @@ select option {
   color: var(--jade);
   margin-bottom: 25px;
 }
-.knowledge-item h2 {
+.knowledge-item h2,
+.knowledge-item h3 {
   font-size: 20px;
   font-weight: 400;
   margin: 15px 0;
@@ -1063,6 +1064,51 @@ select option {
   font-size: 12px;
   line-height: 1.8;
   color: var(--muted);
+}
+.library-section {
+  margin-top: 64px;
+}
+.library-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+.library-section-heading h2 {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 400;
+  margin: 12px 0;
+}
+.library-section-heading p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+  max-width: 560px;
+}
+.library-section-count {
+  color: var(--jade);
+  font-size: 24px;
+  white-space: nowrap;
+  text-align: right;
+}
+.library-section-count span {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.library-section .knowledge-card-art {
+  height: auto;
+  aspect-ratio: 3 / 2;
+}
+.library-section .knowledge-item .symbol {
+  position: static;
+  float: right;
+  margin: 0 0 10px 12px;
+  font-size: 24px;
+}
+.library-section .knowledge-item h3 {
+  clear: both;
 }
 .empty-state {
   padding: 65px 20px;

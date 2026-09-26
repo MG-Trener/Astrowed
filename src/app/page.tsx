@@ -87,7 +87,7 @@ export default function Home() {
           </h2>
         </div>
         <Link className="text-button" href="/knowledge">
-          Открыть академию <Arrow diagonal />
+          Открыть библиотеку <Arrow diagonal />
         </Link>
       </section>
     </>

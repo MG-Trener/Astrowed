@@ -1,4 +1,5 @@
 import { elements } from "../domain/bazi/catalog";
+import { libraryAdditions } from "./library-additions";
 export type KnowledgeEntry = {
   id: string;
   slug: string;
@@ -33,6 +34,7 @@ const entry = (
   requiresExpertReview: true,
 });
 export const libraryArticles: KnowledgeEntry[] = [
+  ...libraryAdditions,
   ...elements.map((e, i) => ({
     ...entry(
       e.id,

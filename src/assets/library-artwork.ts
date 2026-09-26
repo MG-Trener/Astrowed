@@ -12,7 +12,37 @@ import stars from "./generated/knowledge-stars.webp";
 import dayMaster from "./generated/knowledge-day-master.webp";
 import unknownTime from "./generated/knowledge-unknown-time.webp";
 import solarTerms from "./generated/knowledge-solar-terms.webp";
+import hiddenStems from "./generated/knowledge-hidden-stems.webp";
+import elementBalance from "./generated/knowledge-element-balance.webp";
+import personalGua from "./generated/knowledge-personal-gua.webp";
+import compass from "./generated/knowledge-feng-shui-compass.webp";
+import ninePalaces from "./generated/knowledge-qimen-nine-palaces.webp";
+import eightDoors from "./generated/knowledge-qimen-eight-doors.webp";
 const art: Record<string, { image: StaticImageData; alt: string }> = {
+  "hidden-stems": {
+    image: hiddenStems,
+    alt: "Раскрытый нефритовый цилиндр с тремя светящимися минеральными сердцевинами",
+  },
+  "element-balance": {
+    image: elementBalance,
+    alt: "Пять разноцветных камней вокруг тонких латунных весов",
+  },
+  "personal-gua": {
+    image: personalGua,
+    alt: "Восьмиугольный нефритовый медальон внутри золотого кольца с жемчужными ориентирами",
+  },
+  "feng-shui-compass": {
+    image: compass,
+    alt: "Латунный компас на архитектурном плане рядом с нефритовой моделью дома",
+  },
+  "qimen-nine-palaces": {
+    image: ninePalaces,
+    alt: "Нефритовые павильоны вокруг светящегося центра на квадратной платформе",
+  },
+  "qimen-eight-doors": {
+    image: eightDoors,
+    alt: "Восемь светящихся нефритовых и латунных дверей вокруг каменного подиума",
+  },
   "four-pillars": baziArtwork,
   "day-master": {
     image: dayMaster,
