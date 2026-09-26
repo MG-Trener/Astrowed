@@ -8,6 +8,7 @@ import logo from "@/assets/generated/astrowed-logo.webp";
 import { StarMap } from "@/scenes/star-map";
 import { ActiveChartProvider } from "./active-chart";
 import { BackgroundMusic } from "./background-music";
+import { AccountProvider, AccountGate, AccountName } from "./account-provider";
 export function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const [menu, setMenu] = useState(false);
@@ -38,6 +39,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
     ["/about-julia", "Эксперт"],
   ];
   return (
+    <AccountProvider>
     <ActiveChartProvider>
       <div
         className={compact ? "app compact" : "app"}
@@ -78,14 +80,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 {label}
               </Link>
             ))}
-            <Link className="nav-workspace" href="/clients" onClick={() => setMenu(false)}>
-              Кабинет ↗
+            <Link className="nav-workspace" href="/account/" onClick={() => setMenu(false)}>
+              <AccountName /> ↗
             </Link>
           </nav>
           <div className="header-actions">
             <BackgroundMusic />
-            <Link className="workspace-link" href="/clients">
-              Кабинет <Arrow diagonal />
+            <Link className="workspace-link" href="/account/">
+              <AccountName /> <Arrow diagonal />
             </Link>
             <button
               className="menu-button"
@@ -98,7 +100,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </button>
           </div>
         </header>
-        <main id="main">{children}</main>
+        <main id="main">{[/^\/calculator\/?$/, /^\/bazi\/calculator/, /^\/qimen(?:\/|$)/, /^\/feng-shui\/(gua|compass)/, /^\/calendar(?:\/|$)/, /^\/compasses(?:\/|$)/, /^\/chart\/(current)/].some(pattern => pattern.test(path.replace(/^\/Astrowed/, ""))) ? <AccountGate>{children}</AccountGate> : children}</main>
         <footer className="footer">
           <Link href="/" className="footer-brand">
             <Image
@@ -149,5 +151,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </footer>
       </div>
     </ActiveChartProvider>
+    </AccountProvider>
   );
 }

@@ -16,6 +16,8 @@ import {
   distanceBetween,
 } from "@/domain/feng-shui/compass";
 import styles from "./feng-compass.module.css";
+import { ProfileFill } from "./account-provider";
+import { accountFetch } from "@/services/account-client";
 
 const demo = { lat: 51.106, lng: 71.416 };
 const elementNames = {
@@ -28,6 +30,7 @@ const elementNames = {
 const degrees = (n: number) =>
   `${n.toLocaleString("ru-RU", { maximumFractionDigits: 1 })}°`;
 export function FengCompass() {
+  useEffect(() => { void accountFetch("/events/compass", {}).catch(() => {}); }, []);
   const [center, setCenter] = useState<Coordinates>(demo),
     [place, setPlace] = useState("Астана · Ботанический сад");
   const [view, setView] = useState({ zoom: 15.5, request: 0 });
@@ -209,6 +212,7 @@ export function FengCompass() {
           羅盤<small>24 ГОРЫ · 8 ТРИГРАММ</small>
         </div>
       </header>
+      <ProfileFill label="Показать мой город" onFill={(birth, p) => { const place = p.residence || birth; setCenter({ lat: place.latitude, lng: place.longitude }); setPlace(place.city); setView(v => ({ zoom: 14, request: v.request + 1 })); }} />
       <div
         ref={tool}
         className={expanded ? styles.expanded : undefined}

@@ -16,6 +16,8 @@ import styles from "./chinese-calendar.module.css";
 import { CalendarLunarScene } from "./calendar-lunar-scene";
 import { CalendarLocation } from "./calendar-location";
 import { CalendarHours } from "./calendar-hours";
+import { ProfileFill } from "./account-provider";
+import { accountFetch } from "@/services/account-client";
 import {
   calculateLocalMonth,
   defaultClock,
@@ -170,21 +172,19 @@ export function ChineseCalendar() {
     const timer = setInterval(update, 60000);
     return () => clearInterval(timer);
   }, [clock.timezone]);
-  const calculated = useMemo(() => {
-    try {
-      return {
-        days: period
-          ? calculateLocalMonth(period.year, period.month, clock)
-          : [],
-        error: "",
-      };
-    } catch (e) {
-      return {
-        days: [],
-        error:
-          e instanceof Error ? e.message : "Не удалось рассчитать календарь.",
-      };
-    }
+  const [calculated, setCalculated] = useState<{ days: ReturnType<typeof calculateLocalMonth>; error: string }>({ days: [], error: "" });
+  const [calculating, setCalculating] = useState(false);
+  useEffect(() => {
+    if (!period) return;
+    let active = true;
+    setCalculating(true);
+    const timer = setTimeout(() => {
+      accountFetch<ReturnType<typeof calculateLocalMonth>>("/calculate", { kind: "calendar", ...period, clock })
+        .then(days => { if (active) setCalculated({ days, error: "" }); })
+        .catch(e => { if (active) setCalculated({ days: [], error: e instanceof Error ? e.message : "Не удалось рассчитать календарь." }); })
+        .finally(() => { if (active) setCalculating(false); });
+    }, 300);
+    return () => { active = false; clearTimeout(timer); };
   }, [period, clock]);
   const days = calculated.days;
   const day = days[selected - 1] ?? days[0];
@@ -257,6 +257,8 @@ export function ChineseCalendar() {
         </div>
         <CalendarLunarScene />
       </header>
+      <ProfileFill label="Использовать мой город" onFill={(birth, p) => { const place = p.residence || birth; setClock(c => ({ ...c, city: place.city, timezone: place.timezone, longitude: place.longitude })); }} />
+      {calculating && <p role="status">Рассчитываем месяц…</p>}
       <CalendarLocation
         value={clock}
         onChange={(value) => {

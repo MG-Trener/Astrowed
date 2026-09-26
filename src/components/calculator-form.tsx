@@ -6,6 +6,8 @@ import { Arrow } from "./icons";
 import { LocationPicker } from "./location-picker";
 import { emptyBirthInput } from "@/domain/bazi/session";
 import { useActiveChart } from "./active-chart";
+import { ProfileFill } from "./account-provider";
+import { accountFetch } from "@/services/account-client";
 export function CalculatorForm({
   browserOnly = false,
 }: {
@@ -60,20 +62,7 @@ export function CalculatorForm({
         ...input,
         time: input.unknownTime ? "12:00" : input.time,
       };
-      let result: Chart;
-      if (browserOnly) {
-        const { calculateNew } = await import("@/domain/bazi/engine");
-        result = calculateNew(submitted);
-      } else {
-        const r = await fetch("/api/calculate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(submitted),
-        });
-        const body = await r.json();
-        if (!r.ok) throw new Error(body.error);
-        result = body;
-      }
+      const result = await accountFetch<Chart>("/calculate", { kind: "bazi", input: submitted });
       remember(result);
       setChart(result);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -104,6 +93,7 @@ export function CalculatorForm({
       </div>
       <div className="form-layout">
         <form className="form" onSubmit={submit}>
+          <ProfileFill onFill={value => { setInput(value); setPlaceReady(true); }} />
           <label className="field calculator-name">
             Имя
             <input

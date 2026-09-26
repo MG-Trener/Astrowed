@@ -5,6 +5,7 @@ import { newBirthSchema } from "@/domain/bazi/engine";
 import { emptyBirthInput } from "@/domain/bazi/session";
 import { useActiveChart } from "./active-chart";
 import type { BirthInput } from "@/domain/bazi/types";
+import { ProfileFill } from "./account-provider";
 
 export function MomentForm({
   onCalculate,
@@ -12,7 +13,7 @@ export function MomentForm({
   label = "Построить карту",
   gender = false,
 }: {
-  onCalculate: (input: BirthInput) => void;
+  onCalculate: (input: BirthInput) => void | Promise<void>;
   children?: React.ReactNode;
   label?: string;
   gender?: boolean;
@@ -25,6 +26,7 @@ export function MomentForm({
   const restored = useRef(false);
   const [placeReady, setPlaceReady] = useState(false);
   const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
   useEffect(() => {
     if (!ready || restored.current) return;
     restored.current = true;
@@ -42,7 +44,7 @@ export function MomentForm({
   return (
     <form
       className="moment-form moment-compact"
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
         if (!placeReady) {
           setError(
@@ -51,8 +53,9 @@ export function MomentForm({
           return;
         }
         setError("");
+        setBusy(true);
         try {
-          onCalculate(
+          await onCalculate(
             newBirthSchema.parse({
               ...input,
               time: input.unknownTime ? "12:00" : input.time,
@@ -60,9 +63,13 @@ export function MomentForm({
           );
         } catch (e) {
           setError(e instanceof Error ? e.message : "Проверьте данные.");
+        } finally {
+          setBusy(false);
         }
       }}
     >
+      <ProfileFill onFill={value => { setInput(value); setPlaceReady(true); }} />
+      {busy && <p role="status">Выполняем расчёт…</p>}
       <div className="form-grid">
         <label className="field">
           {gender ? "Дата рождения" : "Дата события / рождения"}
@@ -144,7 +151,7 @@ export function MomentForm({
             : error}
         </p>
       )}
-      <button className="button primary" type="submit" disabled={!placeReady}>
+      <button className="button primary" type="submit" disabled={!placeReady || busy}>
         {label} <span aria-hidden>↗</span>
       </button>
     </form>

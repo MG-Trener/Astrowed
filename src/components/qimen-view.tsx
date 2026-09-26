@@ -9,6 +9,7 @@ import {
 import { MomentForm } from "./moment-form";
 import { PalaceBoard } from "./palace-board";
 import { QimenPrintPreview } from "./qimen-print-preview";
+import { accountFetch } from "@/services/account-client";
 
 // Keep the existing import contract for reports and other chart views.
 export { PalaceBoard } from "./palace-board";
@@ -40,8 +41,8 @@ export function QimenView() {
       )}
       <section id="qimen-calculator" hidden={Boolean(chart)}>
         <MomentForm
-          onCalculate={(input) =>
-            setChart(calculateQimen(input, { system, ju, dun }))
+          onCalculate={async (input) =>
+            setChart(await accountFetch<QimenChart>("/calculate", { kind: "qimen", input, options: { system, ju, dun } }))
           }
         >
           <label className="field full">

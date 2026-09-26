@@ -13,6 +13,73 @@ import {
 } from "drizzle-orm/pg-core";
 import type { Chart, BirthInput } from "../domain/bazi/types";
 export const appSchema = pgSchema("astrowed");
+// Managed identity remains in neon_auth; these tables contain application data only.
+export const memberProfiles = appSchema
+  .table("member_profiles", {
+    userId: text().primaryKey(),
+    email: text().notNull(),
+    name: text().notNull(),
+    phone: text().notNull(),
+    birth: jsonb().$type<BirthInput | null>(),
+    residence: jsonb().$type<{
+      city: string;
+      timezone: string;
+      longitude: number;
+      latitude: number;
+    } | null>(),
+    privacyConsent: boolean().notNull(),
+    termsConsent: boolean().notNull(),
+    marketingConsent: boolean().notNull().default(false),
+    consentVersion: text().notNull(),
+    createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+  })
+  .enableRLS();
+export const memberConsents = appSchema
+  .table("member_consents", {
+    id: uuid().defaultRandom().primaryKey(),
+    userId: text()
+      .notNull()
+      .references(() => memberProfiles.userId, { onDelete: "cascade" }),
+    version: text().notNull(),
+    privacy: boolean().notNull(),
+    terms: boolean().notNull(),
+    marketing: boolean().notNull(),
+    createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+  })
+  .enableRLS();
+export const calculationEvents = appSchema
+  .table(
+    "calculation_events",
+    {
+      id: uuid().defaultRandom().primaryKey(),
+      userId: text().notNull(),
+      kind: text().notNull(),
+      createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+    },
+    (t) => [
+      index("calculation_events_date_idx").on(t.createdAt),
+      index("calculation_events_user_idx").on(t.userId),
+    ],
+  )
+  .enableRLS();
+export const memberRequests = appSchema
+  .table(
+    "member_requests",
+    {
+      id: uuid().defaultRandom().primaryKey(),
+      userId: text()
+        .notNull()
+        .references(() => memberProfiles.userId, { onDelete: "cascade" }),
+      message: text().notNull(),
+      status: text().notNull().default("pending"),
+      snapshot: jsonb().notNull(),
+      createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+      sentAt: timestamp({ withTimezone: true }),
+    },
+    (t) => [index("member_requests_user_idx").on(t.userId)],
+  )
+  .enableRLS();
 export const users = appSchema.table("users", {
   id: uuid().defaultRandom().primaryKey(),
   email: text().notNull().unique(),

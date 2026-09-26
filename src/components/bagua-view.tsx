@@ -4,6 +4,7 @@ import type { BirthInput } from "@/domain/bazi/types";
 import { palaceOf, luoShuOrder } from "@/domain/feng-shui/catalog";
 import { elementOf } from "@/domain/bazi/catalog";
 import { calculateGua } from "@/domain/feng-shui/gua";
+import { accountFetch } from "@/services/account-client";
 import { MomentForm } from "./moment-form";
 import styles from "./gua-result.module.css";
 export function BaguaNavigator() {
@@ -163,8 +164,8 @@ export function GuaCalculator() {
         <MomentForm
           gender
           label="Рассчитать Гуа"
-          onCalculate={(input) => {
-            const next = calculateGua(input);
+          onCalculate={async (input) => {
+            const next = await accountFetch<ReturnType<typeof calculateGua>>("/calculate", { kind: "gua", input });
             setSource(input);
             setResult(next);
           }}
