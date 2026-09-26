@@ -28,7 +28,7 @@ export function CelestialSky({ paused }: { paused: boolean }) {
     let lost = false;
     const canRun = () => !disposed && !lost && !pausedRef.current && !media.matches && !document.hidden;
     const paint = () => {
-      renderer?.draw(elapsed.current, media.matches);
+      renderer?.draw(elapsed.current);
       // Inspectable only on the decorative DOM element; no React updates per frame.
       canvas.dataset.skyTime = elapsed.current.toFixed(3);
     };
