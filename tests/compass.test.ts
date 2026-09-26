@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
 import {
+  distanceBetween,
+  pointerBearing,
+} from "../src/domain/feng-shui/compass";
+import { russianMapStyle } from "../src/services/compass-map-style";
+import {
   mountains,
   mountainAt,
   bearingBetween,
@@ -48,5 +53,55 @@ describe("geographic facade bearings", () => {
     expect(
       bearingBetween({ lat: 0, lng: 179.9 }, { lat: 0, lng: -179.9 }),
     ).toBeCloseTo(90);
+  });
+});
+describe("interactive map compass", () => {
+  it("keeps pointer azimuth geographic when the map is rotated", () => {
+    expect(pointerBearing(0, -100, 45)).toBe(45);
+    expect(pointerBearing(100, 0, 45)).toBe(135);
+    expect(pointerBearing(-100, 0, 120)).toBe(30);
+    expect(pointerBearing(0, 100, 210)).toBe(30);
+  });
+  it("measures great-circle distance, including wraparound", () => {
+    expect(distanceBetween({ lat: 0, lng: 0 }, { lat: 0, lng: 1 })).toBeCloseTo(
+      111195.08,
+      1,
+    );
+    expect(distanceBetween({ lat: 45, lng: 90 }, { lat: 45, lng: 90 })).toBe(0);
+    expect(
+      distanceBetween({ lat: 0, lng: 179.5 }, { lat: 0, lng: -179.5 }),
+    ).toBeCloseTo(111195.08, 1);
+  });
+  it("localizes names without replacing house numbers or mutating the source style", () => {
+    const style = {
+      version: 8 as const,
+      sources: {},
+      layers: [
+        {
+          id: "places",
+          source: "map",
+          type: "symbol" as const,
+          layout: { "text-field": "{name:latin}" },
+        },
+        {
+          id: "numbers",
+          source: "map",
+          type: "symbol" as const,
+          layout: { "text-field": "{housenumber}" },
+        },
+      ],
+    };
+    const localized = russianMapStyle(style);
+    expect(
+      (localized.layers[0] as (typeof style.layers)[0]).layout?.["text-field"],
+    ).toEqual([
+      "coalesce",
+      ["get", "name:ru"],
+      ["get", "name"],
+      ["get", "name:latin"],
+      "",
+    ]);
+    expect(localized.layers[1]).toEqual(style.layers[1]);
+    expect(style.layers[0].layout["text-field"]).toBe("{name:latin}");
   });
 });

@@ -13,3 +13,5 @@ out/
 
 apps/pages/public/locations/
 apps/pages/public/audio/
+public/maplibre/
+apps/pages/public/maplibre/

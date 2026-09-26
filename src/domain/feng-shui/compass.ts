@@ -2,6 +2,24 @@ import { palaceOf } from "./catalog";
 import type { ElementId } from "../bazi/catalog";
 
 export type Coordinates = { lat: number; lng: number };
+export type CompassKind = "luopan" | "bagua" | "gua" | "route";
+export function distanceBetween(a: Coordinates, b: Coordinates) {
+  const dLat = radians(b.lat - a.lat),
+    dLng = radians(b.lng - a.lng);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(radians(a.lat)) *
+      Math.cos(radians(b.lat)) *
+      Math.sin(dLng / 2) ** 2;
+  return (
+    6371008.8 *
+    2 *
+    Math.atan2(Math.sqrt(Math.min(1, h)), Math.sqrt(Math.max(0, 1 - h)))
+  );
+}
+export function pointerBearing(x: number, y: number, north = 0) {
+  return normalizeBearing((Math.atan2(x, -y) * 180) / Math.PI + north);
+}
 export const normalizeBearing = (angle: number) => ((angle % 360) + 360) % 360;
 const radians = (angle: number) => (angle * Math.PI) / 180;
 

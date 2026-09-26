@@ -159,7 +159,7 @@ export function FengShuiPage() {
         <a href="#foundations">Основы</a>
         <a href="#space-elements">Пять элементов</a>
         <Link href="/feng-shui/bagua">Багуа</Link>
-        <Link href="/feng-shui/compass">Компас Фэн Шуй</Link>
+        <Link href="/compasses">Компас Фэн Шуй</Link>
         <Link href="/feng-shui/gua">Личное Гуа</Link>
         <a href="#flying-stars">Летящие звёзды</a>
         <Link href="/feng-shui/recommendations">Комнаты и практика</Link>
@@ -173,7 +173,7 @@ export function FengShuiPage() {
             центр и направление фасада.
           </p>
         </div>
-        <Link className="button primary" href="/feng-shui/compass">
+        <Link className="button primary" href="/compasses">
           Открыть компас ↗
         </Link>
       </section>

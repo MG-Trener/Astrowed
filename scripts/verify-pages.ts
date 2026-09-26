@@ -5,6 +5,8 @@ import path from "node:path";
 
 const root = path.resolve("apps/pages/out");
 const required = [
+  "maplibre/maplibre-gl-worker.mjs",
+  "maplibre/maplibre-gl-shared.mjs",
   "index.html",
   "calculator/index.html",
   "chart/demo/index.html",
@@ -23,6 +25,7 @@ const required = [
   "feng-shui/bagua/index.html",
   "feng-shui/gua/index.html",
   "feng-shui/compass/index.html",
+  "compasses/index.html",
   "qimen/index.html",
   "qimen/palaces/index.html",
   "about-julia/index.html",

@@ -204,29 +204,6 @@
 .mapFrame[data-mode="facing"] .map {
   cursor: crosshair;
 }
-.map :global(.leaflet-tile-pane) {
-  filter: brightness(0.7) saturate(0.36) sepia(0.2);
-}
-.map :global(.leaflet-control-attribution) {
-  background: #f3f0e4;
-  color: #283c30;
-  font-size: 10px;
-  padding: 4px 7px;
-}
-.map :global(.leaflet-control-attribution a) {
-  color: #1e5444;
-}
-.map :global(.leaflet-control-zoom a) {
-  background: #13281f;
-  color: #dfc68c;
-  border-color: #526343;
-}
-.map :global(.leaflet-control-scale-line) {
-  color: #f7eed7;
-  border-color: #d6bc83;
-  background: #10251eda;
-  text-shadow: none;
-}
 .centerMarker {
   background: #dbc389;
   color: #13241e;
@@ -662,5 +639,483 @@
   .guide p {
     grid-column: 2;
     margin: 0;
+  }
+}
+.modeTabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 0 0 20px;
+}
+.modeTabs button {
+  background: #14271fdd;
+  color: #c9d6c8;
+  border: 1px solid #516247;
+  border-radius: 12px;
+  padding: 16px 18px;
+  text-align: left;
+  cursor: pointer;
+}
+.modeTabs button[aria-pressed="true"] {
+  background: #d3be88;
+  color: #1b3023;
+  border-color: #e9d7a7;
+}
+.modeTabs strong,
+.modeTabs small {
+  display: block;
+}
+.modeTabs strong {
+  font-size: 15px;
+  font-weight: 500;
+}
+.modeTabs small {
+  font-size: 10px;
+  margin-top: 8px;
+  opacity: 0.8;
+}
+.interpretation {
+  padding: 17px 14px;
+  margin: 18px 0;
+  border: 1px solid #637354;
+  border-radius: 11px;
+  background: #102319;
+}
+.interpretation h3 {
+  color: #e4cea0;
+  font-size: 15px;
+  font-weight: 400;
+  margin: 10px 0;
+}
+.interpretation p {
+  color: #c0cebf;
+  line-height: 1.7;
+  font-size: 11px;
+  margin: 10px 0;
+}
+.interpretation small {
+  color: #9caf9c;
+  font-size: 10px;
+  line-height: 1.6;
+  display: block;
+}
+.guaSelect {
+  display: grid;
+  gap: 9px;
+  color: #d9ceac;
+  font-size: 12px;
+  margin: 18px 0;
+}
+.guaSelect select {
+  padding: 10px;
+  border: 1px solid #677555;
+  border-radius: 7px;
+  background: #10251b;
+  color: #e4dcc5;
+}
+.guaSelect a {
+  font-size: 10px;
+  color: #d6c18f;
+}
+.locationStatus {
+  margin: 0;
+  padding: 12px 18px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #e1d4ad;
+  background: #1a3125;
+}
+.northButton {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: #122e23ed;
+  color: #eed9a6;
+  border: 1px solid #beaa71;
+  border-radius: 8px;
+  padding: 10px 13px;
+  cursor: pointer;
+  font-size: 11px;
+}
+.northButton span {
+  font-size: 20px;
+  display: inline-block;
+}
+.mapRose {
+  position: absolute;
+  top: 88px;
+  left: 44px;
+  z-index: 500;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+.mapRose span {
+  position: absolute;
+  left: -9px;
+  top: -9px;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  color: #1a4130;
+  background: #f7efd8eb;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: bold;
+}
+.destinationMarker {
+  background: #e8d19c;
+  border: 2px solid #1e5942;
+  border-radius: 50%;
+  color: #193e2c;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  font-weight: bold;
+}
+.centerMarker {
+  width: 30px;
+  height: 30px;
+}
+.map :global(.maplibregl-ctrl-attrib) {
+  background: #f6f1e4;
+  color: #274d3b;
+  font-size: 10px;
+}
+.map :global(.maplibregl-ctrl-attrib a) {
+  color: #274d3b;
+}
+.map :global(.maplibregl-ctrl-scale) {
+  background: #f6f1e4dd;
+  color: #214331;
+  border-color: #214331;
+}
+.map :global(.maplibregl-ctrl-group) {
+  background: #e9dfbf;
+}
+.dial {
+  filter: none;
+}
+@media (min-width: 801px) {
+  .panel {
+    max-height: 870px;
+    overflow-y: auto;
+    scrollbar-color: #899771 #13271c;
+  }
+  .mapFrame {
+    height: 740px;
+  }
+}
+@media (max-width: 800px) {
+  .interpretation,
+  .guaSelect {
+    grid-column: 1 / -1;
+  }
+  .panel {
+    display: block;
+  }
+  .modeTabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.modeTabs button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-height: 104px;
+  padding: 17px 16px;
+  border: 1px solid #51604a;
+  background: linear-gradient(130deg, #1c3228ee, #101e1be8);
+  border-radius: 14px;
+  color: #ced8cb;
+  box-shadow: inset 0 1px #d9d8b710;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    transform 0.2s;
+  overflow: hidden;
+}
+.modeTabs button:hover {
+  border-color: #b8a773;
+  transform: translateY(-2px);
+}
+.modeTabs button[aria-pressed="true"] {
+  background: linear-gradient(130deg, #34533a, #152b21);
+  color: #f0dfb5;
+  border-color: #cfb97e;
+  box-shadow:
+    inset 0 0 25px #a9954a13,
+    0 5px 20px #0002;
+}
+.modeTabs button[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #e0c27c, transparent);
+}
+.modeIcon {
+  width: 53px;
+  height: 53px;
+  flex: 0 0 53px;
+  color: #abac83;
+}
+.modeTabs button[aria-pressed="true"] .modeIcon {
+  color: #e6c888;
+}
+.modeIcon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.modeLabel {
+  min-width: 0;
+}
+.modeTabs .modeLabel strong {
+  font-size: 15px;
+  letter-spacing: 0.015em;
+}
+.modeTabs .modeLabel small {
+  font-size: 10px;
+  line-height: 1.5;
+  color: #aabaac;
+}
+.modeIndicator {
+  align-self: flex-start;
+  margin-left: auto;
+  font-size: 11px;
+  color: #cab783;
+}
+@media (max-width: 1100px) {
+  .modeTabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .modeTabs {
+    gap: 8px;
+  }
+  .modeTabs button {
+    min-height: 95px;
+    gap: 8px;
+    padding: 12px 9px;
+  }
+  .modeIcon {
+    width: 35px;
+    height: 35px;
+    flex-basis: 35px;
+  }
+  .modeTabs .modeLabel strong {
+    font-size: 13px;
+  }
+  .modeTabs .modeLabel small {
+    font-size: 9px;
+    margin-top: 5px;
+  }
+  .modeIndicator {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modeTabs button {
+    transition: none;
+  }
+  .modeTabs button:hover {
+    transform: none;
+  }
+}
+.modeTabs {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.modeTabs button {
+  min-height: 96px;
+  padding: 14px 11px;
+  gap: 9px;
+}
+.modeIcon {
+  width: 39px;
+  height: 39px;
+  flex-basis: 39px;
+}
+.modeTabs .modeLabel strong {
+  font-size: 13px;
+}
+.modeTabs .modeLabel small {
+  font-size: 9px;
+}
+@media (max-width: 800px) {
+  .modeTabs {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    padding: 3px 2px 10px;
+    scrollbar-color: #b29c66 #13261d;
+  }
+  .modeTabs button {
+    flex: 0 0 185px;
+    scroll-snap-align: start;
+  }
+}
+
+.viewBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.viewBar > span {
+  margin-right: auto;
+  color: #a8b8a9;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+}
+.viewBar button {
+  border: 1px solid #7b805d;
+  border-radius: 8px;
+  background: #183025;
+  color: #e7d3a3;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.viewBar button:hover {
+  background: #2c4834;
+  border-color: #d6bd80;
+}
+.expanded {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  width: 100%;
+  height: 100dvh;
+  max-width: none;
+  padding: 12px;
+  background: #0c1a15;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.expanded::backdrop {
+  background: #0c1a15;
+}
+.expanded .viewBar {
+  flex-shrink: 0;
+}
+.expanded .modeTabs {
+  flex-shrink: 0;
+  margin-bottom: 10px;
+}
+.expanded .modeTabs button {
+  min-height: 62px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.expanded .modeTabs small {
+  margin-top: 3px;
+}
+.expanded .workspace {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  border-radius: 12px;
+}
+.expanded .topbar {
+  padding: 10px 16px;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.expanded .workGrid {
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: minmax(0, 1fr) 300px;
+}
+.expanded .mapColumn {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.expanded .mapFrame {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+}
+.expanded .toolbar {
+  flex-shrink: 0;
+  padding: 9px 12px;
+}
+.expanded .mapFooter {
+  flex-shrink: 0;
+  padding: 10px 14px;
+}
+.expanded .panel {
+  max-height: none;
+  min-height: 0;
+  overflow-y: auto;
+  display: block;
+  border-top: 0;
+  border-left: 1px solid #405141;
+  overscroll-behavior: contain;
+}
+.expanded[data-panel-open="false"] .workGrid {
+  grid-template-columns: minmax(0, 1fr);
+}
+.expanded[data-panel-open="false"] .panel {
+  display: none;
+}
+@media (max-width: 800px) {
+  .expanded {
+    padding: 8px;
+  }
+  .expanded .workGrid {
+    position: relative;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .expanded .panel {
+    position: absolute;
+    z-index: 1200;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: min(300px, 82%);
+    box-shadow: -12px 0 35px #0005;
+  }
+  .expanded .viewBar > span {
+    display: none;
+  }
+  .expanded .viewBar {
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .expanded .viewBar button {
+    font-size: 11px;
+    padding: 9px;
+  }
+  .expanded .search {
+    grid-template-columns: 110px minmax(0, 1fr);
+    gap: 9px;
+  }
+  .expanded .search > label {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .expanded .topbar {
+    padding: 8px;
+  }
+  .expanded .modeTabs {
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+  }
+  .expanded .mapFooter {
+    font-size: 10px;
   }
 }

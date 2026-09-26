@@ -15,7 +15,7 @@ export function KnowledgeArticle({ article }: { article: KnowledgeEntry }) {
       ? { href: "/qimen", label: "Рассчитать карту Ци Мэнь" }
       : section === "feng-shui"
         ? article.slug === "feng-shui-compass"
-          ? { href: "/feng-shui/compass", label: "Открыть Компас Фэн Шуй" }
+          ? { href: "/compasses", label: "Открыть Компас Фэн Шуй" }
           : { href: "/feng-shui/gua", label: "Рассчитать личное Гуа" }
         : { href: "/calculator", label: "Перейти к своей карте" };
   const sections = article.body.split(/\n\s*\n/);

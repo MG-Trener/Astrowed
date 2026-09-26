@@ -31,6 +31,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const links = [
     ["/bazi", "Ба Цзы"],
     ["/feng-shui", "Фэн Шуй"],
+    ["/compasses", "Компасы"],
     ["/qimen", "Ци Мэнь"],
     ["/knowledge", "Библиотека"],
     ["/about-julia", "Эксперт"],

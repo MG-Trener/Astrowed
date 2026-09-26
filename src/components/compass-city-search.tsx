@@ -87,7 +87,7 @@ export function CompassCitySearch({
               : undefined
           }
           value={query}
-          placeholder="Например, Алматы"
+          placeholder="Например, Астана"
           autoComplete="off"
           onFocus={() => setOpen(true)}
           onChange={(e) => {
