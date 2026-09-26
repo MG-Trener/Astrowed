@@ -1,9 +1,11 @@
+import { consultationLinks } from "@/data/consultation";
+
 export function ContactLinks() {
   return (
     <div className="contact-links">
       <a
         className="button primary"
-        href="https://wa.me/77777644655"
+        href={consultationLinks.whatsapp}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -11,7 +13,7 @@ export function ContactLinks() {
       </a>
       <a
         className="button"
-        href="https://t.me/+77777644655"
+        href={consultationLinks.telegram}
         target="_blank"
         rel="noopener noreferrer"
       >

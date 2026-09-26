@@ -4,7 +4,7 @@ import { calculate, demoInput } from "../src/domain/bazi/engine";
 import { reportHtml, type ReportLevel } from "../src/services/report-template";
 // Offline document rendering only. Application UI is verified through the
 // browser tool; this script renders self-contained report HTML to PDF.
-const output = "artifacts/expansion-pdf";
+const output = "output/pdf";
 await mkdir(output, { recursive: true });
 const cover = `data:image/webp;base64,${(await readFile("src/assets/generated/observatory.webp")).toString("base64")}`;
 const browser = await chromium.launch({
@@ -17,7 +17,7 @@ try {
   for (const level of ["brief", "full", "professional"] as ReportLevel[]) {
     const html = reportHtml(calculate(demoInput), {
       level,
-      date: "2026-09-25",
+      date: "2026-09-26",
       cover,
     });
     await writeFile(`${output}/${level}.html`, html);

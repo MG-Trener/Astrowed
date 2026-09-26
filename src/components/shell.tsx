@@ -41,7 +41,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         className={compact ? "app compact" : "app"}
         data-sky-paused={skyPaused || pageHidden || compact}
       >
-        <StarMap />
+        <StarMap paused={skyPaused || pageHidden || compact} />
         <a className="skip-link" href="#main">
           К содержимому
         </a>

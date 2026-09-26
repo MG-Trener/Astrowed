@@ -1,11 +1,14 @@
 "use client";
 
 import { useId, useState, type CSSProperties } from "react";
+import Image from "next/image";
+import { zodiacArtwork } from "@/assets/zodiac-artwork";
 import { doorMeaning, doorNames, spiritNames, starNames, type QimenChart } from "@/domain/qimen/engine";
 import { luoShuOrder, palaceOf } from "@/domain/feng-shui/catalog";
 import { elementOf, stemElement } from "@/domain/bazi/catalog";
 import { palaceZodiac, zodiacPaths, type ZodiacAnimal, type ZodiacSide } from "./palace-zodiac";
 import styles from "./palace-board.module.css";
+import palaceJade from "@/assets/generated/qimen-palace-jade.webp";
 
 type Layer = "all" | "stems" | "doors" | "stars" | "spirits";
 const layers: [Layer, string][] = [["all", "Все слои"], ["stems", "Стволы"], ["doors", "Двери"], ["stars", "Звёзды"], ["spirits", "Духи"]];
@@ -14,10 +17,14 @@ const shortSpirits: Record<string, string> = { 值符: "符", 腾蛇: "蛇", 太
 const accent = (color: string) => ({ "--palace-accent": color }) as CSSProperties;
 
 function ZodiacIcon({ animal }: { animal: ZodiacAnimal }) {
-  return <svg viewBox="0 0 64 64" className={styles.animalIcon} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+  const [failed, setFailed] = useState(false);
+  return <span className={styles.animalIcon} data-failed={failed} aria-hidden="true">
+    <Image className={styles.animalArtwork} src={zodiacArtwork[animal]} alt="" width={84} height={84} sizes="(max-width: 600px) 56px, 84px" onError={() => setFailed(true)} />
+    <svg viewBox="0 0 64 64" className={styles.animalLinework} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" focusable="false">
     <circle cx="32" cy="32" r="29" strokeWidth="0.7" opacity="0.22" strokeDasharray="2 5" />
     {zodiacPaths[animal].map((d, i) => <path key={i} d={d} />)}
-  </svg>;
+    </svg>
+  </span>;
 }
 
 function Stem({ value }: { value: string }) {
@@ -53,7 +60,7 @@ export function PalaceBoard({ chart }: { chart: QimenChart }) {
     })}
   </div>;
 
-  return <section className={styles.workspace} data-layer={layer} aria-label="Интерактивные девять дворцов Ци Мэнь">
+  return <section className={styles.workspace} data-layer={layer} style={{ "--palace-art": `url("${palaceJade.src}")` } as CSSProperties} aria-label="Интерактивные девять дворцов Ци Мэнь">
     <div className={styles.mapColumn}>
       <div className={styles.boardHeading}>
         <div><span className={styles.eyebrow}>ЦИ МЭНЬ ДУНЬ ЦЗЯ</span><h2>Девять дворцов</h2></div>
@@ -64,10 +71,17 @@ export function PalaceBoard({ chart }: { chart: QimenChart }) {
         <button type="button" className={styles.animalToggle} aria-pressed={animalsVisible} onClick={() => setAnimalsVisible((visible) => !visible)}>Животные <span aria-hidden="true">{animalsVisible ? "◉" : "○"}</span></button>
       </div>
       <div className={`${styles.frame} ${animalsVisible ? "" : styles.withoutAnimals}`}>
-        {animalsVisible && <>{rail("top")}{rail("right")}{rail("bottom")}{rail("left")}
-          <span className={`${styles.corner} ${styles.nw}`}>ЮВ</span><span className={`${styles.corner} ${styles.ne}`}>ЮЗ</span>
-          <span className={`${styles.corner} ${styles.sw}`}>СВ</span><span className={`${styles.corner} ${styles.se}`}>СЗ</span>
-        </>}
+        {animalsVisible && <>{rail("top")}{rail("right")}{rail("bottom")}{rail("left")}</>}
+        <span className={`${styles.corner} ${styles.nw}`} aria-label="Юго-восток" title="Юго-восток · 135°">ЮВ</span>
+        <span className={`${styles.corner} ${styles.ne}`} aria-label="Юго-запад" title="Юго-запад · 225°">ЮЗ</span>
+        <span className={`${styles.corner} ${styles.sw}`} aria-label="Северо-восток" title="Северо-восток · 45°">СВ</span>
+        <span className={`${styles.corner} ${styles.se}`} aria-label="Северо-запад" title="Северо-запад · 315°">СЗ</span>
+        {([
+          ["south", "Юг", "Ю", "180°"], ["north", "Север", "С", "0°"],
+          ["east", "Восток", "В", "90°"], ["west", "Запад", "З", "270°"],
+        ] as const).map(([side, name, short, bearing]) => <span key={side} className={`${styles.compass} ${styles[side]}`} aria-label={name} title={`${name} · ${bearing}`}>
+          <span className={styles.compassLong}>{name}</span><span className={styles.compassShort}>{short}</span>
+        </span>)}
         <div className={styles.grid} role="group" aria-label="Ло Шу: юг сверху, восток слева">
           {luoShuOrder.map((id) => {
             const cell = chart.palaces.find((item) => item.id === id)!;

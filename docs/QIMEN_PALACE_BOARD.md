@@ -7,10 +7,16 @@ imports. Both the server app and the GitHub Pages app use the same component.
 ## Display
 
 - Luo Shu remains 4–9–2 / 3–5–7 / 8–1–6, south up and east left.
-- Twelve original SVG line illustrations sit outside the nine calculation cells.
+- Twelve individually generated jade-and-brass animal images sit outside the nine calculation cells.
   They represent fixed directional branches, not calculated omens, extra palaces,
   or a substitute for the eight spirits. Their data and paths are in
-  `palace-zodiac.ts`; no external image services, emoji fonts or packages are used.
+  `palace-zodiac.ts`; static local artwork is mapped in `src/assets/zodiac-artwork.ts`.
+  Original SVG line illustrations remain for printing and image-load fallback.
+  Final generation prompts and asset paths are in `QIMEN_ZODIAC_PROMPTS.md`.
+- All eight compass directions remain visible around the frame, including when
+  animals are hidden. South is above, north below, east left and west right.
+  Narrow layouts use abbreviations; accessible names and tooltips spell out the
+  directions, and tooltips include geographical bearings.
 - Selecting a palace or an animal updates the same detail panel. The eight
   external cells read stems, stars, doors, spirits, duty flags and hosted stems
   directly from `QimenChart`. The center has no invented door or spirit; its

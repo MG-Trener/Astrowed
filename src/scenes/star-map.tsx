@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { CelestialSky } from "./celestial-sky";
 
 // Decorative sky map: deterministic positions keep server and browser in sync.
 const constellations = [
@@ -58,48 +59,11 @@ const cometRoutes = [
   [2, 46, 0, 89, 60, "#e3d49c"],
   [98, 65, 180, 97, 70, "#9fc0ec"],
 ] as const;
-const spiral = Array.from({ length: 64 }, (_, i) => {
-  const angle = i * 0.09;
-  const radius = 8 + i * 2.5;
-  return `${i === 0 ? "M" : "L"}${(200 + radius * Math.cos(angle)).toFixed(3)} ${(200 + radius * Math.sin(angle)).toFixed(3)}`;
-}).join(" ");
-
-function Galaxy({ variant }: { variant: "jade" | "violet" }) {
-  return (
-    <div className={`sky-galaxy sky-galaxy-${variant}`}>
-      <div className="galaxy-disc">
-        <svg viewBox="0 0 400 400" className="galaxy-spiral" fill="none">
-          {[0, 120, 240].map((angle) => (
-            <g key={angle} transform={`rotate(${angle} 200 200)`}>
-              <path d={spiral} className="galaxy-arm-haze" />
-              <path d={spiral} className="galaxy-arm" />
-              {Array.from({ length: 22 }, (_, i) => {
-                const a = i * 0.25,
-                  r = 12 + i * 7;
-                return (
-                  <circle
-                    key={i}
-                    cx={(200 + r * Math.cos(a)).toFixed(3)}
-                    cy={(200 + r * Math.sin(a)).toFixed(3)}
-                    r={i % 3 === 0 ? 1.3 : 0.65}
-                  />
-                );
-              })}
-            </g>
-          ))}
-        </svg>
-        <div className="galaxy-core" />
-      </div>
-    </div>
-  );
-}
-
-export function StarMap() {
+export function StarMap({ paused = false }: { paused?: boolean }) {
   return (
     <div className="site-star-map" aria-hidden="true">
       <div className="star-map-nebula" />
-      <Galaxy variant="jade" />
-      <Galaxy variant="violet" />
+      <CelestialSky paused={paused} />
       {cometRoutes.map(([x, y, angle, period, delay, color], i) => (
         <div
           key={i}
@@ -117,30 +81,6 @@ export function StarMap() {
           }
         >
           <div className="meteor" />
-        </div>
-      ))}
-      {[
-        [18, 32, 41, 7],
-        [82, 55, 59, 19],
-        [62, 16, 71, 35],
-        [31, 84, 89, 47],
-      ].map(([x, y, period, delay], i) => (
-        <div
-          key={i}
-          className="star-burst"
-          data-extra={i >= 2}
-          style={
-            {
-              left: `${x}%`,
-              top: `${y}%`,
-              "--burst-period": `${period}s`,
-              "--burst-delay": `${delay}s`,
-            } as CSSProperties
-          }
-        >
-          <i className="star-burst-ring" />
-          <i className="star-burst-rays" />
-          <i className="star-burst-core" />
         </div>
       ))}
       <svg
